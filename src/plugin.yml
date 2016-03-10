@@ -1,0 +1,11 @@
+name: AdvancedKitsReloaded
+main: hu.tryharddood.advancedkits.AdvancedKits
+version: 3.0.7
+author: TryHardDood
+website: https://infinityhosting.hu
+softdepend: [Vault]
+commands:
+  kit:
+    aliases: [akits, akit, kits]
+    description: Main kit command.
+    usage: /kit

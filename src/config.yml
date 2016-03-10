@@ -1,0 +1,21 @@
+# +----------------------------------------------------+
+# <               AdvancedKits Reloaded                >
+# <                 Configuration file                 >
+# <                     config.yml                     >
+# +----------------------------------------------------+
+
+# You can enable the economy hook via Vault
+# You need an Economy plugin, like Essentials
+use-economy: true
+
+# You can change the chat prefix.
+# So it's looks more unique :)
+chat-prefix: '&7[&6AdvancedKits&7]'
+
+# AdvancedKitsReloaded support multilanguage.
+# Currently there are the available values:
+# English: en | Hungarian: hu
+# If you'd like to translate it send it here:
+# Email: tryharddood@infinityhosting.hu
+# Email: rsnconfigs@gmail.com
+locale: en
