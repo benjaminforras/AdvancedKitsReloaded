@@ -11,8 +11,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
-@SuppressWarnings("WeakerAccess")
-public final class NamedInventory extends ClickInventory
+public final class NamedInventory extends ClickInventory<Object>
 {
 
     private final HashMap<ItemStack, Page> pageDirectors = new HashMap<>();
@@ -24,14 +23,12 @@ public final class NamedInventory extends ClickInventory
         this(null, player);
     }
 
-    @SuppressWarnings("UnusedParameters")
     @Deprecated
     public NamedInventory(Player player, boolean dymanicInventory)
     {
         this(player);
     }
 
-    @SuppressWarnings("SameParameterValue")
     private NamedInventory(String inventoryName, Player player)
     {
         super(inventoryName, player);
@@ -64,11 +61,13 @@ public final class NamedInventory extends ClickInventory
         return pages;
     }
 
+    @Override
     public String getTitle()
     {
         return currentPage.getPageDisplayTitle();
     }
 
+    @Override
     public void setTitle(String newTitle)
     {
         if (newTitle != null && getCurrentPage() != null)
@@ -94,6 +93,7 @@ public final class NamedInventory extends ClickInventory
         }
     }
 
+    @Override
     protected void onInventoryClick(InventoryClickEvent event)
     {
         ItemStack item = event.getCurrentItem();
@@ -205,7 +205,7 @@ public final class NamedInventory extends ClickInventory
     {
         if (items.length % 9 != 0)
         {
-            items = Arrays.copyOf(items, (int) (Math.ceil((double) items.length / 9D) * 9));
+            items = Arrays.copyOf(items, (int) (Math.ceil(items.length / 9D) * 9));
         }
         if (items.length > (isPlayerInventory() ? 36 : 54))
         {
@@ -236,6 +236,7 @@ public final class NamedInventory extends ClickInventory
         }
     }
 
+    @Override
     public NamedInventory setPlayerInventory()
     {
         super.setPlayerInventory();

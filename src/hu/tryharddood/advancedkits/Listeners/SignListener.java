@@ -1,10 +1,10 @@
 package hu.tryharddood.advancedkits.Listeners;
 
 import hu.tryharddood.advancedkits.AdvancedKits;
-import hu.tryharddood.advancedkits.Commands.CommandManager;
-import hu.tryharddood.advancedkits.KitManager.Kit;
-import hu.tryharddood.advancedkits.KitManager.KitManager;
+import hu.tryharddood.advancedkits.Kits.Kit;
+import hu.tryharddood.advancedkits.Kits.KitManager;
 import hu.tryharddood.advancedkits.Variables;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
@@ -46,7 +46,7 @@ public class SignListener implements Listener
                         return;
                     }
 
-                    CommandManager.handleUseCommand(player, kit);
+                    Bukkit.dispatchCommand(player, "kit use " + kit.getName());
                     event.setCancelled(true);
                 }
             }

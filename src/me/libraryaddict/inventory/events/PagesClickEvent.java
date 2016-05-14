@@ -22,16 +22,19 @@ public class PagesClickEvent extends ItemClickEvent
         return handlers;
     }
 
+    @Override
     public HandlerList getHandlers()
     {
         return handlers;
     }
 
+    @Override
     public PageInventory getInventory()
     {
         return inv;
     }
 
+    @Override
     public ItemStack getItemStack()
     {
         if (slot >= 0) return inv.getItem(slot);

@@ -1,6 +1,5 @@
 package hu.tryharddood.advancedkits.Configuration;
 
-
 import hu.tryharddood.advancedkits.AdvancedKits;
 import hu.tryharddood.advancedkits.Phrases;
 import org.bukkit.ChatColor;
@@ -30,24 +29,28 @@ public class Configuration
         this.instance = instance;
     }
 
-    public boolean isEconomy()
+    private void copy(InputStream in, File file)
     {
-        return this.economy;
-    }
-
-    public void setEconomy(boolean economy)
-    {
-        this.economy = economy;
+        try
+        {
+            OutputStream out = new FileOutputStream(file);
+            byte[] buf = new byte[1024];
+            int len;
+            while ((len = in.read(buf)) > 0)
+            {
+                out.write(buf, 0, len);
+            }
+            out.close();
+            in.close();
+        } catch (Exception e)
+        {
+            e.printStackTrace();
+        }
     }
 
     public String getChatPrefix()
     {
         return ChatColor.translateAlternateColorCodes('&', this.chatprefix);
-    }
-
-    public void setChatprefix(String chatprefix)
-    {
-        this.chatprefix = chatprefix;
     }
 
     public String getLocale()
@@ -58,6 +61,16 @@ public class Configuration
     public void setLocale(String locale)
     {
         this.locale = locale;
+    }
+
+    public boolean isEconomy()
+    {
+        return this.economy;
+    }
+
+    public void setEconomy(boolean economy)
+    {
+        this.economy = economy;
     }
 
     public void loadConfiguration()
@@ -102,22 +115,8 @@ public class Configuration
         }
     }
 
-    private void copy(InputStream in, File file)
+    public void setChatprefix(String chatprefix)
     {
-        try
-        {
-            OutputStream out = new FileOutputStream(file);
-            byte[] buf = new byte[1024];
-            int len;
-            while ((len = in.read(buf)) > 0)
-            {
-                out.write(buf, 0, len);
-            }
-            out.close();
-            in.close();
-        } catch (Exception e)
-        {
-            e.printStackTrace();
-        }
+        this.chatprefix = chatprefix;
     }
 }

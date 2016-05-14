@@ -4,7 +4,6 @@ import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
 
-@SuppressWarnings("WeakerAccess")
 public class PageLayout
 {
 
@@ -18,7 +17,7 @@ public class PageLayout
         invSize = strings.length * 9;
         for (int slot = 0; slot < strings.length * 9; slot++)
         {
-            String string = strings[(int) Math.floor((double) slot / 9D)];
+            String string = strings[(int) Math.floor(slot / 9D)];
             if (string.length() != 9)
             {
                 throw new RuntimeException("String is not a length of 9. String is a length of " + string.length() + ". " + string);

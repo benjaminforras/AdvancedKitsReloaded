@@ -57,7 +57,6 @@ public class Phrases
         }
         MessageFormat messageFormat = hMessageFormatCache.get(format);
 
-
         if (messageFormat == null)
         {
             try

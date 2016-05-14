@@ -8,26 +8,25 @@ import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
-import org.bukkit.potion.Potion;
 
 import java.util.*;
 
 /**
  * @author PaulBGD from https://gist.github.com/PaulBGD/9831d28b1c7bdba0cddd
- *         <p/>
+ *         <p>
  *         This however was modified for my own needs
  */
-@SuppressWarnings("ALL")
 public class ItemBuilder
 {
 
     private final short data;
-    private final HashMap<Enchantment, Integer> enchants = new HashMap<Enchantment, Integer>();
-    private final List<String> lore = new ArrayList<String>();
+    @SuppressWarnings("Convert2Diamond")
+    private final HashMap<Enchantment, Integer> enchants = new HashMap<>();
+    @SuppressWarnings("Convert2Diamond")
+    private final List<String> lore = new ArrayList<>();
     private int amount;
     private Color color;
     private Material mat;
-    // private Potion potion;
     private String title = null;
 
     public ItemBuilder(ItemStack item)
@@ -35,10 +34,7 @@ public class ItemBuilder
         this(item.getType(), item.getDurability());
         this.amount = item.getAmount();
         this.enchants.putAll(item.getEnchantments());
-        if (item.getType() == Material.POTION)
-        {
-            // setPotion(Potion.fromItemStack(item));
-        }
+
         if (item.hasItemMeta())
         {
             ItemMeta meta = item.getItemMeta();
@@ -62,7 +58,6 @@ public class ItemBuilder
         this(mat, 1);
     }
 
-    @SuppressWarnings("SameParameterValue")
     public ItemBuilder(Material mat, int amount)
     {
         this(mat, amount, (short) 0);
@@ -80,14 +75,15 @@ public class ItemBuilder
         this(mat, 1, data);
     }
 
+    @SuppressWarnings("Convert2Diamond")
     private static ArrayList<String> split(String string, int maxLength)
     {
         String[] split = string.split(" ");
         string = "";
-        ArrayList<String> newString = new ArrayList<String>();
-        for (int i = 0; i < split.length; i++)
+        ArrayList<String> newString = new ArrayList<>();
+        for (String aSplit : split)
         {
-            string += (string.length() == 0 ? "" : " ") + split[i];
+            string += (string.length() == 0 ? "" : " ") + aSplit;
             if (ChatColor.stripColor(string).length() > maxLength)
             {
                 newString.add((newString.size() > 0 ? ChatColor.getLastColors(newString.get(newString.size() - 1)) : "") + string);
@@ -101,7 +97,6 @@ public class ItemBuilder
         return newString;
     }
 
-    @SuppressWarnings("UnusedReturnValue")
     public ItemBuilder addEnchantment(Enchantment enchant, int level)
     {
         if (enchants.containsKey(enchant))
@@ -109,22 +104,6 @@ public class ItemBuilder
             enchants.remove(enchant);
         }
         enchants.put(enchant, level);
-        return this;
-    }
-
-    @SuppressWarnings("UnusedReturnValue")
-    public ItemBuilder addLore(String lore, int maxLength)
-    {
-        this.lore.addAll(split(lore, maxLength));
-        return this;
-    }
-
-    public ItemBuilder addLores(List<String> lores, int maxLength)
-    {
-        for (String lore : lores)
-        {
-            addLore(lore, maxLength);
-        }
         return this;
     }
 
@@ -137,10 +116,30 @@ public class ItemBuilder
         return this;
     }
 
+    public ItemBuilder addLore(String lore, int maxLength)
+    {
+        this.lore.addAll(split(lore, maxLength));
+        return this;
+    }
+
     public ItemBuilder addLores(List<String> lores)
     {
         this.lore.addAll(lores);
         return this;
+    }
+
+    public ItemBuilder addLores(List<String> lores, int maxLength)
+    {
+        for (String lore : lores)
+        {
+            addLore(lore, maxLength);
+        }
+        return this;
+    }
+
+    public ItemBuilder addLores(String[] description, int maxLength)
+    {
+        return addLores(Arrays.asList(description), maxLength);
     }
 
     public ItemStack build()
@@ -180,6 +179,7 @@ public class ItemBuilder
         return item;
     }
 
+    @Override
     public ItemBuilder clone() throws CloneNotSupportedException
     {
         ItemBuilder newBuilder = new ItemBuilder(this.mat);
@@ -209,7 +209,6 @@ public class ItemBuilder
         return this.color;
     }
 
-    @SuppressWarnings("UnusedReturnValue")
     public ItemBuilder setColor(Color color)
     {
         if (!this.mat.name().contains("LEATHER_"))
@@ -302,18 +301,6 @@ public class ItemBuilder
         return this;
     }
 
-    @SuppressWarnings("UnusedParameters")
-    public ItemBuilder setPotion(Potion potion)
-    {
-        if (this.mat != Material.POTION)
-        {
-            this.mat = Material.POTION;
-        }
-        // this.potion = potion;
-        return this;
-    }
-
-    @SuppressWarnings("UnusedReturnValue")
     public ItemBuilder setRawTitle(String title)
     {
         this.title = title;
@@ -333,11 +320,6 @@ public class ItemBuilder
         }
         setTitle(title);
         return this;
-    }
-
-    public ItemBuilder addLores(String[] description, int maxLength)
-    {
-        return addLores(Arrays.asList(description), maxLength);
     }
 
 }

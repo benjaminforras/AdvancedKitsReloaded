@@ -24,15 +24,20 @@ public class TabTitleSendEvent extends Event
         return handlers;
     }
 
+    public String getFooter()
+    {
+        return footer;
+    }
+
+    public void setFooter(String footer)
+    {
+        this.footer = footer;
+    }
+
     @Override
     public HandlerList getHandlers()
     {
         return handlers;
-    }
-
-    public Player getPlayer()
-    {
-        return player;
     }
 
     public String getHeader()
@@ -45,14 +50,9 @@ public class TabTitleSendEvent extends Event
         this.header = header;
     }
 
-    public String getFooter()
+    public Player getPlayer()
     {
-        return footer;
-    }
-
-    public void setFooter(String footer)
-    {
-        this.footer = footer;
+        return player;
     }
 
     public boolean isCancelled()

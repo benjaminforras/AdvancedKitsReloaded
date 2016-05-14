@@ -5,7 +5,6 @@ public class Page
     private final String pageName;
     private String pageTitle;
 
-    @SuppressWarnings("SameParameterValue")
     public Page(String pageName)
     {
         this(pageName, pageName);
@@ -17,6 +16,7 @@ public class Page
         this.pageName = pageName;
     }
 
+    @Override
     public boolean equals(Object obj)
     {
         if (this == obj) return true;

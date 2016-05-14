@@ -35,16 +35,6 @@ public class TitleSendEvent extends Event
         return player;
     }
 
-    public String getTitle()
-    {
-        return title;
-    }
-
-    public void setTitle(String title)
-    {
-        this.title = title;
-    }
-
     public String getSubtitle()
     {
         return subtitle;
@@ -53,6 +43,16 @@ public class TitleSendEvent extends Event
     public void setSubtitle(String subtitle)
     {
         this.subtitle = subtitle;
+    }
+
+    public String getTitle()
+    {
+        return title;
+    }
+
+    public void setTitle(String title)
+    {
+        this.title = title;
     }
 
     public boolean isCancelled()

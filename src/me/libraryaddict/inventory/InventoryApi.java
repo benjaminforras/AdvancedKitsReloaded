@@ -17,11 +17,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-@SuppressWarnings("ALL")
 public class InventoryApi implements Listener
 {
 
-    private static final ArrayList<ClickInventory> inventories = new ArrayList<ClickInventory>();
+    private static final ArrayList<ClickInventory<?>> inventories = new ArrayList<>();
 
     /**
      * Generates a empty array of ItemStack rounded up to the nearest 9
@@ -97,7 +96,7 @@ public class InventoryApi implements Listener
         return getHiddenString(item) != null;
     }
 
-    public static void registerInventory(ClickInventory inv)
+    public static void registerInventory(ClickInventory<?> inv)
     {
         inventories.add(inv);
     }
@@ -117,6 +116,14 @@ public class InventoryApi implements Listener
         meta.setDisplayName(itemName);
         itemToName.setItemMeta(meta);
         return itemToName;
+    }
+
+    /**
+     * Ignore this
+     */
+    public static void setInstance(JavaPlugin plugin)
+    {
+        ClickInventory.plugin = plugin;
     }
 
     /**
@@ -165,24 +172,16 @@ public class InventoryApi implements Listener
         return (StringUtils.join(names, " "));
     }
 
-    protected static void unregisterInventory(ClickInventory inv)
+    protected static void unregisterInventory(ClickInventory<?> inv)
     {
         inventories.remove(inv);
-    }
-
-    /**
-     * Ignore this
-     */
-    public static void setInstance(JavaPlugin plugin)
-    {
-        ClickInventory.plugin = plugin;
     }
 
     @EventHandler
     public void onClose(InventoryCloseEvent event)
     {
         int found = 0;
-        for (ClickInventory inv : new ArrayList<ClickInventory>(inventories))
+        for (ClickInventory<?> inv : new ArrayList<>(inventories))
         {
             if (inv.getPlayer() == event.getPlayer())
             {
@@ -199,7 +198,7 @@ public class InventoryApi implements Listener
     public void onInventoryClick(InventoryClickEvent event)
     {
         int found = 0;
-        for (ClickInventory cInv : new ArrayList<ClickInventory>(inventories))
+        for (ClickInventory<?> cInv : new ArrayList<>(inventories))
         {
             if (cInv.getPlayer() == event.getWhoClicked())
             {
@@ -213,7 +212,7 @@ public class InventoryApi implements Listener
     public void onInventoryDrag(InventoryDragEvent event)
     {
         int found = 0;
-        for (ClickInventory inv : new ArrayList<ClickInventory>(inventories))
+        for (ClickInventory<?> inv : new ArrayList<>(inventories))
         {
             if (inv.getPlayer() == event.getWhoClicked())
             {
@@ -227,7 +226,7 @@ public class InventoryApi implements Listener
     public void onQuit(PlayerQuitEvent event)
     {
         int found = 0;
-        for (ClickInventory inv : new ArrayList<ClickInventory>(inventories))
+        for (ClickInventory<?> inv : new ArrayList<>(inventories))
         {
             if (inv.getPlayer() == event.getPlayer())
             {

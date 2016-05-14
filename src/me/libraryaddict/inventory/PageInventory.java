@@ -15,8 +15,7 @@ import java.util.HashMap;
 
 import static hu.tryharddood.advancedkits.Phrases.phrase;
 
-@SuppressWarnings("WeakerAccess")
-public final class PageInventory extends ClickInventory
+public final class PageInventory extends ClickInventory<Object>
 {
 
     private final HashMap<Integer, ItemStack[]> pages = new HashMap<>();
@@ -45,36 +44,23 @@ public final class PageInventory extends ClickInventory
         this(null, player, inventorySize);
     }
 
-    @SuppressWarnings("SameParameterValue")
     private PageInventory(String inventoryName, Player player)
     {
         super(inventoryName, player);
     }
 
-    @SuppressWarnings("SameParameterValue")
     private PageInventory(String inventoryName, Player player, boolean dymanicInventory)
     {
         super(inventoryName, player);
         dynamicInventorySize = dymanicInventory;
     }
 
-    @SuppressWarnings("SameParameterValue")
     private PageInventory(String inventoryName, Player player, int inventorySize)
     {
         super(inventoryName, player);
         this.inventorySize = Math.min(54, (int) (Math.ceil((double) inventorySize / 9)) * 9);
         this.dynamicInventorySize = false;
         pages.put(0, new ItemStack[0]);
-    }
-
-    public ItemStack getExitInventory()
-    {
-        return exitInventory;
-    }
-
-    public void setExitInventory(ItemStack item)
-    {
-        this.exitInventory = item;
     }
 
     /**
@@ -105,6 +91,16 @@ public final class PageInventory extends ClickInventory
         return currentPage;
     }
 
+    public ItemStack getExitInventory()
+    {
+        return exitInventory;
+    }
+
+    public void setExitInventory(ItemStack item)
+    {
+        this.exitInventory = item;
+    }
+
     /**
      * Get the itemstack which is the next page
      */
@@ -125,25 +121,43 @@ public final class PageInventory extends ClickInventory
         forwardsAPage = newForwards;
     }
 
-    @Override
-    public String getTitle()
+    public ArrayList<ItemStack> getItems()
     {
-        return getPageTitle();
+        ArrayList<ItemStack> items = new ArrayList<>();
+        for (int i = 0; i < pages.size(); i++)
+        {
+            ItemStack[] itemArray = pages.get(i);
+            items.addAll(Arrays.asList(itemArray).subList(0, itemArray.length - (pages.size() > 1 ? 9 : 0)));
+        }
+        return items;
     }
 
-    /**
-     * Sets the title of the next page opened
-     */
-    public void setTitle(String newTitle)
+    private ItemStack[] getItemsForPage()
     {
-        if (!getTitle().equals(newTitle))
+        ItemStack[] pageItems = pages.get(Math.max(getCurrentPage(), 0));
+        int pageSize = pageItems.length;
+        if (pages.size() > 1 || this.getExitInventory() != null)
         {
-            title = newTitle;
-            if (isInventoryInUse())
-            {
-                setPage(getCurrentPage());
-            }
+            pageSize += 9;
         }
+        if (!this.dynamicInventorySize || isPlayerInventory())
+        {
+            pageSize = isPlayerInventory() ? 36 : inventorySize;
+        }
+        else
+        {
+            pageSize = ((pageSize + 8) / 9) * 9;
+        }
+        pageItems = Arrays.copyOf(pageItems, pageSize);
+        if (getCurrentPage() > 0 || getExitInventory() != null)
+        {
+            pageItems[pageItems.length - 9] = getCurrentPage() == 0 ? getExitInventory() : getBackPage();
+        }
+        if (pages.size() - 1 > getCurrentPage())
+        {
+            pageItems[pageItems.length - 1] = getForwardsPage();
+        }
+        return pageItems;
     }
 
     /**
@@ -161,14 +175,6 @@ public final class PageInventory extends ClickInventory
     public HashMap<Integer, ItemStack[]> getPages()
     {
         return pages;
-    }
-
-    /**
-     * Auto fills out the pages with these items
-     */
-    public void setPages(ArrayList<ItemStack> allItems)
-    {
-        setPages(allItems.toArray(new ItemStack[allItems.size()]));
     }
 
     /**
@@ -225,9 +231,39 @@ public final class PageInventory extends ClickInventory
         setPage(getCurrentPage());
     }
 
+    /**
+     * Auto fills out the pages with these items
+     */
+    public void setPages(ArrayList<ItemStack> allItems)
+    {
+        setPages(allItems.toArray(new ItemStack[allItems.size()]));
+    }
+
     protected String getPageTitle()
     {
         return (this.isPageDisplayedInTitle() ? titleFormat.replace("%Title%", title).replace("%Page%", (getCurrentPage() + 1) + "") : title);
+    }
+
+    @Override
+    public String getTitle()
+    {
+        return getPageTitle();
+    }
+
+    /**
+     * Sets the title of the next page opened
+     */
+    @Override
+    public void setTitle(String newTitle)
+    {
+        if (!getTitle().equals(newTitle))
+        {
+            title = newTitle;
+            if (isInventoryInUse())
+            {
+                setPage(getCurrentPage());
+            }
+        }
     }
 
     public boolean isPageDisplayedInTitle()
@@ -247,6 +283,7 @@ public final class PageInventory extends ClickInventory
         }
     }
 
+    @Override
     protected void onInventoryClick(InventoryClickEvent event)
     {
         ItemStack item = event.getCurrentItem();
@@ -332,45 +369,6 @@ public final class PageInventory extends ClickInventory
         openInv();
     }
 
-    private ItemStack[] getItemsForPage()
-    {
-        ItemStack[] pageItems = pages.get(Math.max(getCurrentPage(), 0));
-        int pageSize = pageItems.length;
-        if (pages.size() > 1 || this.getExitInventory() != null)
-        {
-            pageSize += 9;
-        }
-        if (!this.dynamicInventorySize || isPlayerInventory())
-        {
-            pageSize = isPlayerInventory() ? 36 : inventorySize;
-        }
-        else
-        {
-            pageSize = ((pageSize + 8) / 9) * 9;
-        }
-        pageItems = Arrays.copyOf(pageItems, pageSize);
-        if (getCurrentPage() > 0 || getExitInventory() != null)
-        {
-            pageItems[pageItems.length - 9] = getCurrentPage() == 0 ? getExitInventory() : getBackPage();
-        }
-        if (pages.size() - 1 > getCurrentPage())
-        {
-            pageItems[pageItems.length - 1] = getForwardsPage();
-        }
-        return pageItems;
-    }
-
-    public ArrayList<ItemStack> getItems()
-    {
-        ArrayList<ItemStack> items = new ArrayList<>();
-        for (int i = 0; i < pages.size(); i++)
-        {
-            ItemStack[] itemArray = pages.get(i);
-            items.addAll(Arrays.asList(itemArray).subList(0, itemArray.length - (pages.size() > 1 ? 9 : 0)));
-        }
-        return items;
-    }
-
     /**
      * Moves the inventory to a page
      */
@@ -409,6 +407,7 @@ public final class PageInventory extends ClickInventory
         }
     }
 
+    @Override
     public PageInventory setPlayerInventory()
     {
         super.setPlayerInventory();

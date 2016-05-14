@@ -12,17 +12,15 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.util.HashMap;
 
-@SuppressWarnings("ALL")
 public abstract class ClickInventory<E>
 {
     protected static JavaPlugin plugin;
     private final Player player;
     private final String inventoryName;
-    private final HashMap<Object, Object> savedData = new HashMap<Object, Object>();
+    private final HashMap<Object, Object> savedData = new HashMap<>();
     protected Inventory currentInventory;
     private boolean inventoryInUse;
     private boolean modifiable;
@@ -39,64 +37,6 @@ public abstract class ClickInventory<E>
         this.inventoryName = inventoryName;
     }
 
-    protected void saveContents()
-    {
-        this.previousContents = getPlayer().getInventory().getContents().clone();
-    }
-
-    public Object getData(Object key)
-    {
-        return savedData.get(key);
-    }
-
-    public ClickInventory setData(Object key, Object obj)
-    {
-        if (obj == null)
-        {
-            this.savedData.remove(key);
-        }
-        else
-        {
-            this.savedData.put(key, obj);
-        }
-        return this;
-    }
-
-    public String getName()
-    {
-        return inventoryName;
-    }
-
-    @SuppressWarnings("UnusedReturnValue")
-    public ClickInventory setPlayerInventory()
-    {
-        if (!isInventoryInUse())
-        {
-            this.playerInventoryUsed = true;
-        }
-        return this;
-    }
-
-    public void closeInventory()
-    {
-        closeInventory(true);
-    }
-
-    protected void onInventoryDrag(InventoryDragEvent event)
-    {
-        if (!isModifiable())
-        {
-            for (int slot : event.getRawSlots())
-            {
-                if (checkInMenu(slot))
-                {
-                    event.setCancelled(true);
-                    return;
-                }
-            }
-        }
-    }
-
     protected boolean checkInMenu(int rawSlot)
     {
         if (isPlayerInventory())
@@ -110,13 +50,17 @@ public abstract class ClickInventory<E>
         return rawSlot < currentInventory.getSize();
     }
 
-    public boolean isPlayerInventory()
+    public void closeInventory()
     {
-        return playerInventoryUsed;
+        closeInventory(true);
     }
 
-    protected abstract void onInventoryClick(InventoryClickEvent event);
+    public void closeInventory(boolean forceClose)
+    {
+        closeInventory(forceClose, true);
+    }
 
+    @SuppressWarnings("unchecked")
     private void closeInventory(boolean forceClose, boolean restoreInventory)
     {
         InventoryApi.unregisterInventory(this);
@@ -147,6 +91,7 @@ public abstract class ClickInventory<E>
             getPlayer().getInventory().setContents(previousContents);
             Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, new Runnable()
             {
+                @Override
                 public void run()
                 {
                     getPlayer().updateInventory();
@@ -155,9 +100,9 @@ public abstract class ClickInventory<E>
         }
     }
 
-    public void closeInventory(boolean forceClose)
+    public Object getData(Object key)
     {
-        closeInventory(forceClose, true);
+        return savedData.get(key);
     }
 
     /**
@@ -180,32 +125,9 @@ public abstract class ClickInventory<E>
         return null;
     }
 
-    protected void setItems(ItemStack[] items)
+    public String getName()
     {
-        if (isPlayerInventory())
-        {
-            for (int i = 0; i < items.length; i++)
-            {
-                setItem(i, items[i]);
-            }
-        }
-        else
-        {
-            currentInventory.setContents(items);
-        }
-    }
-
-    protected void setItem(int slot, ItemStack item)
-    {
-        if (isPlayerInventory())
-        {
-            slot += 9;
-            if (slot >= 36)
-            {
-                slot -= 36;
-            }
-        }
-        currentInventory.setItem(slot, item);
+        return inventoryName;
     }
 
     /**
@@ -216,12 +138,15 @@ public abstract class ClickInventory<E>
         return player;
     }
 
+    protected abstract String getTitle();
+
+    public abstract void setTitle(String newTitle);
+
     public boolean isInventoryInUse()
     {
         return this.inventoryInUse;
     }
 
-    @SuppressWarnings("BooleanMethodIsAlwaysInverted")
     public boolean isModifiable()
     {
         return modifiable;
@@ -232,18 +157,42 @@ public abstract class ClickInventory<E>
         this.modifiable = modifiable;
     }
 
+    public boolean isPlayerInventory()
+    {
+        return playerInventoryUsed;
+    }
+
+    protected abstract void onInventoryClick(InventoryClickEvent event);
+
+    protected void onInventoryDrag(InventoryDragEvent event)
+    {
+        if (!isModifiable())
+        {
+            for (int slot : event.getRawSlots())
+            {
+                if (checkInMenu(slot))
+                {
+                    event.setCancelled(true);
+                    return;
+                }
+            }
+        }
+    }
+
     /**
      * Internal method to open the inventory or switch them
      */
+    @SuppressWarnings("unchecked")
     protected void openInv()
     {
         /**
-         * If ever getting bugs with opening a inventory and items glitch and no itemclickevent fires. Make sure you cancel the
-         * click event you used to get this.. And didn't open a new inventory as the old one closed.
+         * If ever getting bugs with opening a inventory and items glitch and no itemclickevent
+         * fires. Make sure you cancel the click event you used to get this.. And didn't open a new
+         * inventory as the old one closed.
          */
         boolean isSwitchingInventory = isInventoryInUse();
         ItemStack heldItem = null;
-        ClickInventory[] invs = new ClickInventory[2];
+        ClickInventory<E>[] invs = new ClickInventory[2];
         for (String inv : new String[]{"PageInventory", "NamedInventory"})
         {
             if (getPlayer().hasMetadata(inv))
@@ -255,7 +204,7 @@ public abstract class ClickInventory<E>
                     {
                         if (invss[i] != null)
                         {
-                            invs[i] = (ClickInventory) invss[i];
+                            invs[i] = (ClickInventory<E>) invss[i];
                         }
                     }
                 }
@@ -267,8 +216,8 @@ public abstract class ClickInventory<E>
             boolean previous = false;
             if (invs[1] != null)
             {
-                previous = ((ClickInventory) invs[1]).inventoryInUse;
-                ((ClickInventory) invs[1]).inventoryInUse = false;
+                previous = invs[1].inventoryInUse;
+                invs[1].inventoryInUse = false;
             }
             if (isSwitchingInventory)
             {
@@ -278,7 +227,7 @@ public abstract class ClickInventory<E>
             try
             {
                 Object player = getPlayer().getClass().getDeclaredMethod("getHandle").invoke(getPlayer());
-                Class c = Class.forName(player.getClass().getName().replace("Player", "Human"));
+                Class<?> c = Class.forName(player.getClass().getName().replace("Player", "Human"));
                 Object defaultContainer = c.getField("defaultContainer").get(player);
                 Field activeContainer = c.getField("activeContainer");
                 if (activeContainer.get(player) == defaultContainer)
@@ -287,7 +236,8 @@ public abstract class ClickInventory<E>
                 }
                 else
                 {
-                    // Do this so that other inventories know their time is over.
+                    // Do this so that other inventories know their time is
+                    // over.
                     Class.forName("org.bukkit.craftbukkit." + c.getName().split("\\.")[3] + ".event.CraftEventFactory").getMethod("handleInventoryCloseEvent", c).invoke(null, player);
                     activeContainer.set(player, defaultContainer);
                     getPlayer().openInventory(currentInventory);
@@ -298,7 +248,7 @@ public abstract class ClickInventory<E>
             }
             if (invs[1] != null)
             {
-                ((ClickInventory) invs[1]).inventoryInUse = previous;
+                invs[1].inventoryInUse = previous;
             }
         }
         else
@@ -321,12 +271,18 @@ public abstract class ClickInventory<E>
                 }
                 if (isPlayerInventory())
                 {
-                    this.previousContents = ((ClickInventory) invs[1]).previousContents;
+                    this.previousContents = invs[1].previousContents;
                 }
             }
-            E[] inv = (E[]) (getPlayer().hasMetadata(getClass().getSimpleName()) ? getPlayer().getMetadata(getClass().getSimpleName()).get(0).value() : (E[]) Array.newInstance(getClass(), 2));
-            inv[slot] = (E) this;
-            getPlayer().setMetadata(getClass().getSimpleName(), new FixedMetadataValue(plugin, inv));
+            Object[] object = new Object[2];
+            object[slot] = this;
+
+            /*
+             * E[] inv = (E[]) (getPlayer().hasMetadata(getClass().getSimpleName()) ?
+             * getPlayer().getMetadata(getClass().getSimpleName()).get(0).value( ) : (E[])
+             * Array.newInstance(getClass(), 2)); inv[slot] = (E) this;
+             */
+            getPlayer().setMetadata(getClass().getSimpleName(), new FixedMetadataValue(plugin, object));
         }
         else
         {
@@ -339,8 +295,59 @@ public abstract class ClickInventory<E>
         inventoryInUse = true;
     }
 
-    protected abstract String getTitle();
+    protected void saveContents()
+    {
+        this.previousContents = getPlayer().getInventory().getContents().clone();
+    }
 
-    public abstract void setTitle(String newTitle);
+    public ClickInventory<E> setData(Object key, Object obj)
+    {
+        if (obj == null)
+        {
+            this.savedData.remove(key);
+        }
+        else
+        {
+            this.savedData.put(key, obj);
+        }
+        return this;
+    }
+
+    protected void setItem(int slot, ItemStack item)
+    {
+        if (isPlayerInventory())
+        {
+            slot += 9;
+            if (slot >= 36)
+            {
+                slot -= 36;
+            }
+        }
+        currentInventory.setItem(slot, item);
+    }
+
+    protected void setItems(ItemStack[] items)
+    {
+        if (isPlayerInventory())
+        {
+            for (int i = 0; i < items.length; i++)
+            {
+                setItem(i, items[i]);
+            }
+        }
+        else
+        {
+            currentInventory.setContents(items);
+        }
+    }
+
+    public ClickInventory<E> setPlayerInventory()
+    {
+        if (!isInventoryInUse())
+        {
+            this.playerInventoryUsed = true;
+        }
+        return this;
+    }
 
 }

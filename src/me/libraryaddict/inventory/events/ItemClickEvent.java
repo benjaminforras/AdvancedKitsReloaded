@@ -8,7 +8,6 @@ import org.bukkit.event.HandlerList;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 
-@SuppressWarnings("WeakerAccess")
 public abstract class ItemClickEvent extends Event implements Cancellable
 {
     private static final HandlerList handlers = new HandlerList();
@@ -32,12 +31,13 @@ public abstract class ItemClickEvent extends Event implements Cancellable
         return invEvent;
     }
 
+    @Override
     public HandlerList getHandlers()
     {
         return handlers;
     }
 
-    protected abstract ClickInventory getInventory();
+    protected abstract ClickInventory<?> getInventory();
 
     public abstract ItemStack getItemStack();
 
@@ -53,11 +53,13 @@ public abstract class ItemClickEvent extends Event implements Cancellable
         return slot;
     }
 
+    @Override
     public boolean isCancelled()
     {
         return cancelled;
     }
 
+    @Override
     public void setCancelled(boolean cancel)
     {
         cancelled = cancel;

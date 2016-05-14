@@ -20,25 +20,25 @@ public class NamedCloseEvent extends Event
         return handlers;
     }
 
+    @Override
     public HandlerList getHandlers()
     {
         return handlers;
     }
 
-    @SuppressWarnings("WeakerAccess")
     public NamedInventory getInventory()
     {
         return inv;
     }
 
-    public Player getPlayer()
-    {
-        return inv.getPlayer();
-    }
-
     public String getName()
     {
         return getInventory().getName();
+    }
+
+    public Player getPlayer()
+    {
+        return inv.getPlayer();
     }
 
 }
