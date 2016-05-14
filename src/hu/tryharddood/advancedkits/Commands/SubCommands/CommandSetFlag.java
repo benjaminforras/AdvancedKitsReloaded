@@ -3,6 +3,7 @@ package hu.tryharddood.advancedkits.Commands.SubCommands;
 import hu.tryharddood.advancedkits.AdvancedKits;
 import hu.tryharddood.advancedkits.Commands.Subcommand;
 import hu.tryharddood.advancedkits.Kits.Kit;
+import hu.tryharddood.advancedkits.Kits.KitManager;
 import hu.tryharddood.advancedkits.Variables;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -64,7 +65,7 @@ public class CommandSetFlag extends Subcommand
             return;
         }
 
-        Kit kit = new Kit(args[1]);
+        Kit kit = KitManager.getKit(args[1]);
         if (kit == null)
         {
             sendMessage(sender, phrase("error_kit_not_found"), ChatColor.RED);
