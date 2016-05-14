@@ -129,18 +129,24 @@ public class InventoryListener implements Listener
             }
 
             List<ItemStack> armor = kit.getArmor();
-            int in = 0;
-            for (int i = 27; i < 31; i++)
+            for (ItemStack i : armor)
             {
-                if (in >= armor.size())
+                if (isHelmet(i.getType()))
                 {
-                    break;
+                    items[27] = i;
                 }
-                else
+                else if (isChestplate(i.getType()))
                 {
-                    items[i] = armor.get(in);
+                    items[28] = i;
                 }
-                in++;
+                else if (isLeggings(i.getType()))
+                {
+                    items[29] = i;
+                }
+                else if (isBoots(i.getType()))
+                {
+                    items[30] = i;
+                }
             }
 
             for (int i = 36; i < 45; i++)
@@ -316,6 +322,7 @@ public class InventoryListener implements Listener
             String itemName = event.getCurrentItem().getItemMeta().getDisplayName();
             if (itemName.equalsIgnoreCase(ChatColor.GREEN + "" + ChatColor.BOLD + "Edit kit"))
             {
+                kit.setSave(true);
                 kit.getItemStacks().clear();
                 for (int i = 0; i < 36; i++)
                 {
@@ -333,7 +340,8 @@ public class InventoryListener implements Listener
                     {
                         continue;
                     }
-                    else if (i == 27 && isHelmet(inventory.getItem(i).getType()))
+
+                    if (i == 27 && isHelmet(inventory.getItem(i).getType()))
                     {
                         armors.add(inventory.getItem(i));
                     }
@@ -351,7 +359,7 @@ public class InventoryListener implements Listener
                     }
                 }
                 kit.setArmor(armors);
-
+                kit.setSave(false);
                 KitManager.load();
 
                 event.setCancelled(true);

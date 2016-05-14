@@ -16,6 +16,7 @@ import org.bukkit.inventory.ItemStack;
 
 import java.util.List;
 
+import static hu.tryharddood.advancedkits.Listeners.InventoryListener.*;
 import static hu.tryharddood.advancedkits.Phrases.phrase;
 
 /**
@@ -96,18 +97,24 @@ public class ViewCommand extends Subcommand
             }
         }
 
-        int in = 0;
-        for (int i = 27; i < 31; i++)
+        for (ItemStack i : armor)
         {
-            if (in >= armor.size())
+            if (isHelmet(i.getType()))
             {
-                break;
+                items[27] = i;
             }
-            else
+            else if (isChestplate(i.getType()))
             {
-                items[i] = armor.get(in);
+                items[28] = i;
             }
-            in++;
+            else if (isLeggings(i.getType()))
+            {
+                items[29] = i;
+            }
+            else if (isBoots(i.getType()))
+            {
+                items[30] = i;
+            }
         }
 
         for (int i = 36; i < 45; i++)

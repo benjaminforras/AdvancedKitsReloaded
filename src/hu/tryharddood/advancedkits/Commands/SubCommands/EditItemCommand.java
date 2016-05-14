@@ -21,7 +21,7 @@ import static hu.tryharddood.advancedkits.Phrases.phrase;
  *
  * @author TryHardDood
  */
-public class CommandEditItem extends Subcommand
+public class EditItemCommand extends Subcommand
 {
     @Override
     public String getPermission()

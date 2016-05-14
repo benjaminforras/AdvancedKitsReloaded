@@ -87,7 +87,7 @@ public class Configuration
         setChatprefix(this.yamlConfig.getString("chat-prefix"));
         setLocale(this.yamlConfig.getString("locale"));
 
-        if (isEconomy())
+        if (isEconomy() && !instance.setupEconomy())
         {
             this.instance.setupVault(this.instance.getServer().getPluginManager());
         }

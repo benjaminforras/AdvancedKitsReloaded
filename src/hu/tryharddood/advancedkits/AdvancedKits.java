@@ -147,15 +147,15 @@ public class AdvancedKits extends JavaPlugin
         CommandHandler.addComand(Collections.singletonList("edit"), new EditCommand());
         CommandHandler.addComand(Collections.singletonList("delete"), new DeleteCommand());
 
-        CommandHandler.addComand(Arrays.asList("setflag", "flag"), new CommandSetFlag());
-        CommandHandler.addComand(Arrays.asList("edititem", "item", "setitem"), new CommandEditItem());
+        CommandHandler.addComand(Arrays.asList("setflag", "flag"), new SetFlagCommand());
+        CommandHandler.addComand(Arrays.asList("edititem", "item", "setitem"), new EditItemCommand());
 
         CommandHandler.addComand(Collections.singletonList("reload"), new ReloadCommand());
         CommandHandler.addComand(Collections.singletonList("version"), new VersionCommand());
         CommandHandler.addComand(Collections.singletonList("help"), new HelpCommand());
     }
 
-    private boolean setupEconomy()
+    public boolean setupEconomy()
     {
         RegisteredServiceProvider<Economy> economyProvider = getServer().getServicesManager().getRegistration(Economy.class);
 

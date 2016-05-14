@@ -21,7 +21,7 @@ import static hu.tryharddood.advancedkits.Phrases.phrase;
  *
  * @author TryHardDood
  */
-public class CommandSetFlag extends Subcommand
+public class SetFlagCommand extends Subcommand
 {
     @Override
     public String getPermission()
@@ -81,13 +81,13 @@ public class CommandSetFlag extends Subcommand
             {
                 if (flag.equalsIgnoreCase("visible"))
                 {
-                    boolean visible = kit.isVisible(); //Lekérem az értéket
+                    boolean visible = kit.isVisible();
                     kit.setSave(true);
-                    kit.setVisible(!visible); //Megfordítom
+                    kit.setVisible(!visible);
                     kit.setSave(false);
 
                     player.sendMessage(AdvancedKits.getInstance().getConfiguration().getChatPrefix() + " " + ChatColor.GOLD + phrase("kitadmin_flag_set"));
-                    player.sendMessage(ChatColor.WHITE + "    visibility: " + (!visible ? ChatColor.GREEN + "" + ChatColor.BOLD + "ON" : ChatColor.RED + "" + ChatColor.BOLD + "OFF"));//Itt ugyan azt az értéket használja, mint változtatás előtt DE a fájlba pedig elmenti helyesen.
+                    player.sendMessage(ChatColor.WHITE + "    visibility: " + (!visible ? ChatColor.GREEN + "" + ChatColor.BOLD + "ON" : ChatColor.RED + "" + ChatColor.BOLD + "OFF"));//Itt ugyan azt az ĂŠrtĂŠket hasznĂĄlja, mint vĂĄltoztatĂĄs elĹtt DE a fĂĄjlba pedig elmenti helyesen.
                     return;
                 }
                 else if (flag.equalsIgnoreCase("permonly") || flag.equalsIgnoreCase("permissiononly"))
@@ -147,6 +147,12 @@ public class CommandSetFlag extends Subcommand
 
             if (flag.equalsIgnoreCase("visible"))
             {
+                if (!value.equalsIgnoreCase("true") || !value.equalsIgnoreCase("false"))
+                {
+                    player.sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "Error! " + phrase("kitadmin_flag_boolean"));
+                    return;
+                }
+
                 boolean visible = kit.isVisible();
                 kit.setSave(true);
                 kit.setVisible(Boolean.valueOf(value));
@@ -158,6 +164,12 @@ public class CommandSetFlag extends Subcommand
             }
             if (flag.equalsIgnoreCase("clearinv"))
             {
+                if (!value.equalsIgnoreCase("true") || !value.equalsIgnoreCase("false"))
+                {
+                    player.sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "Error! " + phrase("kitadmin_flag_boolean"));
+                    return;
+                }
+
                 boolean clearinv = kit.isClearinv();
                 kit.setSave(true);
                 kit.setClearinv(Boolean.valueOf(value));
@@ -168,6 +180,12 @@ public class CommandSetFlag extends Subcommand
             }
             else if (flag.equalsIgnoreCase("permonly") || flag.equalsIgnoreCase("permissiononly"))
             {
+                if (!value.equalsIgnoreCase("true") || !value.equalsIgnoreCase("false"))
+                {
+                    player.sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "Error! " + phrase("kitadmin_flag_boolean"));
+                    return;
+                }
+
                 boolean permonly = kit.isPermonly();
                 kit.setSave(true);
                 kit.setPermonly(Boolean.valueOf(value));

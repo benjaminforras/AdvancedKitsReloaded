@@ -17,6 +17,7 @@ import org.bukkit.inventory.ItemStack;
 
 import java.util.List;
 
+import static hu.tryharddood.advancedkits.Listeners.InventoryListener.*;
 import static hu.tryharddood.advancedkits.Phrases.phrase;
 
 /**
@@ -70,26 +71,35 @@ public class EditCommand extends Subcommand
         int inventorySize = 54;
         Inventory inventory = Bukkit.createInventory(null, inventorySize, "Edit - " + kit.getName());
 
-        player.sendMessage(kit.getItemStacks().toString());
-
-        for (ItemStack i : kit.getItemStacks())
-        {
-            inventory.addItem(i);
-        }
+        kit.getItemStacks().forEach(inventory::addItem);
 
         List<ItemStack> armor = kit.getArmor();
-        int in = 0;
+        for (ItemStack i : armor)
+        {
+            if (isHelmet(i.getType()))
+            {
+                inventory.setItem(27, i);
+            }
+            else if (isChestplate(i.getType()))
+            {
+                inventory.setItem(28, i);
+            }
+            else if (isLeggings(i.getType()))
+            {
+                inventory.setItem(29, i);
+            }
+            else if (isBoots(i.getType()))
+            {
+                inventory.setItem(30, i);
+            }
+        }
+
         for (int i = 27; i < 31; i++)
         {
-            if (in >= armor.size())
+            if (inventory.getItem(i) == null || inventory.getItem(i).getType() == Material.AIR)
             {
                 inventory.setItem(i, new ItemBuilder(Material.STAINED_GLASS_PANE, DyeColor.GREEN.getData()).setTitle(ChatColor.GREEN + "" + ChatColor.BOLD + "§8").build());
             }
-            else
-            {
-                inventory.setItem(i, armor.get(in));
-            }
-            in++;
         }
 
         inventory.setItem(inventorySize - 4, new ItemBuilder(Material.STAINED_GLASS_PANE, DyeColor.GREEN.getData()).setTitle(ChatColor.GREEN + "" + ChatColor.BOLD + "Edit kit").addLore(ChatColor.WHITE + "" + ChatColor.BOLD, ChatColor.WHITE + "" + ChatColor.BOLD + "Click here to create the kit").build());
