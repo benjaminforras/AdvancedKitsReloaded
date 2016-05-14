@@ -80,13 +80,13 @@ public class CommandSetFlag extends Subcommand
             {
                 if (flag.equalsIgnoreCase("visible"))
                 {
-                    boolean visible = kit.isVisible();
+                    boolean visible = kit.isVisible(); //Lekérem az értéket
                     kit.setSave(true);
-                    kit.setVisible(!visible);
+                    kit.setVisible(!visible); //Megfordítom
                     kit.setSave(false);
 
                     player.sendMessage(AdvancedKits.getInstance().getConfiguration().getChatPrefix() + " " + ChatColor.GOLD + phrase("kitadmin_flag_set"));
-                    player.sendMessage(ChatColor.WHITE + "    visibility: " + (!visible ? ChatColor.GREEN + "" + ChatColor.BOLD + "ON" : ChatColor.RED + "" + ChatColor.BOLD + "OFF"));
+                    player.sendMessage(ChatColor.WHITE + "    visibility: " + (!visible ? ChatColor.GREEN + "" + ChatColor.BOLD + "ON" : ChatColor.RED + "" + ChatColor.BOLD + "OFF"));//Itt ugyan azt az értéket használja, mint változtatás előtt DE a fájlba pedig elmenti helyesen.
                     return;
                 }
                 else if (flag.equalsIgnoreCase("permonly") || flag.equalsIgnoreCase("permissiononly"))
