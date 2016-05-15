@@ -233,7 +233,8 @@ public class InventoryListener implements Listener
                     {
                         continue;
                     }
-                    else if (i == 27 && isHelmet(inventory.getItem(i).getType()))
+
+                    if (i == 27 && isHelmet(inventory.getItem(i).getType()))
                     {
                         armors.add(inventory.getItem(i));
                     }

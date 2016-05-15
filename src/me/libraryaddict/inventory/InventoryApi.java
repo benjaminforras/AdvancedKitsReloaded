@@ -34,7 +34,7 @@ public class InventoryApi implements Listener
     /**
      * Returns a hidden string in the itemstack which is hidden using displayname
      */
-    public static String getHiddenString(ItemStack item)
+    private static String getHiddenString(ItemStack item)
     {
         // Only the color chars at the end of the string is it
         StringBuilder builder = new StringBuilder();
@@ -58,7 +58,7 @@ public class InventoryApi implements Listener
         return builder.toString();
     }
 
-    public static NamedInventory[] getNamedInventories(Player p)
+    private static NamedInventory[] getNamedInventories(Player p)
     {
         if (!p.hasMetadata("NamedInventory")) return new NamedInventory[2];
         return ((NamedInventory[]) p.getMetadata("NamedInventory").get(0).value()).clone();
@@ -73,7 +73,7 @@ public class InventoryApi implements Listener
         return invs[0];
     }
 
-    public static PageInventory[] getPageInventories(Player p)
+    private static PageInventory[] getPageInventories(Player p)
     {
         if (!p.hasMetadata("PageInventory")) return new PageInventory[2];
         return ((PageInventory[]) p.getMetadata("PageInventory").get(0).value()).clone();
@@ -104,7 +104,7 @@ public class InventoryApi implements Listener
     /**
      * Sets a hidden string in the itemstack displayname
      */
-    public static ItemStack setHiddenString(ItemStack itemToName, String name)
+    private static ItemStack setHiddenString(ItemStack itemToName, String name)
     {
         String itemName = ChatColor.WHITE + toReadable(itemToName.getType().name());
         ItemMeta meta = itemToName.getItemMeta();
@@ -130,7 +130,7 @@ public class InventoryApi implements Listener
      * Generates a item with the given Material, Data, Name and Lore
      */
     @Deprecated
-    public static ItemStack setNameAndLore(ItemStack item, String name, List<String> lore)
+    private static ItemStack setNameAndLore(ItemStack item, String name, List<String> lore)
     {
         ItemMeta meta = item.getItemMeta();
         if (name != null)

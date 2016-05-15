@@ -58,12 +58,12 @@ public class ItemBuilder
         this(mat, 1);
     }
 
-    public ItemBuilder(Material mat, int amount)
+    private ItemBuilder(Material mat, int amount)
     {
         this(mat, amount, (short) 0);
     }
 
-    public ItemBuilder(Material mat, int amount, short data)
+    private ItemBuilder(Material mat, int amount, short data)
     {
         this.mat = mat;
         this.amount = amount;
@@ -97,7 +97,7 @@ public class ItemBuilder
         return newString;
     }
 
-    public ItemBuilder addEnchantment(Enchantment enchant, int level)
+    private ItemBuilder addEnchantment(Enchantment enchant, int level)
     {
         if (enchants.containsKey(enchant))
         {
@@ -116,7 +116,7 @@ public class ItemBuilder
         return this;
     }
 
-    public ItemBuilder addLore(String lore, int maxLength)
+    private ItemBuilder addLore(String lore, int maxLength)
     {
         this.lore.addAll(split(lore, maxLength));
         return this;
@@ -128,7 +128,7 @@ public class ItemBuilder
         return this;
     }
 
-    public ItemBuilder addLores(List<String> lores, int maxLength)
+    private ItemBuilder addLores(List<String> lores, int maxLength)
     {
         for (String lore : lores)
         {
@@ -209,7 +209,7 @@ public class ItemBuilder
         return this.color;
     }
 
-    public ItemBuilder setColor(Color color)
+    private ItemBuilder setColor(Color color)
     {
         if (!this.mat.name().contains("LEATHER_"))
         {
@@ -224,12 +224,12 @@ public class ItemBuilder
         return this.enchants.get(enchant);
     }
 
-    public List<String> getLore()
+    private List<String> getLore()
     {
         return this.lore;
     }
 
-    public String getTitle()
+    private String getTitle()
     {
         return this.title;
     }
@@ -240,7 +240,7 @@ public class ItemBuilder
         return this;
     }
 
-    public Material getType()
+    private Material getType()
     {
         return this.mat;
     }
@@ -251,7 +251,7 @@ public class ItemBuilder
         return this;
     }
 
-    public boolean hasEnchantment(Enchantment enchant)
+    private boolean hasEnchantment(Enchantment enchant)
     {
         return this.enchants.containsKey(enchant);
     }

@@ -53,12 +53,12 @@ public class Configuration
         return ChatColor.translateAlternateColorCodes('&', this.chatprefix);
     }
 
-    public String getLocale()
+    private String getLocale()
     {
         return this.locale;
     }
 
-    public void setLocale(String locale)
+    private void setLocale(String locale)
     {
         this.locale = locale;
     }
@@ -115,7 +115,7 @@ public class Configuration
         }
     }
 
-    public void setChatprefix(String chatprefix)
+    private void setChatprefix(String chatprefix)
     {
         this.chatprefix = chatprefix;
     }

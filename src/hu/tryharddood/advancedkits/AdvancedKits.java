@@ -28,8 +28,8 @@ import java.util.logging.Logger;
 
 public class AdvancedKits extends JavaPlugin
 {
-    public static AdvancedKits instance;
-    public static ConsoleCommandSender console;
+    private static AdvancedKits instance;
+    private static ConsoleCommandSender console;
     public static ClearInventory clearInventory;
     public static Economy econ = null;
     public static int ServerVersion;

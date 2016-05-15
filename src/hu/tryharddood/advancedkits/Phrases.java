@@ -39,7 +39,7 @@ public class Phrases
         }
         if (getInstance().phrases == null)
         {
-            return "\u00A74Phrase Error! Did you /reload? Don't!";
+            return "Phrase Error! Did you /reload? Don't!";
         }
         if (!getInstance().phrases.containsKey(key))
         {

@@ -1,6 +1,7 @@
 - Fixed permissions
 - Fixed bugs.
-- Added clear error messages. ( In console, when kit configuration contains error )
+- Added Signs.
+- Added clearer error messages. ( In console, when kit configuration contains error )
 - Added Armor slot, autoequip armor.
 - Added Flag: ClearInv (Removes armor and items).
 

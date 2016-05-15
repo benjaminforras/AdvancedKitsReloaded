@@ -313,7 +313,7 @@ public abstract class ClickInventory<E>
         return this;
     }
 
-    protected void setItem(int slot, ItemStack item)
+    private void setItem(int slot, ItemStack item)
     {
         if (isPlayerInventory())
         {
