@@ -76,10 +76,14 @@ public class MainCommand extends Subcommand
             lore.clear();
 
             kit = kits.get(i);
+
             if (!KitManager.CheckCooldown(player, kit))
             {
+                String waittext = phrase("kituse_wait");
+                waittext = waittext.substring(0, waittext.length() - 3);
+
                 lore.add("§8");
-                lore.add(ChatColor.RED + "" + ChatColor.BOLD + phrase("kituse_wait"));
+                lore.add(ChatColor.RED + "" + ChatColor.BOLD + waittext);
                 lore.add(ChatColor.WHITE + "" + ChatColor.BOLD + "- " + KitManager.getDelay(player, kit));
                 lore.add("§8");
             }
