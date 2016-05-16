@@ -12,6 +12,7 @@ import hu.tryharddood.advancedkits.Listeners.InventoryListener;
 import hu.tryharddood.advancedkits.Listeners.SignListener;
 import hu.tryharddood.advancedkits.Utils.UpdateManager;
 import me.libraryaddict.inventory.InventoryApi;
+import me.libraryaddict.inventory.events.PagesClickEvent;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.ChatColor;
 import org.bukkit.command.ConsoleCommandSender;
@@ -130,9 +131,12 @@ public class AdvancedKits extends JavaPlugin
 
         getServer().getPluginManager().registerEvents(new InventoryListener(), this);
         getServer().getPluginManager().registerEvents(new SignListener(), this);
-        getServer().getPluginManager().registerEvents(new InventoryApi(), this);
-        InventoryApi.setInstance(this);
 
+        if(InventoryApi.getInstance() == null)
+        {
+            getServer().getPluginManager().registerEvents(new InventoryApi(), this);
+            InventoryApi.setInstance(this);
+        }
         checkForUpdate();
     }
 

@@ -125,6 +125,10 @@ public class InventoryApi implements Listener
     {
         ClickInventory.plugin = plugin;
     }
+    public static JavaPlugin getInstance()
+    {
+        return ClickInventory.plugin;
+    }
 
     /**
      * Generates a item with the given Material, Data, Name and Lore
