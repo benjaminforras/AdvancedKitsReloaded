@@ -56,7 +56,7 @@ public class Updater extends Thread
         }
         if (log)
         {
-            plugin.getLogger().info("[" + plugin.getDescription().getName() + "] Searching for updates...");
+            plugin.getLogger().info("Searching for updates...");
         }
         HttpURLConnection connection = null;
         try
@@ -94,19 +94,19 @@ public class Updater extends Thread
             {
                 if (log)
                 {
-                    plugin.getLogger().warning("[" + plugin.getDescription().getName() + "] Invalid response received.");
-                    plugin.getLogger().warning("[" + plugin.getDescription().getName() + "] Either the author of this plugin has configured the updater wrong, or the API is experiencing some issues.");
+                    plugin.getLogger().warning("Response received.");
+                    plugin.getLogger().warning("Either the author of this plugin has configured the updater wrong, or the API is experiencing some issues.");
                 }
                 return;
             }
             if (!currentVersion.equals(plugin.getDescription().getVersion()))
             {
-                plugin.getLogger().info("[" + plugin.getDescription().getName() + "] Found new version: " + currentVersion + "! (Your version is " + plugin.getDescription().getVersion() + ")");
-                plugin.getLogger().info("[" + plugin.getDescription().getName() + "] Download here: http://www.spigotmc.org/resources/" + id);
+                plugin.getLogger().info("Found new version: " + currentVersion + "! (Your version is " + plugin.getDescription().getVersion() + ")");
+                plugin.getLogger().info("Download here: http://www.spigotmc.org/resources/" + id);
             }
             else if (log)
             {
-                plugin.getLogger().info("[" + plugin.getDescription().getName() + "] " + plugin.getDescription().getName() + " is up-to-date.");
+                plugin.getLogger().info(" " + plugin.getDescription().getName() + " is up-to-date.");
             }
         } catch (IOException e)
         {
@@ -117,7 +117,7 @@ public class Updater extends Thread
                     try
                     {
                         int code = connection.getResponseCode();
-                        plugin.getLogger().warning("[" + plugin.getDescription().getName() + "] API connection returned response code " + code);
+                        plugin.getLogger().warning("API connection returned response code " + code);
                     } catch (IOException ignored)
                     {
                     }
