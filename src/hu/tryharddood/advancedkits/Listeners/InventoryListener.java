@@ -3,9 +3,7 @@ package hu.tryharddood.advancedkits.Listeners;
 import hu.tryharddood.advancedkits.AdvancedKits;
 import hu.tryharddood.advancedkits.Kits.Kit;
 import hu.tryharddood.advancedkits.Kits.KitManager;
-import hu.tryharddood.advancedkits.Utils.OpInfoThread;
 import hu.tryharddood.advancedkits.Utils.TitleAPI.TitleAPI;
-import hu.tryharddood.advancedkits.Utils.UpdateManager;
 import hu.tryharddood.advancedkits.Variables;
 import me.libraryaddict.inventory.ItemBuilder;
 import me.libraryaddict.inventory.PageInventory;
@@ -19,7 +17,6 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
@@ -421,17 +418,6 @@ public class InventoryListener implements Listener
         if (Arrays.asList(36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53).contains(event.getRawSlot()))
         {
             event.setCancelled(true);
-        }
-    }
-
-    @EventHandler(priority = EventPriority.NORMAL)
-    public void onPlayerJoin(PlayerJoinEvent ev)
-    {
-        Player player = ev.getPlayer();
-
-        if (player.isOp() && UpdateManager.isUpdated())
-        {
-            Bukkit.getScheduler().scheduleSyncDelayedTask(AdvancedKits.getInstance(), new OpInfoThread(player), 20L);
         }
     }
 }

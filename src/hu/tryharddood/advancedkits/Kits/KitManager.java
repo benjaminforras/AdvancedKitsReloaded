@@ -144,19 +144,19 @@ public class KitManager
             if (kit.getCost() == 0)
             {
                 list.add(ChatColor.GREEN + "");
-                list.add(ChatColor.GREEN + "" + ChatColor.BOLD + "Cost: " + ChatColor.WHITE + "" + ChatColor.BOLD + "FREE");
+                list.add(ChatColor.GREEN + "" + ChatColor.BOLD + phrase("cost") + ": " + ChatColor.WHITE + "" + ChatColor.BOLD + "FREE");
             }
             else
             {
                 if ((AdvancedKits.econ.getBalance(Bukkit.getOfflinePlayer(player.getUniqueId())) - kit.getCost()) >= 0)
                 {
                     list.add(ChatColor.GREEN + "");
-                    list.add(ChatColor.GREEN + "" + ChatColor.BOLD + "Cost: " + ChatColor.WHITE + "" + ChatColor.BOLD + kit.getCost());
+                    list.add(ChatColor.GREEN + "" + ChatColor.BOLD + phrase("cost") + ": " + ChatColor.WHITE + "" + ChatColor.BOLD + kit.getCost());
                 }
                 else
                 {
                     list.add(ChatColor.GREEN + "");
-                    list.add(ChatColor.RED + "" + ChatColor.BOLD + "Cost: " + ChatColor.WHITE + "" + ChatColor.BOLD + kit.getCost());
+                    list.add(ChatColor.RED + "" + ChatColor.BOLD + phrase("cost") + ": " + ChatColor.WHITE + "" + ChatColor.BOLD + kit.getCost());
                 }
             }
         }
@@ -164,13 +164,13 @@ public class KitManager
         if (kit.isPermonly() && !player.hasPermission(kit.getPermission()))
         {
             list.add(ChatColor.GREEN + "");
-            list.add(ChatColor.RED + "" + ChatColor.BOLD + "You don't have the permission for this kit");
+            list.add(ChatColor.RED + "" + ChatColor.BOLD + phrase("error_no_permission"));
         }
 
         if (kit.getDelay() > 0)
         {
             list.add(ChatColor.GREEN + "");
-            list.add(ChatColor.GREEN + "" + ChatColor.BOLD + "Delay: " + ChatColor.WHITE + "" + ChatColor.BOLD + kit.getDelay() + " hour(s)");
+            list.add(ChatColor.GREEN + "" + ChatColor.BOLD + phrase("delay") + ": " + ChatColor.WHITE + "" + ChatColor.BOLD + kit.getDelay() + " hour(s)");
         }
 
         if (kit.getWorlds().size() > 0)

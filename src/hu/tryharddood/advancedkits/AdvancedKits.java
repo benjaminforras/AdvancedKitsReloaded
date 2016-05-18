@@ -1,5 +1,6 @@
 package hu.tryharddood.advancedkits;
 
+import hu.main.java.org.mcstats.Metrics;
 import hu.tryharddood.advancedkits.ClearInventory.ClearInventory;
 import hu.tryharddood.advancedkits.ClearInventory.ClearInventory_1_8;
 import hu.tryharddood.advancedkits.ClearInventory.ClearInventory_1_9;
@@ -10,9 +11,8 @@ import hu.tryharddood.advancedkits.Kits.Kit;
 import hu.tryharddood.advancedkits.Kits.KitManager;
 import hu.tryharddood.advancedkits.Listeners.InventoryListener;
 import hu.tryharddood.advancedkits.Listeners.SignListener;
-import hu.tryharddood.advancedkits.Utils.UpdateManager;
+import hu.tryharddood.advancedkits.Utils.Updater;
 import me.libraryaddict.inventory.InventoryApi;
-import me.libraryaddict.inventory.events.PagesClickEvent;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.ChatColor;
 import org.bukkit.command.ConsoleCommandSender;
@@ -45,20 +45,6 @@ public class AdvancedKits extends JavaPlugin
     public static void log(String message)
     {
         console.sendMessage("[" + AdvancedKits.getInstance().getDescription().getName() + "] " + message);
-    }
-
-    private void checkForUpdate()
-    {
-        UpdateManager.check();
-        if (UpdateManager.isUpdated())
-        {
-            log(ChatColor.RED + "Update found: v" + UpdateManager.LATEST_VERSION + "!");
-            log(ChatColor.GREEN + "Download the latest here: " + UpdateManager.DOWNLOAD_LINK);
-        }
-        else
-        {
-            log(ChatColor.GREEN + "You're running the latest AdvancedKitsReloaded version.");
-        }
     }
 
     public Configuration getConfiguration()
@@ -137,7 +123,21 @@ public class AdvancedKits extends JavaPlugin
             getServer().getPluginManager().registerEvents(new InventoryApi(), this);
             InventoryApi.setInstance(this);
         }
-        checkForUpdate();
+
+        log(ChatColor.GREEN + "- Initalizing Metrics");
+        try {
+            Metrics metrics = new Metrics(this);
+            metrics.start();
+        } catch (IOException e) {
+            log(ChatColor.RED + "- Failed to initalize Metrics");
+        }
+
+        try
+        {
+            new Updater(this, 11193);
+        } catch (IOException ignored)
+        {
+        }
     }
 
     private void registerCommands()
