@@ -106,7 +106,7 @@ public class Updater extends Thread
             }
             else if (log)
             {
-                plugin.getLogger().info(" " + plugin.getDescription().getName() + " is up-to-date.");
+                plugin.getLogger().info("" + plugin.getDescription().getName() + " is up-to-date.");
             }
         } catch (IOException e)
         {
