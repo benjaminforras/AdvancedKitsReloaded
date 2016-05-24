@@ -14,8 +14,7 @@ chat-prefix: '&7[&6AdvancedKits&7]'
 
 # AdvancedKitsReloaded support multilanguage.
 # Currently there are the available values:
-# English: en | Hungarian: hu
-# If you'd like to translate it send it here:
-# Email: tryharddood@infinityhosting.hu
-# Email: rsnconfigs@gmail.com
+# English: en | Hungarian: hu | Portoguese: pt | Italian: it | Finnish: fi
+# If you'd like to translate it here:
+# https://ackuna.com/translate-/advancedkits-reloaded/
 locale: en

@@ -13,54 +13,43 @@ import org.bukkit.plugin.java.JavaPlugin;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 
-public class TitleAPI extends JavaPlugin implements Listener
-{
+public class TitleAPI extends JavaPlugin implements Listener {
 
-    public static void clearTitle(Player player)
-    {
+    public static void clearTitle(Player player) {
         sendTitle(player, 0, 0, 0, "", "");
     }
 
-    public static Class<?> getNMSClass(String name)
-    {
+    public static Class<?> getNMSClass(String name) {
         String version = Bukkit.getServer().getClass().getPackage().getName().split("\\.")[3];
-        try
-        {
+        try {
             return Class.forName("net.minecraft.server." + version + "." + name);
-        } catch (ClassNotFoundException e)
-        {
+        } catch (ClassNotFoundException e) {
             e.printStackTrace();
             return null;
         }
     }
 
     @Deprecated
-    public static void sendFullTitle(Player player, Integer fadeIn, Integer stay, Integer fadeOut, String title, String subtitle)
-    {
+    public static void sendFullTitle(Player player, Integer fadeIn, Integer stay, Integer fadeOut, String title, String subtitle) {
         sendTitle(player, fadeIn, stay, fadeOut, title, subtitle);
     }
 
-    public static void sendPacket(Player player, Object packet)
-    {
-        try
-        {
+    public static void sendPacket(Player player, Object packet) {
+        try {
             Object handle = player.getClass().getMethod("getHandle").invoke(player);
             Object playerConnection = handle.getClass().getField("playerConnection").get(handle);
             playerConnection.getClass().getMethod("sendPacket", getNMSClass("Packet")).invoke(playerConnection, packet);
-        } catch (Exception e)
-        {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
     @Deprecated
-    public static void sendSubtitle(Player player, Integer fadeIn, Integer stay, Integer fadeOut, String message)
-    {
+    public static void sendSubtitle(Player player, Integer fadeIn, Integer stay, Integer fadeOut, String message) {
         sendTitle(player, fadeIn, stay, fadeOut, null, message);
     }
 
-    public static void sendTabTitle(Player player, String header, String footer)
-    {
+    public static void sendTabTitle(Player player, String header, String footer) {
         if (header == null) header = "";
         header = ChatColor.translateAlternateColorCodes('&', header);
 
@@ -74,8 +63,7 @@ public class TitleAPI extends JavaPlugin implements Listener
         header = header.replaceAll("%player%", player.getDisplayName());
         footer = footer.replaceAll("%player%", player.getDisplayName());
 
-        try
-        {
+        try {
             Object tabHeader = getNMSClass("IChatBaseComponent").getDeclaredClasses()[0].getMethod("a", String.class).invoke(null, "{\"text\":\"" + header + "\"}");
             Object tabFooter = getNMSClass("IChatBaseComponent").getDeclaredClasses()[0].getMethod("a", String.class).invoke(null, "{\"text\":\"" + footer + "\"}");
             Constructor<?> titleConstructor = getNMSClass("PacketPlayOutPlayerListHeaderFooter").getConstructor(getNMSClass("IChatBaseComponent"));
@@ -84,26 +72,22 @@ public class TitleAPI extends JavaPlugin implements Listener
             field.setAccessible(true);
             field.set(packet, tabFooter);
             sendPacket(player, packet);
-        } catch (Exception ex)
-        {
+        } catch (Exception ex) {
             ex.printStackTrace();
         }
     }
 
     @Deprecated
-    public static void sendTitle(Player player, Integer fadeIn, Integer stay, Integer fadeOut, String message)
-    {
+    public static void sendTitle(Player player, Integer fadeIn, Integer stay, Integer fadeOut, String message) {
         sendTitle(player, fadeIn, stay, fadeOut, message, null);
     }
 
-    public static void sendTitle(Player player, Integer fadeIn, Integer stay, Integer fadeOut, String title, String subtitle)
-    {
+    public static void sendTitle(Player player, Integer fadeIn, Integer stay, Integer fadeOut, String title, String subtitle) {
         TitleSendEvent titleSendEvent = new TitleSendEvent(player, title, subtitle);
         Bukkit.getPluginManager().callEvent(titleSendEvent);
         if (titleSendEvent.isCancelled()) return;
 
-        try
-        {
+        try {
             Object e;
             Object chatTitle;
             Object chatSubtitle;
@@ -111,8 +95,7 @@ public class TitleAPI extends JavaPlugin implements Listener
             Object titlePacket;
             Object subtitlePacket;
 
-            if (title != null)
-            {
+            if (title != null) {
                 title = ChatColor.translateAlternateColorCodes('&', title);
                 title = title.replaceAll("%player%", player.getDisplayName());
                 // Times packets
@@ -129,8 +112,7 @@ public class TitleAPI extends JavaPlugin implements Listener
                 sendPacket(player, titlePacket);
             }
 
-            if (subtitle != null)
-            {
+            if (subtitle != null) {
                 subtitle = ChatColor.translateAlternateColorCodes('&', subtitle);
                 subtitle = subtitle.replaceAll("%player%", player.getDisplayName());
                 // Times packets
@@ -146,15 +128,13 @@ public class TitleAPI extends JavaPlugin implements Listener
                 subtitlePacket = subtitleConstructor.newInstance(e, chatSubtitle, fadeIn, stay, fadeOut);
                 sendPacket(player, subtitlePacket);
             }
-        } catch (Exception var11)
-        {
+        } catch (Exception var11) {
             var11.printStackTrace();
         }
     }
 
     @Override
-    public void onEnable()
-    {
+    public void onEnable() {
         getConfig().options().copyDefaults(true);
         saveConfig();
         Server server = getServer();
@@ -164,15 +144,12 @@ public class TitleAPI extends JavaPlugin implements Listener
     }
 
     @EventHandler
-    public void onPlayerJoin(PlayerJoinEvent event)
-    {
-        if (getConfig().getBoolean("Title On Join"))
-        {
+    public void onPlayerJoin(PlayerJoinEvent event) {
+        if (getConfig().getBoolean("Title On Join")) {
             sendTitle(event.getPlayer(), 20, 50, 20, getConfig().getString("Title Message"), getConfig().getString("Subtitle Message"));
         }
 
-        if (getConfig().getBoolean("Tab Header Enabled"))
-        {
+        if (getConfig().getBoolean("Tab Header Enabled")) {
             sendTabTitle(event.getPlayer(), getConfig().getString("Tab Header Message"), getConfig().getString("Tab Footer Message"));
         }
     }

@@ -11,127 +11,100 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
-public final class NamedInventory extends ClickInventory<Object>
-{
+public final class NamedInventory extends ClickInventory<Object> {
 
     private final HashMap<ItemStack, Page> pageDirectors = new HashMap<>();
     private final HashMap<Page, ItemStack[]> pages = new HashMap<>();
     private Page currentPage;
 
-    private NamedInventory(Player player)
-    {
+    private NamedInventory(Player player) {
         this(null, player);
     }
 
     @Deprecated
-    public NamedInventory(Player player, boolean dymanicInventory)
-    {
+    public NamedInventory(Player player, boolean dymanicInventory) {
         this(player);
     }
 
-    private NamedInventory(String inventoryName, Player player)
-    {
+    private NamedInventory(String inventoryName, Player player) {
         super(inventoryName, player);
     }
 
-    public Page getCurrentPage()
-    {
+    public Page getCurrentPage() {
         return currentPage;
     }
 
-    public ItemStack[] getPage(Page page)
-    {
+    public ItemStack[] getPage(Page page) {
         return pages.get(page);
     }
 
-    public Page getPage(String pageName)
-    {
+    public Page getPage(String pageName) {
         for (Page page : pages.keySet())
             if (page.getPageName().equals(pageName)) return page;
         return null;
     }
 
-    public Page getPageLink(ItemStack item)
-    {
+    public Page getPageLink(ItemStack item) {
         return pageDirectors.get(item);
     }
 
-    public HashMap<Page, ItemStack[]> getPages()
-    {
+    public HashMap<Page, ItemStack[]> getPages() {
         return pages;
     }
 
     @Override
-    public String getTitle()
-    {
+    public String getTitle() {
         return currentPage.getPageDisplayTitle();
     }
 
     @Override
-    public void setTitle(String newTitle)
-    {
-        if (newTitle != null && getCurrentPage() != null)
-        {
-            if (!getCurrentPage().getPageDisplayTitle().equals(newTitle))
-            {
+    public void setTitle(String newTitle) {
+        if (newTitle != null && getCurrentPage() != null) {
+            if (!getCurrentPage().getPageDisplayTitle().equals(newTitle)) {
                 setPage(new Page(getCurrentPage().getPageName(), newTitle), getPage(getCurrentPage()));
             }
         }
     }
 
-    public void linkPage(ItemStack item, Page page)
-    {
+    public void linkPage(ItemStack item, Page page) {
         pageDirectors.put(item, page);
     }
 
-    public void linkPage(ItemStack item, String pageName)
-    {
+    public void linkPage(ItemStack item, String pageName) {
         Page page = getPage(pageName);
-        if (page != null)
-        {
+        if (page != null) {
             linkPage(item, page);
         }
     }
 
     @Override
-    protected void onInventoryClick(InventoryClickEvent event)
-    {
+    protected void onInventoryClick(InventoryClickEvent event) {
         ItemStack item = event.getCurrentItem();
-        if (checkInMenu(event.getRawSlot()))
-        {
-            if (item != null && pageDirectors.containsKey(item))
-            {
+        if (checkInMenu(event.getRawSlot())) {
+            if (item != null && pageDirectors.containsKey(item)) {
                 event.setCancelled(true);
                 setPage(pageDirectors.get(item));
                 return;
             }
             int slot = event.getSlot();
-            if (isPlayerInventory())
-            {
+            if (isPlayerInventory()) {
                 slot -= 9;
-                if (slot < 0)
-                {
+                if (slot < 0) {
                     slot += 36;
                 }
             }
             NamedPageClickEvent itemClickEvent = new NamedPageClickEvent(this, currentPage, slot, event);
-            if (!isModifiable())
-            {
+            if (!isModifiable()) {
                 itemClickEvent.setCancelled(true);
             }
             Bukkit.getPluginManager().callEvent(itemClickEvent);
-            if (itemClickEvent.isCancelled())
-            {
+            if (itemClickEvent.isCancelled()) {
                 event.setCancelled(true);
             }
-        }
-        else if (!this.isModifiable() && event.isShiftClick() && item != null && item.getType() != Material.AIR)
-        {
-            for (int slot = 0; slot < currentInventory.getSize(); slot++)
-            {
+        } else if (!this.isModifiable() && event.isShiftClick() && item != null && item.getType() != Material.AIR) {
+            for (int slot = 0; slot < currentInventory.getSize(); slot++) {
                 ItemStack invItem = currentInventory.getItem(slot);
-                if (invItem == null || invItem.getType() == Material.AIR || (invItem.isSimilar(item) && invItem.getAmount() < invItem.getMaxStackSize()))
-                {
+                if (invItem == null || invItem.getType() == Material.AIR || (invItem.isSimilar(item) && invItem.getAmount() < invItem.getMaxStackSize())) {
                     event.setCancelled(true);
                     break;
                 }
@@ -139,33 +112,24 @@ public final class NamedInventory extends ClickInventory<Object>
         }
     }
 
-    public void openInventory()
-    {
-        if (isInventoryInUse())
-        {
+    public void openInventory() {
+        if (isInventoryInUse()) {
             return;
         }
-        if (isPlayerInventory())
-        {
+        if (isPlayerInventory()) {
             saveContents();
         }
-        if (currentPage == null)
-        {
-            if (pages.isEmpty())
-            {
+        if (currentPage == null) {
+            if (pages.isEmpty()) {
                 pages.put(new Page("Inventory"), new ItemStack[0]);
             }
             currentPage = pages.keySet().iterator().next();
         }
-        if (currentInventory == null)
-        {
+        if (currentInventory == null) {
             ItemStack[] pageItems = getPage(currentPage);
-            if (isPlayerInventory())
-            {
+            if (isPlayerInventory()) {
                 currentInventory = getPlayer().getInventory();
-            }
-            else
-            {
+            } else {
                 currentInventory = Bukkit.createInventory(null, pageItems.length, getTitle());
             }
             setItems(pageItems);
@@ -173,78 +137,60 @@ public final class NamedInventory extends ClickInventory<Object>
         openInv();
     }
 
-    public void removePage(Page page)
-    {
+    public void removePage(Page page) {
         pages.remove(page);
     }
 
-    public void setPage(Page newPage)
-    {
-        if (pages.containsKey(newPage))
-        {
+    public void setPage(Page newPage) {
+        if (pages.containsKey(newPage)) {
             Page oldPage = currentPage;
             currentPage = newPage;
-            if (isInventoryInUse())
-            {
+            if (isInventoryInUse()) {
                 ItemStack[] pageItems = pages.get(currentPage);
-                if (!isPlayerInventory() && (pageItems.length != currentInventory.getSize() || !oldPage.getPageDisplayTitle().equals(getTitle())))
-                {
+                if (!isPlayerInventory() && (pageItems.length != currentInventory.getSize() || !oldPage.getPageDisplayTitle().equals(getTitle()))) {
                     currentInventory = Bukkit.createInventory(null, pageItems.length, getTitle());
                     currentInventory.setContents(pageItems);
                     openInv();
-                }
-                else
-                {
+                } else {
                     setItems(pageItems);
                 }
             }
         }
     }
 
-    public void setPage(Page page, ItemStack... items)
-    {
-        if (items.length % 9 != 0)
-        {
+    public void setPage(Page page, ItemStack... items) {
+        if (items.length % 9 != 0) {
             items = Arrays.copyOf(items, (int) (Math.ceil(items.length / 9D) * 9));
         }
-        if (items.length > (isPlayerInventory() ? 36 : 54))
-        {
+        if (items.length > (isPlayerInventory() ? 36 : 54)) {
             throw new RuntimeException("A inventory size of " + items.length + " was passed when the max is " + (isPlayerInventory() ? 36 : 54));
         }
         pages.put(page, items);
-        if (currentPage == null)
-        {
+        if (currentPage == null) {
             currentPage = page;
-        }
-        else if (currentPage.equals(page))
-        {
+        } else if (currentPage.equals(page)) {
             setPage(page);
         }
     }
 
-    public void setPage(Page page, List<ItemStack> items)
-    {
+    public void setPage(Page page, List<ItemStack> items) {
         setPage(page, items.toArray(new ItemStack[items.size()]));
     }
 
-    public void setPage(String pageName)
-    {
+    public void setPage(String pageName) {
         Page page = getPage(pageName);
-        if (page != null)
-        {
+        if (page != null) {
             setPage(page);
         }
     }
 
     @Override
-    public NamedInventory setPlayerInventory()
-    {
+    public NamedInventory setPlayerInventory() {
         super.setPlayerInventory();
         return this;
     }
 
-    public void unlinkPage(ItemStack item)
-    {
+    public void unlinkPage(ItemStack item) {
         pageDirectors.remove(item);
     }
 }

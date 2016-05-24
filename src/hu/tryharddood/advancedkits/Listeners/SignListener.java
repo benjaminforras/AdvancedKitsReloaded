@@ -22,25 +22,19 @@ import java.util.Arrays;
  *
  * @author TryHardDood
  */
-public class SignListener implements Listener
-{
+public class SignListener implements Listener {
     @EventHandler(priority = EventPriority.NORMAL)
-    public void onPlayerInteract(PlayerInteractEvent event)
-    {
+    public void onPlayerInteract(PlayerInteractEvent event) {
         Action action = event.getAction();
 
-        if (action == Action.RIGHT_CLICK_BLOCK)
-        {
-            if (event.getClickedBlock().getState() instanceof Sign)
-            {
+        if (action == Action.RIGHT_CLICK_BLOCK) {
+            if (event.getClickedBlock().getState() instanceof Sign) {
                 Player player = event.getPlayer();
                 Sign sign = (Sign) event.getClickedBlock().getState();
 
-                if (sign.getLine(0).equalsIgnoreCase(ChatColor.GRAY + "[" + ChatColor.DARK_BLUE + "Kits" + ChatColor.GRAY + "]"))
-                {
+                if (sign.getLine(0).equalsIgnoreCase(ChatColor.GRAY + "[" + ChatColor.DARK_BLUE + "Kits" + ChatColor.GRAY + "]")) {
                     Kit kit = KitManager.getKit(ChatColor.stripColor(sign.getLine(1)));
-                    if (kit == null)
-                    {
+                    if (kit == null) {
                         AdvancedKits.log(ChatColor.RED + "Error: Kit doesn't exists. Sign location: " + sign.getLocation().toString());
                         event.setCancelled(true);
                         return;
@@ -54,24 +48,20 @@ public class SignListener implements Listener
     }
 
     @EventHandler(priority = EventPriority.NORMAL)
-    public void SignChangeEvent(SignChangeEvent sign)
-    {
+    public void SignChangeEvent(SignChangeEvent sign) {
         if (sign.getLine(0) == null) return;
         Player player = sign.getPlayer();
 
-        if (Arrays.asList("kit", "[kit]", "[kits]", "Kit", "[Kit]", "[Kits]").contains(sign.getLine(0)) && player.hasPermission(Variables.KITADMIN_PERMISSION))
-        {
+        if (Arrays.asList("kit", "[kit]", "[kits]", "Kit", "[Kit]", "[Kits]").contains(sign.getLine(0)) && player.hasPermission(Variables.KITADMIN_PERMISSION)) {
             sign.setLine(0, ChatColor.GRAY + "[" + ChatColor.DARK_BLUE + "Kits" + ChatColor.GRAY + "]");
-            if (sign.getLine(1) == null)
-            {
+            if (sign.getLine(1) == null) {
                 AdvancedKits.log(ChatColor.RED + "Error: Kit doesn't exists. Sign location: " + sign.getBlock().getLocation().toString());
                 player.sendMessage(AdvancedKits.getInstance().getConfiguration().getChatPrefix() + ChatColor.RED + "Error: Kit doesn't exists. Sign location: " + sign.getBlock().getLocation().toString());
                 return;
             }
 
             Kit kit = KitManager.getKit(ChatColor.stripColor(sign.getLine(1)));
-            if (kit == null)
-            {
+            if (kit == null) {
                 AdvancedKits.log(ChatColor.RED + "Error: Kit doesn't exists. Sign location: " + sign.getBlock().getLocation().toString());
                 player.sendMessage(AdvancedKits.getInstance().getConfiguration().getChatPrefix() + ChatColor.RED + "Error: Kit doesn't exists. Sign location: " + sign.getBlock().getLocation().toString());
                 return;

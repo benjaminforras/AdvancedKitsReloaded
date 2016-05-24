@@ -5,8 +5,7 @@ package hu.tryharddood.advancedkits;
  *
  * @author TryHardDood
  */
-public class Variables
-{
+public class Variables {
     public static final String RELOAD_PERMISSION = "advancedkits.reload";
     public static final String KITADMIN_PERMISSION = "advancedkits.kitadmin";
     public static final String KITDELAY_BYPASS = "advancedkits.delay.bypass";

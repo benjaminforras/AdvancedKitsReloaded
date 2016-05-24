@@ -1,21 +1,20 @@
 package hu.tryharddood.advancedkits.Configuration;
 
 import hu.tryharddood.advancedkits.AdvancedKits;
-import hu.tryharddood.advancedkits.Phrases;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.YamlConfiguration;
 
-import java.io.*;
-import java.util.Locale;
-import java.util.Properties;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
 
 /**
  * Class:
  *
  * @author TryHardDood
  */
-public class Configuration
-{
+public class Configuration {
     private AdvancedKits instance;
 
     private boolean economy;
@@ -23,100 +22,77 @@ public class Configuration
     private String locale;
 
     private YamlConfiguration yamlConfig;
+    private boolean authMeHook;
 
-    public Configuration(AdvancedKits instance)
-    {
+    public Configuration(AdvancedKits instance) {
         this.instance = instance;
     }
 
-    private void copy(InputStream in, File file)
-    {
-        try
-        {
+    private void copy(InputStream in, File file) {
+        try {
             OutputStream out = new FileOutputStream(file);
             byte[] buf = new byte[1024];
             int len;
-            while ((len = in.read(buf)) > 0)
-            {
+            while ((len = in.read(buf)) > 0) {
                 out.write(buf, 0, len);
             }
             out.close();
             in.close();
-        } catch (Exception e)
-        {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    public String getChatPrefix()
-    {
+    public String getChatPrefix() {
         return ChatColor.translateAlternateColorCodes('&', this.chatprefix);
     }
 
-    private String getLocale()
-    {
+    private void setChatprefix(String chatprefix) {
+        this.chatprefix = chatprefix;
+    }
+
+    private String getLocale() {
         return this.locale;
     }
 
-    private void setLocale(String locale)
-    {
+    private void setLocale(String locale) {
         this.locale = locale;
     }
 
-    public boolean isEconomy()
-    {
+    public boolean isEconomy() {
         return this.economy;
     }
 
-    public void setEconomy(boolean economy)
-    {
+    public void setEconomy(boolean economy) {
         this.economy = economy;
     }
 
-    public void loadConfiguration()
-    {
+    public void loadConfiguration() {
         File configFile = new File(this.instance.getDataFolder(), "config.yml");
-        if (!configFile.exists())
-        {
+        if (!configFile.exists()) {
             configFile.getParentFile().mkdirs();
             copy(this.instance.getResource("config.yml"), configFile);
         }
         this.yamlConfig = YamlConfiguration.loadConfiguration(configFile);
 
-        setEconomy(this.yamlConfig.getBoolean("use-economy"));
-        setChatprefix(this.yamlConfig.getString("chat-prefix"));
-        setLocale(this.yamlConfig.getString("locale"));
+        setEconomy(this.yamlConfig.getBoolean("use-economy", true));
+        setAuthMeHook(this.yamlConfig.getBoolean("authme_hook", true));
+        setChatprefix(this.yamlConfig.getString("chat-prefix", "&7[&6AdvancedKits&7]"));
+        setLocale(this.yamlConfig.getString("locale", "en"));
 
-        if (isEconomy() && !instance.setupEconomy())
-        {
+        if (isEconomy() && !instance.setupEconomy()) {
             this.instance.setupVault(this.instance.getServer().getPluginManager());
         }
 
-        loadLanguageFile();
+        instance.i18n.updateLocale(getLocale());
         AdvancedKits.log(ChatColor.GREEN + "Configuration loaded successfully");
     }
 
-    private void loadLanguageFile()
-    {
-        Locale locale = new Locale(getLocale());
-        Phrases.getInstance().initialize(locale);
-        File overrides = new File(instance.getDataFolder(), "messages_en.properties");
-        if (overrides.exists())
-        {
-            Properties overridesProps = new Properties();
-            try
-            {
-                overridesProps.load(new FileInputStream(overrides));
-            } catch (IOException e)
-            {
-                e.printStackTrace();
-            }
-            Phrases.getInstance().overrides(overridesProps);
-        }
+    public boolean isAuthMeHook() {
+        return authMeHook;
     }
 
-    private void setChatprefix(String chatprefix)
-    {
-        this.chatprefix = chatprefix;
+    private void setAuthMeHook(boolean authMeHook) {
+        this.authMeHook = authMeHook;
     }
 }

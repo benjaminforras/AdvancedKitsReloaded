@@ -17,131 +17,109 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.List;
 
-import static hu.tryharddood.advancedkits.Phrases.phrase;
+import static hu.tryharddood.advancedkits.I18n.tl;
+
 
 /**
  * Class:
  *
  * @author TryHardDood
  */
-public class UseCommand extends Subcommand
-{
+public class UseCommand extends Subcommand {
     @Override
-    public String getPermission()
-    {
+    public String getPermission() {
         return Variables.KIT_PERMISSION;
     }
 
     @Override
-    public String getUsage()
-    {
+    public String getUsage() {
         return "/kit use <kit>";
     }
 
     @Override
-    public String getDescription()
-    {
+    public String getDescription() {
         return "Uses a kit";
     }
 
     @Override
-    public int getArgs()
-    {
+    public int getArgs() {
         return 2;
     }
 
     @Override
-    public boolean playerOnly()
-    {
+    public boolean playerOnly() {
         return true;
     }
 
     @Override
-    public void onCommand(CommandSender sender, Command cmd, String label, String[] args)
-    {
+    public void onCommand(CommandSender sender, Command cmd, String label, String[] args) {
         Player player = (Player) sender;
         Kit kit = KitManager.getKit(args[1]);
-        if (kit == null)
-        {
-            sendMessage(player, phrase("error_kit_not_found"), ChatColor.RED);
+        if (kit == null) {
+            sendMessage(player, tl("error_kit_not_found"), ChatColor.RED);
             return;
         }
-        if (kit.getUses() > 0 && (kit.getUses() - KitManager.getUses(kit, player)) <= 0 && !player.hasPermission(Variables.KITADMIN_PERMISSION))
-        {
-            sendMessage(player, phrase("cant_use_anymore"), ChatColor.RED);
+        if (kit.getUses() > 0 && (kit.getUses() - KitManager.getUses(kit, player)) <= 0 && !player.hasPermission(Variables.KITADMIN_PERMISSION)) {
+            sendMessage(player, tl("cant_use_anymore"), ChatColor.RED);
             closeGUI(player, "Details");
 
             return;
         }
 
-        if (AdvancedKits.getInstance().getConfiguration().isEconomy() && !KitManager.getUnlocked(kit, player.getName()))
-        {
-            sendMessage(player, phrase("kituse_error_notunlocked"), ChatColor.RED);
+        if (AdvancedKits.getInstance().getConfiguration().isEconomy() && !KitManager.getUnlocked(kit, player.getName())) {
+            sendMessage(player, tl("kituse_error_notunlocked"), ChatColor.RED);
             closeGUI(player, "Details");
 
             return;
         }
 
-        if (kit.isPermonly() && !player.hasPermission(kit.getPermission()))
-        {
-            sendMessage(player, phrase("error_no_permission"), ChatColor.RED);
+        if (kit.isPermonly() && !player.hasPermission(kit.getPermission())) {
+            sendMessage(player, tl("error_no_permission"), ChatColor.RED);
             closeGUI(player, "Details");
 
             return;
         }
 
-        if (kit.getDelay() > 0)
-        {
-            if (!player.hasPermission(Variables.KITDELAY_BYPASS))
-            {
-                if (!KitManager.CheckCooldown(player, kit))
-                {
+        if (kit.getDelay() > 0) {
+            if (!player.hasPermission(Variables.KITDELAY_BYPASS)) {
+                if (!KitManager.CheckCooldown(player, kit)) {
                     closeGUI(player, "Details");
-                    sendMessage(player, phrase("kituse_wait", KitManager.getDelay(player, kit)), ChatColor.RED);
+                    sendMessage(player, tl("kituse_wait", KitManager.getDelay(player, kit)), ChatColor.RED);
                     return;
                 }
             }
         }
 
-        if (kit.getWorlds().contains(player.getWorld().getName()))
-        {
-            sendMessage(player, phrase("kitadmin_flag_world"), ChatColor.RED);
+        if (kit.getWorlds().contains(player.getWorld().getName())) {
+            sendMessage(player, tl("kitadmin_flag_world"), ChatColor.RED);
             return;
         }
 
         GiveItems(player, kit);
     }
 
-    private void GiveItems(Player player, Kit kit)
-    {
-        if (kit.getUses() > 0)
-        {
+    private void GiveItems(Player player, Kit kit) {
+        if (kit.getUses() > 0) {
             KitManager.setUses(kit, player, (KitManager.getUses(kit, player) + 1));
         }
 
         PlayerInventory inv = player.getInventory();
-        if (kit.isClearinv())
-        {
+        if (kit.isClearinv()) {
             AdvancedKits.clearInventory.clearArmor(player);
             AdvancedKits.clearInventory.clearInventory(player);
         }
 
         ItemMeta itemMeta;
-        for (ItemStack item : kit.getItemStacks())
-        {
-            if (item.hasItemMeta())
-            {
+        for (ItemStack item : kit.getItemStacks()) {
+            if (item.hasItemMeta()) {
                 itemMeta = item.getItemMeta();
-                if (itemMeta.hasDisplayName() && itemMeta.getDisplayName().contains("%player%"))
-                {
+                if (itemMeta.hasDisplayName() && itemMeta.getDisplayName().contains("%player%")) {
                     itemMeta.setDisplayName(itemMeta.getDisplayName().replaceAll("%player%", player.getName()));
                 }
 
-                if (itemMeta.getLore() != null)
-                {
+                if (itemMeta.getLore() != null) {
                     List<String> lore = itemMeta.getLore();
-                    for (int i = 0; i < lore.size(); i++)
-                    {
+                    for (int i = 0; i < lore.size(); i++) {
                         lore.set(i, lore.get(i).replaceAll("%player%", player.getName()));
                     }
                     itemMeta.setLore(lore);
@@ -152,21 +130,16 @@ public class UseCommand extends Subcommand
             inv.addItem(item);
         }
 
-        for (ItemStack item : kit.getArmor())
-        {
-            if (item.hasItemMeta())
-            {
+        for (ItemStack item : kit.getArmor()) {
+            if (item.hasItemMeta()) {
                 itemMeta = item.getItemMeta();
-                if (itemMeta.hasDisplayName() && itemMeta.getDisplayName().contains("%player%"))
-                {
+                if (itemMeta.hasDisplayName() && itemMeta.getDisplayName().contains("%player%")) {
                     itemMeta.setDisplayName(itemMeta.getDisplayName().replaceAll("%player%", player.getName()));
                 }
 
-                if (itemMeta.getLore() != null)
-                {
+                if (itemMeta.getLore() != null) {
                     List<String> lore = itemMeta.getLore();
-                    for (int i = 0; i < lore.size(); i++)
-                    {
+                    for (int i = 0; i < lore.size(); i++) {
                         lore.set(i, lore.get(i).replaceAll("%player%", player.getName()));
                     }
                     itemMeta.setLore(lore);
@@ -175,29 +148,22 @@ public class UseCommand extends Subcommand
                 item.setItemMeta(itemMeta);
             }
 
-            if (InventoryListener.isHelmet(item.getType()))
-            {
+            if (InventoryListener.isHelmet(item.getType())) {
                 player.getInventory().setHelmet(item);
-            }
-            else if (InventoryListener.isChestplate(item.getType()))
-            {
+            } else if (InventoryListener.isChestplate(item.getType())) {
                 player.getInventory().setChestplate(item);
-            }
-            else if (InventoryListener.isLeggings(item.getType()))
-            {
+            } else if (InventoryListener.isLeggings(item.getType())) {
                 player.getInventory().setLeggings(item);
-            }
-            else if (InventoryListener.isBoots(item.getType())) player.getInventory().setBoots(item);
+            } else if (InventoryListener.isBoots(item.getType())) player.getInventory().setBoots(item);
         }
 
         player.updateInventory();
 
         KitManager.setDelay(player, kit.getDelay(), kit);
         closeGUI(player, "Details");
-        sendMessage(player, phrase("kituse_success"), ChatColor.GREEN);
+        sendMessage(player, tl("kituse_success"), ChatColor.GREEN);
 
-        for (String command : kit.getCommands())
-        {
+        for (String command : kit.getCommands()) {
             Bukkit.dispatchCommand(AdvancedKits.getInstance().getServer().getConsoleSender(), command.replaceAll("%player%", player.getName()));
         }
     }

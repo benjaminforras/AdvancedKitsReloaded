@@ -14,48 +14,42 @@ import org.bukkit.inventory.ItemStack;
 import java.util.ArrayList;
 import java.util.List;
 
-import static hu.tryharddood.advancedkits.Phrases.phrase;
+import static hu.tryharddood.advancedkits.I18n.tl;
+
 
 /**
  * Class:
  *
  * @author TryHardDood
  */
-public class MainCommand extends Subcommand
-{
+public class MainCommand extends Subcommand {
     @Override
-    public String getPermission()
-    {
+    public String getPermission() {
         return Variables.KIT_PERMISSION;
     }
 
     @Override
-    public String getUsage()
-    {
+    public String getUsage() {
         return "/kit";
     }
 
     @Override
-    public String getDescription()
-    {
+    public String getDescription() {
         return "Opens up the kit GUI";
     }
 
     @Override
-    public int getArgs()
-    {
+    public int getArgs() {
         return 0;
     }
 
     @Override
-    public boolean playerOnly()
-    {
+    public boolean playerOnly() {
         return true;
     }
 
     @Override
-    public void onCommand(CommandSender sender, Command cmd, String label, String[] args)
-    {
+    public void onCommand(CommandSender sender, Command cmd, String label, String[] args) {
         Player player = (Player) sender;
 
         PageInventory inv = new PageInventory(player);
@@ -66,10 +60,8 @@ public class MainCommand extends Subcommand
         Kit kit;
         List<String> lore = new ArrayList<>();
         int delete = 0;
-        for (int i = 0; i < kits.size(); i++)
-        {
-            if (!kits.get(i).isVisible() || (!player.hasPermission(Variables.KITADMIN_PERMISSION) && KitManager.getUses(kits.get(i), player) > 0))
-            {
+        for (int i = 0; i < kits.size(); i++) {
+            if (!kits.get(i).isVisible() || (!player.hasPermission(Variables.KITADMIN_PERMISSION) && KitManager.getUses(kits.get(i), player) > 0)) {
                 delete++;
                 continue;
             }
@@ -77,13 +69,9 @@ public class MainCommand extends Subcommand
 
             kit = kits.get(i);
 
-            if (!KitManager.CheckCooldown(player, kit))
-            {
-                String waittext = phrase("kituse_wait");
-                waittext = waittext.substring(0, waittext.length() - 3);
-
+            if (!KitManager.CheckCooldown(player, kit)) {
                 lore.add("§8");
-                lore.add(ChatColor.RED + "" + ChatColor.BOLD + waittext);
+                lore.add(ChatColor.RED + "" + ChatColor.BOLD + tl("kituse_wait").replaceAll("\\{(\\D*?)\\}", "") + ":");
                 lore.add(ChatColor.WHITE + "" + ChatColor.BOLD + "- " + KitManager.getDelay(player, kit));
                 lore.add("§8");
             }
