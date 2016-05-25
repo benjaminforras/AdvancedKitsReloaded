@@ -22,7 +22,6 @@ public class Configuration {
     private String locale;
 
     private YamlConfiguration yamlConfig;
-    private boolean authMeHook;
 
     public Configuration(AdvancedKits instance) {
         this.instance = instance;
@@ -76,7 +75,6 @@ public class Configuration {
         this.yamlConfig = YamlConfiguration.loadConfiguration(configFile);
 
         setEconomy(this.yamlConfig.getBoolean("use-economy", true));
-        setAuthMeHook(this.yamlConfig.getBoolean("authme_hook", true));
         setChatprefix(this.yamlConfig.getString("chat-prefix", "&7[&6AdvancedKits&7]"));
         setLocale(this.yamlConfig.getString("locale", "en"));
 
@@ -86,13 +84,5 @@ public class Configuration {
 
         instance.i18n.updateLocale(getLocale());
         AdvancedKits.log(ChatColor.GREEN + "Configuration loaded successfully");
-    }
-
-    public boolean isAuthMeHook() {
-        return authMeHook;
-    }
-
-    private void setAuthMeHook(boolean authMeHook) {
-        this.authMeHook = authMeHook;
     }
 }

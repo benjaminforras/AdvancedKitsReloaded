@@ -26,79 +26,7 @@ import static hu.tryharddood.advancedkits.I18n.tl;
  * @author TryHardDood
  */
 public class UseCommand extends Subcommand {
-    @Override
-    public String getPermission() {
-        return Variables.KIT_PERMISSION;
-    }
-
-    @Override
-    public String getUsage() {
-        return "/kit use <kit>";
-    }
-
-    @Override
-    public String getDescription() {
-        return "Uses a kit";
-    }
-
-    @Override
-    public int getArgs() {
-        return 2;
-    }
-
-    @Override
-    public boolean playerOnly() {
-        return true;
-    }
-
-    @Override
-    public void onCommand(CommandSender sender, Command cmd, String label, String[] args) {
-        Player player = (Player) sender;
-        Kit kit = KitManager.getKit(args[1]);
-        if (kit == null) {
-            sendMessage(player, tl("error_kit_not_found"), ChatColor.RED);
-            return;
-        }
-        if (kit.getUses() > 0 && (kit.getUses() - KitManager.getUses(kit, player)) <= 0 && !player.hasPermission(Variables.KITADMIN_PERMISSION)) {
-            sendMessage(player, tl("cant_use_anymore"), ChatColor.RED);
-            closeGUI(player, "Details");
-
-            return;
-        }
-
-        if (AdvancedKits.getInstance().getConfiguration().isEconomy() && !KitManager.getUnlocked(kit, player.getName())) {
-            sendMessage(player, tl("kituse_error_notunlocked"), ChatColor.RED);
-            closeGUI(player, "Details");
-
-            return;
-        }
-
-        if (kit.isPermonly() && !player.hasPermission(kit.getPermission())) {
-            sendMessage(player, tl("error_no_permission"), ChatColor.RED);
-            closeGUI(player, "Details");
-
-            return;
-        }
-
-        if (kit.getDelay() > 0) {
-            if (!player.hasPermission(Variables.KITDELAY_BYPASS)) {
-                if (!KitManager.CheckCooldown(player, kit)) {
-                    closeGUI(player, "Details");
-                    sendMessage(player, tl("kituse_wait", KitManager.getDelay(player, kit)), ChatColor.RED);
-                    return;
-                }
-            }
-        }
-
-        if (kit.getWorlds().contains(player.getWorld().getName())) {
-            sendMessage(player, tl("kitadmin_flag_world"), ChatColor.RED);
-            return;
-        }
-
-        GiveItems(player, kit);
-    }
-
-    private void GiveItems(Player player, Kit kit) {
+    public static void GiveItems(Player player, Kit kit) {
         if (kit.getUses() > 0) {
             KitManager.setUses(kit, player, (KitManager.getUses(kit, player) + 1));
         }
@@ -166,5 +94,77 @@ public class UseCommand extends Subcommand {
         for (String command : kit.getCommands()) {
             Bukkit.dispatchCommand(AdvancedKits.getInstance().getServer().getConsoleSender(), command.replaceAll("%player%", player.getName()));
         }
+    }
+
+    @Override
+    public String getPermission() {
+        return Variables.KIT_USE_PERMISSION;
+    }
+
+    @Override
+    public String getUsage() {
+        return "/kit use <kit>";
+    }
+
+    @Override
+    public String getDescription() {
+        return "Uses a kit";
+    }
+
+    @Override
+    public int getArgs() {
+        return 2;
+    }
+
+    @Override
+    public boolean playerOnly() {
+        return true;
+    }
+
+    @Override
+    public void onCommand(CommandSender sender, Command cmd, String label, String[] args) {
+        Player player = (Player) sender;
+        Kit kit = KitManager.getKit(args[1]);
+        if (kit == null) {
+            sendMessage(player, tl("error_kit_not_found"), ChatColor.RED);
+            return;
+        }
+        if (kit.getUses() > 0 && (kit.getUses() - KitManager.getUses(kit, player)) <= 0 && !player.hasPermission(Variables.KITADMIN_PERMISSION)) {
+            sendMessage(player, tl("cant_use_anymore"), ChatColor.RED);
+            closeGUI(player, "Details");
+
+            return;
+        }
+
+        if (AdvancedKits.getInstance().getConfiguration().isEconomy() && !KitManager.getUnlocked(kit, player.getName())) {
+            sendMessage(player, tl("kituse_error_notunlocked"), ChatColor.RED);
+            closeGUI(player, "Details");
+
+            return;
+        }
+
+        if (kit.isPermonly() && !player.hasPermission(kit.getPermission())) {
+            sendMessage(player, tl("error_no_permission"), ChatColor.RED);
+            closeGUI(player, "Details");
+
+            return;
+        }
+
+        if (kit.getDelay() > 0) {
+            if (!player.hasPermission(Variables.KITDELAY_BYPASS)) {
+                if (!KitManager.CheckCooldown(player, kit)) {
+                    closeGUI(player, "Details");
+                    sendMessage(player, tl("kituse_wait", KitManager.getDelay(player, kit)), ChatColor.RED);
+                    return;
+                }
+            }
+        }
+
+        if (kit.getWorlds().contains(player.getWorld().getName())) {
+            sendMessage(player, tl("kitadmin_flag_world"), ChatColor.RED);
+            return;
+        }
+
+        GiveItems(player, kit);
     }
 }

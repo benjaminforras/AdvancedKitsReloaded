@@ -16,6 +16,20 @@ import static hu.tryharddood.advancedkits.I18n.tl;
  * @author TryHardDood
  */
 public abstract class Subcommand {
+    public static void sendMessage(CommandSender commandSender, String message, ChatColor color) {
+        commandSender.sendMessage(AdvancedKits.getInstance().getConfiguration().getChatPrefix() + " " + message);
+
+        if (commandSender instanceof Player) {
+            TitleAPI.sendTitle((Player) commandSender, 2, 20, 2, "", color + message);
+        }
+    }
+
+    protected static void closeGUI(Player player, String name) {
+        if (player.getOpenInventory().getTitle().contains(name)) {
+            player.closeInventory();
+        }
+    }
+
     public abstract String getPermission();
 
     public abstract String getUsage();
@@ -49,14 +63,6 @@ public abstract class Subcommand {
         return true;
     }
 
-    public void sendMessage(CommandSender commandSender, String message, ChatColor color) {
-        commandSender.sendMessage(AdvancedKits.getInstance().getConfiguration().getChatPrefix() + " " + message);
-
-        if (commandSender instanceof Player) {
-            TitleAPI.sendTitle((Player) commandSender, 2, 20, 2, "", color + message);
-        }
-    }
-
     protected boolean isNumeric(String s) {
         return s.matches("[-+]?\\d*\\.?\\d+");
     }
@@ -67,12 +73,6 @@ public abstract class Subcommand {
             return true;
         } catch (NumberFormatException e) {
             return false;
-        }
-    }
-
-    protected void closeGUI(Player player, String name) {
-        if (player.getOpenInventory().getTitle().contains(name)) {
-            player.closeInventory();
         }
     }
 

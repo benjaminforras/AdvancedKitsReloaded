@@ -316,8 +316,7 @@ public class KitManager {
 
     public static boolean getFirstJoin(Player player, Kit kit) {
         YamlConfiguration config = kit.getYaml();
-
-        return config.contains("FirstJoin." + player.getUniqueId());
+        return config.getBoolean("FirstJoin." + player.getUniqueId(), false);
     }
 
     public static void setFirstJoin(Player player, Kit kit) {

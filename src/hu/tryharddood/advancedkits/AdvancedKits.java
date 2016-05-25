@@ -10,7 +10,6 @@ import hu.tryharddood.advancedkits.Kits.Kit;
 import hu.tryharddood.advancedkits.Kits.KitManager;
 import hu.tryharddood.advancedkits.Listeners.InventoryListener;
 import hu.tryharddood.advancedkits.Listeners.PlayerListener;
-import hu.tryharddood.advancedkits.Listeners.PlayerListener_AuthMe;
 import hu.tryharddood.advancedkits.Listeners.SignListener;
 import hu.tryharddood.advancedkits.Utils.Updater;
 import me.libraryaddict.inventory.InventoryApi;
@@ -109,12 +108,7 @@ public class AdvancedKits extends JavaPlugin {
             setupVault(getServer().getPluginManager());
         }
 
-        if (configuration.isAuthMeHook()) {
-            getServer().getPluginManager().registerEvents(new PlayerListener_AuthMe(), this);
-        } else {
-            getServer().getPluginManager().registerEvents(new PlayerListener(), this);
-        }
-
+        getServer().getPluginManager().registerEvents(new PlayerListener(), this);
         getServer().getPluginManager().registerEvents(new InventoryListener(), this);
         getServer().getPluginManager().registerEvents(new SignListener(), this);
 

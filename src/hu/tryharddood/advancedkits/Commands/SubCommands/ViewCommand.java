@@ -29,7 +29,7 @@ public class ViewCommand extends Subcommand {
 
     @Override
     public String getPermission() {
-        return Variables.KIT_PERMISSION;
+        return Variables.KIT_VIEW_PERMISSION;
     }
 
     @Override

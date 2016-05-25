@@ -23,7 +23,7 @@ import static hu.tryharddood.advancedkits.I18n.tl;
 public class BuyCommand extends Subcommand {
     @Override
     public String getPermission() {
-        return Variables.KIT_PERMISSION;
+        return Variables.KIT_BUY_PERMISSION;
     }
 
     @Override
