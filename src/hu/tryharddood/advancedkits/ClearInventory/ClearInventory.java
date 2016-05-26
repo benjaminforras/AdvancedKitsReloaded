@@ -7,7 +7,8 @@ import org.bukkit.entity.Player;
  *
  * @author TryHardDood
  */
-public interface ClearInventory {
+public interface ClearInventory
+{
     void clearArmor(Player player);
 
     void clearInventory(Player player);

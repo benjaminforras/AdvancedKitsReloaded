@@ -22,46 +22,55 @@ import static hu.tryharddood.advancedkits.I18n.tl;
  *
  * @author TryHardDood
  */
-public class MainCommand extends Subcommand {
+public class MainCommand extends Subcommand
+{
     @Override
-    public String getPermission() {
-        return Variables.KIT_PERMISSION;
+    public String getPermission()
+    {
+        return Variables.KIT_USE_PERMISSION;
     }
 
     @Override
-    public String getUsage() {
+    public String getUsage()
+    {
         return "/kit";
     }
 
     @Override
-    public String getDescription() {
+    public String getDescription()
+    {
         return "Opens up the kit GUI";
     }
 
     @Override
-    public int getArgs() {
+    public int getArgs()
+    {
         return 0;
     }
 
     @Override
-    public boolean playerOnly() {
+    public boolean playerOnly()
+    {
         return true;
     }
 
     @Override
-    public void onCommand(CommandSender sender, Command cmd, String label, String[] args) {
+    public void onCommand(CommandSender sender, Command cmd, String label, String[] args)
+    {
         Player player = (Player) sender;
 
         PageInventory inv = new PageInventory(player);
 
-        List<Kit> kits = KitManager.getKits();
+        List<Kit>   kits  = KitManager.getKits();
         ItemStack[] items = new ItemStack[kits.size()];
 
-        Kit kit;
-        List<String> lore = new ArrayList<>();
-        int delete = 0;
-        for (int i = 0; i < kits.size(); i++) {
-            if (!kits.get(i).isVisible() || (!player.hasPermission(Variables.KITADMIN_PERMISSION) && KitManager.getUses(kits.get(i), player) > 0)) {
+        Kit          kit;
+        List<String> lore   = new ArrayList<>();
+        int          delete = 0;
+        for (int i = 0; i < kits.size(); i++)
+        {
+            if (!kits.get(i).isVisible() || (!player.hasPermission(Variables.KITADMIN_PERMISSION) && KitManager.getUses(kits.get(i), player) > 0))
+            {
                 delete++;
                 continue;
             }
@@ -69,7 +78,8 @@ public class MainCommand extends Subcommand {
 
             kit = kits.get(i);
 
-            if (!KitManager.CheckCooldown(player, kit)) {
+            if (!KitManager.CheckCooldown(player, kit))
+            {
                 lore.add("§8");
                 lore.add(ChatColor.RED + "" + ChatColor.BOLD + tl("kituse_wait").replaceAll("\\{(\\D*?)\\}", "") + ":");
                 lore.add(ChatColor.WHITE + "" + ChatColor.BOLD + "- " + KitManager.getDelay(player, kit));

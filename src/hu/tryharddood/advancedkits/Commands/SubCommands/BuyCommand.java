@@ -20,69 +20,83 @@ import static hu.tryharddood.advancedkits.I18n.tl;
  *
  * @author TryHardDood
  */
-public class BuyCommand extends Subcommand {
+public class BuyCommand extends Subcommand
+{
     @Override
-    public String getPermission() {
+    public String getPermission()
+    {
         return Variables.KIT_BUY_PERMISSION;
     }
 
     @Override
-    public String getUsage() {
+    public String getUsage()
+    {
         return "/kit buy <kit>";
     }
 
     @Override
-    public String getDescription() {
+    public String getDescription()
+    {
         return "Buys a kit.";
     }
 
     @Override
-    public int getArgs() {
+    public int getArgs()
+    {
         return 2;
     }
 
     @Override
-    public boolean playerOnly() {
+    public boolean playerOnly()
+    {
         return true;
     }
 
     @Override
-    public void onCommand(CommandSender sender, Command cmd, String label, String[] args) {
+    public void onCommand(CommandSender sender, Command cmd, String label, String[] args)
+    {
         Player player = (Player) sender;
-        Kit kit = KitManager.getKit(args[1]);
-        if (kit == null) {
+        Kit    kit    = KitManager.getKit(args[1]);
+        if (kit == null)
+        {
             sendMessage(player, tl("error_kit_not_found"), ChatColor.RED);
             return;
         }
 
-        if (kit.isPermonly() && !player.hasPermission(kit.getPermission())) {
+        if (kit.isPermonly() && !player.hasPermission(kit.getPermission()))
+        {
             sendMessage(player, tl("error_no_permission"), ChatColor.RED);
             closeGUI(player, "Details");
 
             return;
         }
 
-        if (KitManager.getUnlocked(kit, player.getName())) {
+        if (KitManager.getUnlocked(kit, player.getName()))
+        {
             sendMessage(player, tl("error_kitbuy_bought_already"), ChatColor.RED);
             closeGUI(player, "Details");
 
             return;
         }
 
-        if (!AdvancedKits.getInstance().getConfiguration().isEconomy()) {
+        if (!AdvancedKits.getInstance().getConfiguration().isEconomy())
+        {
             sendMessage(player, "Economy support disabled..", ChatColor.RED);
             closeGUI(player, "Details");
             return;
         }
         OfflinePlayer oPlayer = Bukkit.getOfflinePlayer(player.getUniqueId());
-        double balance = AdvancedKits.econ.getBalance(oPlayer);
-        if ((balance - kit.getCost()) >= 0) {
+        double        balance = AdvancedKits.econ.getBalance(oPlayer);
+        if ((balance - kit.getCost()) >= 0)
+        {
             AdvancedKits.econ.withdrawPlayer(oPlayer, kit.getCost());
             KitManager.setUnlocked(kit, player.getName());
 
             sendMessage(player, tl("kitbuy_success_message", kit.getName()), ChatColor.GREEN);
             closeGUI(player, "Details");
-        } else {
+        }
+        else
+        {
             sendMessage(player, tl("error_kitbuy_not_enough_money"), ChatColor.RED);
             closeGUI(player, "Details");
         }

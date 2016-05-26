@@ -15,28 +15,37 @@ import static hu.tryharddood.advancedkits.I18n.tl;
  *
  * @author TryHardDood
  */
-public class CommandHandler implements CommandExecutor {
+public class CommandHandler implements CommandExecutor
+{
     private static HashMap<List<String>, Subcommand> commands = new HashMap<>();
 
-    public static void addComand(List<String> cmds, Subcommand s) {
+    public static void addComand(List<String> cmds, Subcommand s)
+    {
         commands.put(cmds, s);
     }
 
-    public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
-        if (args.length >= 1) {
+    public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args)
+    {
+        if (args.length >= 1)
+        {
             boolean match = false;
 
-            for (List<String> s : commands.keySet()) {
-                if (s.contains(args[0])) {
+            for (List<String> s : commands.keySet())
+            {
+                if (s.contains(args[0]))
+                {
                     commands.get(s).runCommand(sender, cmd, label, args);
                     match = true;
                 }
             }
 
-            if (!match) {
+            if (!match)
+            {
                 sender.sendMessage(tl("chat_unknown"));
             }
-        } else {
+        }
+        else
+        {
             new MainCommand().runCommand(sender, cmd, label, args);
         }
 

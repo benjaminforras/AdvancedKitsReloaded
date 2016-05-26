@@ -13,21 +13,23 @@ import org.bukkit.event.player.PlayerLoginEvent;
  *
  * @author TryHardDood
  */
-public class PlayerListener implements Listener {
+public class PlayerListener implements Listener
+{
 
     @EventHandler
-    public void onPlayerJoin(PlayerLoginEvent event) {
+    public void onPlayerJoin(PlayerLoginEvent event)
+    {
         AdvancedKits.getInstance().getServer().getScheduler().scheduleSyncDelayedTask(AdvancedKits.getInstance(), () -> {
             Player player = event.getPlayer();
 
             KitManager.getKits().stream().forEach(kit ->
-            {
-                if(!KitManager.getFirstJoin(player, kit))
-                {
-                    UseCommand.GiveItems(player, kit);
-                    KitManager.setFirstJoin(player, kit);
-                }
-            });
+                                                  {
+                                                      if (!KitManager.getFirstJoin(player, kit))
+                                                      {
+                                                          UseCommand.GiveItems(player, kit);
+                                                          KitManager.setFirstJoin(player, kit);
+                                                      }
+                                                  });
         }, 2L);
     }
 }

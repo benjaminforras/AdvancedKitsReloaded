@@ -13,16 +13,19 @@ import org.bukkit.event.Listener;
  *
  * @author TryHardDood
  */
-public class PlayerListener_AuthMe implements Listener {
+public class PlayerListener_AuthMe implements Listener
+{
 
     @EventHandler
-    public void OnPlayerLogin(LoginEvent event) {
+    public void OnPlayerLogin(LoginEvent event)
+    {
         Player player = event.getPlayer();
         AdvancedKits.log("Teszt11");
 
         KitManager.getKits().stream().filter(kit -> !KitManager.getFirstJoin(player, kit)).forEach(kit -> {
             AdvancedKits.log("Teszt2");
-            if (!KitManager.getFirstJoin(player, kit)) {
+            if (!KitManager.getFirstJoin(player, kit))
+            {
                 AdvancedKits.log("Teszt3");
                 UseCommand.GiveItems(player, kit);
                 KitManager.setFirstJoin(player, kit);

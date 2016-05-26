@@ -5,32 +5,39 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
-public class NamedCloseEvent extends Event {
+public class NamedCloseEvent extends Event
+{
     private static final HandlerList handlers = new HandlerList();
     private final NamedInventory inv;
 
-    public NamedCloseEvent(NamedInventory inventory) {
+    public NamedCloseEvent(NamedInventory inventory)
+    {
         this.inv = inventory;
     }
 
-    public static HandlerList getHandlerList() {
+    public static HandlerList getHandlerList()
+    {
         return handlers;
     }
 
     @Override
-    public HandlerList getHandlers() {
+    public HandlerList getHandlers()
+    {
         return handlers;
     }
 
-    public NamedInventory getInventory() {
+    public NamedInventory getInventory()
+    {
         return inv;
     }
 
-    public String getName() {
+    public String getName()
+    {
         return getInventory().getName();
     }
 
-    public Player getPlayer() {
+    public Player getPlayer()
+    {
         return inv.getPlayer();
     }
 

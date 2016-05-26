@@ -7,14 +7,17 @@ import org.bukkit.entity.Player;
  *
  * @author TryHardDood
  */
-public class ClearInventory_1_8 implements ClearInventory {
+public class ClearInventory_1_8 implements ClearInventory
+{
     @Override
-    public void clearArmor(Player player) {
+    public void clearArmor(Player player)
+    {
         player.getInventory().setArmorContents(null);
     }
 
     @Override
-    public void clearInventory(Player player) {
+    public void clearInventory(Player player)
+    {
         player.getInventory().clear();
     }
 }

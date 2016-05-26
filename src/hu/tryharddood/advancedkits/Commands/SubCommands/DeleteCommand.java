@@ -18,36 +18,44 @@ import static hu.tryharddood.advancedkits.I18n.tl;
  *
  * @author TryHardDood
  */
-public class DeleteCommand extends Subcommand {
+public class DeleteCommand extends Subcommand
+{
     @Override
-    public String getPermission() {
+    public String getPermission()
+    {
         return Variables.KITADMIN_PERMISSION;
     }
 
     @Override
-    public String getUsage() {
+    public String getUsage()
+    {
         return "/kit delete <kit>";
     }
 
     @Override
-    public String getDescription() {
+    public String getDescription()
+    {
         return "Deletes a kit.";
     }
 
     @Override
-    public int getArgs() {
+    public int getArgs()
+    {
         return 2;
     }
 
     @Override
-    public boolean playerOnly() {
+    public boolean playerOnly()
+    {
         return false;
     }
 
     @Override
-    public void onCommand(CommandSender sender, Command cmd, String label, String[] args) {
+    public void onCommand(CommandSender sender, Command cmd, String label, String[] args)
+    {
         Kit kit = KitManager.getKit(args[1]);
-        if (kit == null) {
+        if (kit == null)
+        {
             sendMessage(sender, tl("error_kit_not_found"), ChatColor.RED);
             return;
         }

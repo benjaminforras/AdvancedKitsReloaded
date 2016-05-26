@@ -14,61 +14,76 @@ import java.io.OutputStream;
  *
  * @author TryHardDood
  */
-public class Configuration {
+public class Configuration
+{
     private AdvancedKits instance;
 
     private boolean economy;
-    private String chatprefix;
-    private String locale;
+    private String  chatprefix;
+    private String  locale;
 
     private YamlConfiguration yamlConfig;
 
-    public Configuration(AdvancedKits instance) {
+    public Configuration(AdvancedKits instance)
+    {
         this.instance = instance;
     }
 
-    private void copy(InputStream in, File file) {
-        try {
+    private void copy(InputStream in, File file)
+    {
+        try
+        {
             OutputStream out = new FileOutputStream(file);
-            byte[] buf = new byte[1024];
-            int len;
-            while ((len = in.read(buf)) > 0) {
+            byte[]       buf = new byte[1024];
+            int          len;
+            while ((len = in.read(buf)) > 0)
+            {
                 out.write(buf, 0, len);
             }
             out.close();
             in.close();
-        } catch (Exception e) {
+        }
+        catch (Exception e)
+        {
             e.printStackTrace();
         }
     }
 
-    public String getChatPrefix() {
+    public String getChatPrefix()
+    {
         return ChatColor.translateAlternateColorCodes('&', this.chatprefix);
     }
 
-    private void setChatprefix(String chatprefix) {
+    private void setChatprefix(String chatprefix)
+    {
         this.chatprefix = chatprefix;
     }
 
-    private String getLocale() {
+    private String getLocale()
+    {
         return this.locale;
     }
 
-    private void setLocale(String locale) {
+    private void setLocale(String locale)
+    {
         this.locale = locale;
     }
 
-    public boolean isEconomy() {
+    public boolean isEconomy()
+    {
         return this.economy;
     }
 
-    public void setEconomy(boolean economy) {
+    public void setEconomy(boolean economy)
+    {
         this.economy = economy;
     }
 
-    public void loadConfiguration() {
+    public void loadConfiguration()
+    {
         File configFile = new File(this.instance.getDataFolder(), "config.yml");
-        if (!configFile.exists()) {
+        if (!configFile.exists())
+        {
             configFile.getParentFile().mkdirs();
             copy(this.instance.getResource("config.yml"), configFile);
         }
@@ -78,7 +93,8 @@ public class Configuration {
         setChatprefix(this.yamlConfig.getString("chat-prefix", "&7[&6AdvancedKits&7]"));
         setLocale(this.yamlConfig.getString("locale", "en"));
 
-        if (isEconomy() && !instance.setupEconomy()) {
+        if (isEconomy() && !instance.setupEconomy())
+        {
             this.instance.setupVault(this.instance.getServer().getPluginManager());
         }
 

@@ -15,17 +15,22 @@ import static hu.tryharddood.advancedkits.I18n.tl;
  *
  * @author TryHardDood
  */
-public abstract class Subcommand {
-    public static void sendMessage(CommandSender commandSender, String message, ChatColor color) {
+public abstract class Subcommand
+{
+    public static void sendMessage(CommandSender commandSender, String message, ChatColor color)
+    {
         commandSender.sendMessage(AdvancedKits.getInstance().getConfiguration().getChatPrefix() + " " + message);
 
-        if (commandSender instanceof Player) {
+        if (commandSender instanceof Player)
+        {
             TitleAPI.sendTitle((Player) commandSender, 2, 20, 2, "", color + message);
         }
     }
 
-    protected static void closeGUI(Player player, String name) {
-        if (player.getOpenInventory().getTitle().contains(name)) {
+    protected static void closeGUI(Player player, String name)
+    {
+        if (player.getOpenInventory().getTitle().contains(name))
+        {
             player.closeInventory();
         }
     }
@@ -42,20 +47,32 @@ public abstract class Subcommand {
 
     public abstract void onCommand(CommandSender sender, Command cmd, String label, String[] args);
 
-    public boolean runCommand(CommandSender sender, Command cmd, String label, String[] args) {
-        if (!sender.hasPermission(getPermission())) {
+    public boolean runCommand(CommandSender sender, Command cmd, String label, String[] args)
+    {
+        if (!sender.hasPermission(getPermission()))
+        {
             sendMessage(sender, tl("error_no_permission"), ChatColor.RED);
-        } else if (getArgs() != -1 && getArgs() != args.length) {
+        }
+        else if (getArgs() != -1 && getArgs() != args.length)
+        {
             sender.sendMessage(tl("chat_usage") + ":");
             sender.sendMessage(ChatColor.GREEN + getUsage() + ChatColor.GRAY + " - " + ChatColor.BLUE + getDescription());
-        } else {
-            if (playerOnly()) {
-                if (sender instanceof Player) {
+        }
+        else
+        {
+            if (playerOnly())
+            {
+                if (sender instanceof Player)
+                {
                     onCommand(sender, cmd, label, args);
-                } else {
+                }
+                else
+                {
                     sender.sendMessage(tl("error_only_player"));
                 }
-            } else {
+            }
+            else
+            {
                 onCommand(sender, cmd, label, args);
             }
         }
@@ -63,22 +80,29 @@ public abstract class Subcommand {
         return true;
     }
 
-    protected boolean isNumeric(String s) {
+    protected boolean isNumeric(String s)
+    {
         return s.matches("[-+]?\\d*\\.?\\d+");
     }
 
-    protected boolean isDouble(String s) {
-        try {
+    protected boolean isDouble(String s)
+    {
+        try
+        {
             Double.parseDouble(s);
             return true;
-        } catch (NumberFormatException e) {
+        }
+        catch (NumberFormatException e)
+        {
             return false;
         }
     }
 
-    protected String getArgString(String[] args, int start) {
+    protected String getArgString(String[] args, int start)
+    {
         StringBuilder sb = new StringBuilder();
-        for (int i = start; i < args.length; i++) {
+        for (int i = start; i < args.length; i++)
+        {
             sb.append(args[i]).append(" ");
         }
 

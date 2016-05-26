@@ -25,44 +25,52 @@ import static hu.tryharddood.advancedkits.Listeners.InventoryListener.*;
  *
  * @author TryHardDood
  */
-public class ViewCommand extends Subcommand {
+public class ViewCommand extends Subcommand
+{
 
     @Override
-    public String getPermission() {
+    public String getPermission()
+    {
         return Variables.KIT_VIEW_PERMISSION;
     }
 
     @Override
-    public String getUsage() {
+    public String getUsage()
+    {
         return "/kit view <kit>";
     }
 
     @Override
-    public String getDescription() {
+    public String getDescription()
+    {
         return "Opens up the kit view for a specified kit";
     }
 
     @Override
-    public int getArgs() {
+    public int getArgs()
+    {
         return 2;
     }
 
     @Override
-    public boolean playerOnly() {
+    public boolean playerOnly()
+    {
         return true;
     }
 
     @Override
-    public void onCommand(CommandSender sender, Command cmd, String label, String[] args) {
+    public void onCommand(CommandSender sender, Command cmd, String label, String[] args)
+    {
         Player player = (Player) sender;
-        Kit kit = KitManager.getKit(args[1]);
-        if (kit == null) {
+        Kit    kit    = KitManager.getKit(args[1]);
+        if (kit == null)
+        {
             sendMessage(sender, tl("error_kit_not_found"), ChatColor.RED);
             return;
         }
 
         List<ItemStack> itemStackList = kit.getItemStacks();
-        List<ItemStack> armor = kit.getArmor();
+        List<ItemStack> armor         = kit.getArmor();
 
         int inventorySize = 54;
 
@@ -70,36 +78,48 @@ public class ViewCommand extends Subcommand {
 
         ItemStack[] items = itemStackList.toArray(new ItemStack[inventorySize]);
 
-        if (player.hasPermission(Variables.KITADMIN_PERMISSION)) {
+        if (player.hasPermission(Variables.KITADMIN_PERMISSION))
+        {
             items[inventorySize - 9] = new ItemBuilder(Material.BOOK_AND_QUILL).setTitle(ChatColor.GREEN + "" + ChatColor.BOLD + ChatColor.stripColor(tl("gui_button_edit"))).build();
             items[inventorySize - 1] = new ItemBuilder(Material.BARRIER).setTitle(ChatColor.GREEN + "" + ChatColor.BOLD + ChatColor.stripColor(tl("gui_button_delete"))).build();
         }
 
         {
-            if (KitManager.canUse(player, kit)) {
+            if (KitManager.canUse(player, kit))
+            {
                 items[inventorySize - 4] = new ItemBuilder(Material.STAINED_GLASS_PANE, DyeColor.GREEN.getData()).setTitle(ChatColor.GREEN + "" + ChatColor.BOLD + ChatColor.stripColor(tl("gui_button_use"))).build();
             }
 
             items[inventorySize - 5] = new ItemBuilder(Material.STAINED_GLASS_PANE, DyeColor.WHITE.getData()).setTitle(ChatColor.GREEN + "" + ChatColor.BOLD + ChatColor.stripColor(tl("gui_button_back"))).addLores(KitManager.getLores(player, kit)).build();
 
-            if (KitManager.canBuy(player, kit)) {
+            if (KitManager.canBuy(player, kit))
+            {
                 items[inventorySize - 6] = new ItemBuilder(Material.STAINED_GLASS_PANE, DyeColor.RED.getData()).setTitle(ChatColor.GREEN + "" + ChatColor.BOLD + ChatColor.stripColor(tl("gui_button_buy"))).build();
             }
         }
 
-        for (ItemStack i : armor) {
-            if (isHelmet(i.getType())) {
+        for (ItemStack i : armor)
+        {
+            if (isHelmet(i.getType()))
+            {
                 items[27] = i;
-            } else if (isChestplate(i.getType())) {
+            }
+            else if (isChestplate(i.getType()))
+            {
                 items[28] = i;
-            } else if (isLeggings(i.getType())) {
+            }
+            else if (isLeggings(i.getType()))
+            {
                 items[29] = i;
-            } else if (isBoots(i.getType())) {
+            }
+            else if (isBoots(i.getType()))
+            {
                 items[30] = i;
             }
         }
 
-        for (int i = 36; i < 45; i++) {
+        for (int i = 36; i < 45; i++)
+        {
             items[i] = new ItemBuilder(Material.STAINED_GLASS_PANE, DyeColor.BLACK.getData()).setTitle(ChatColor.GREEN + "" + ChatColor.BOLD + "§8").build();
         }
 

@@ -26,61 +26,79 @@ import static hu.tryharddood.advancedkits.Listeners.InventoryListener.*;
  *
  * @author TryHardDood
  */
-public class EditCommand extends Subcommand {
+public class EditCommand extends Subcommand
+{
     @Override
-    public String getPermission() {
+    public String getPermission()
+    {
         return Variables.KITADMIN_PERMISSION;
     }
 
     @Override
-    public String getUsage() {
+    public String getUsage()
+    {
         return "/kit edit <kit>";
     }
 
     @Override
-    public String getDescription() {
+    public String getDescription()
+    {
         return "Edits a kit.";
     }
 
     @Override
-    public int getArgs() {
+    public int getArgs()
+    {
         return 2;
     }
 
     @Override
-    public boolean playerOnly() {
+    public boolean playerOnly()
+    {
         return true;
     }
 
     @Override
-    public void onCommand(CommandSender sender, Command cmd, String label, String[] args) {
+    public void onCommand(CommandSender sender, Command cmd, String label, String[] args)
+    {
         Player player = (Player) sender;
-        Kit kit = KitManager.getKit(args[1]);
-        if (kit == null) {
+        Kit    kit    = KitManager.getKit(args[1]);
+        if (kit == null)
+        {
             sendMessage(player, tl("error_kit_not_found"), ChatColor.RED);
             return;
         }
 
-        int inventorySize = 54;
-        Inventory inventory = Bukkit.createInventory(null, inventorySize, "Edit - " + kit.getName());
+        int       inventorySize = 54;
+        Inventory inventory     = Bukkit.createInventory(null, inventorySize, "Edit - " + kit.getName());
 
         kit.getItemStacks().forEach(inventory::addItem);
 
         List<ItemStack> armor = kit.getArmor();
-        for (ItemStack i : armor) {
-            if (isHelmet(i.getType())) {
+        for (ItemStack i : armor)
+        {
+            if (isHelmet(i.getType()))
+            {
                 inventory.setItem(27, i);
-            } else if (isChestplate(i.getType())) {
+            }
+            else if (isChestplate(i.getType()))
+            {
                 inventory.setItem(28, i);
-            } else if (isLeggings(i.getType())) {
+            }
+            else if (isLeggings(i.getType()))
+            {
                 inventory.setItem(29, i);
-            } else if (isBoots(i.getType())) {
+            }
+            else if (isBoots(i.getType()))
+            {
                 inventory.setItem(30, i);
             }
         }
 
-        for (int i = 27; i < 31; i++) {
-            if (inventory.getItem(i) == null || inventory.getItem(i).getType() == Material.AIR) {
+        for (int i = 27; i < 31; i++)
+        {
+            if (inventory.getItem(i) == null || inventory.getItem(i).getType() == Material.AIR)
+            {
                 inventory.setItem(i, new ItemBuilder(Material.STAINED_GLASS_PANE, DyeColor.GREEN.getData()).setTitle(ChatColor.GREEN + "" + ChatColor.BOLD + "§8").build());
             }
         }
@@ -88,7 +106,8 @@ public class EditCommand extends Subcommand {
         inventory.setItem(inventorySize - 4, new ItemBuilder(Material.STAINED_GLASS_PANE, DyeColor.GREEN.getData()).setTitle(ChatColor.GREEN + "" + ChatColor.BOLD + ChatColor.stripColor(tl("gui_button_edit"))).build());
         inventory.setItem(inventorySize - 6, new ItemBuilder(Material.STAINED_GLASS_PANE, DyeColor.RED.getData()).setTitle(ChatColor.RED + "" + ChatColor.BOLD + ChatColor.stripColor(tl("gui_button_cancel"))).build());
 
-        for (int i = 36; i < 45; i++) {
+        for (int i = 36; i < 45; i++)
+        {
             inventory.setItem(i, new ItemBuilder(Material.STAINED_GLASS_PANE, DyeColor.BLACK.getData()).setTitle(ChatColor.GREEN + "" + ChatColor.BOLD + "§8").build());
         }
 
