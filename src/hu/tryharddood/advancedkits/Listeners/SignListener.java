@@ -2,7 +2,6 @@ package hu.tryharddood.advancedkits.Listeners;
 
 import hu.tryharddood.advancedkits.AdvancedKits;
 import hu.tryharddood.advancedkits.Kits.Kit;
-import hu.tryharddood.advancedkits.Kits.KitManager;
 import hu.tryharddood.advancedkits.Variables;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -38,7 +37,7 @@ public class SignListener implements Listener
 
                 if (sign.getLine(0).equalsIgnoreCase(ChatColor.GRAY + "[" + ChatColor.DARK_BLUE + "Kits" + ChatColor.GRAY + "]"))
                 {
-                    Kit kit = KitManager.getKit(ChatColor.stripColor(sign.getLine(1)));
+                    Kit kit = AdvancedKits.getKitManager().getKit(ChatColor.stripColor(sign.getLine(1)));
                     if (kit == null)
                     {
                         AdvancedKits.log(ChatColor.RED + "Error: Kit doesn't exists. Sign location: " + sign.getLocation().toString());
@@ -69,7 +68,7 @@ public class SignListener implements Listener
                 return;
             }
 
-            Kit kit = KitManager.getKit(ChatColor.stripColor(sign.getLine(1)));
+            Kit kit = AdvancedKits.getKitManager().getKit(ChatColor.stripColor(sign.getLine(1)));
             if (kit == null)
             {
                 AdvancedKits.log(ChatColor.RED + "Error: Kit doesn't exists. Sign location: " + sign.getBlock().getLocation().toString());

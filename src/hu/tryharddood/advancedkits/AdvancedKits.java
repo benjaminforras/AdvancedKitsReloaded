@@ -1,8 +1,5 @@
 package hu.tryharddood.advancedkits;
 
-import hu.tryharddood.advancedkits.ClearInventory.ClearInventory;
-import hu.tryharddood.advancedkits.ClearInventory.ClearInventory_1_8;
-import hu.tryharddood.advancedkits.ClearInventory.ClearInventory_1_9;
 import hu.tryharddood.advancedkits.Commands.CommandHandler;
 import hu.tryharddood.advancedkits.Commands.SubCommands.*;
 import hu.tryharddood.advancedkits.Configuration.Configuration;
@@ -11,6 +8,8 @@ import hu.tryharddood.advancedkits.Kits.KitManager;
 import hu.tryharddood.advancedkits.Listeners.InventoryListener;
 import hu.tryharddood.advancedkits.Listeners.PlayerListener;
 import hu.tryharddood.advancedkits.Listeners.SignListener;
+import hu.tryharddood.advancedkits.Utils.I18n;
+import hu.tryharddood.advancedkits.Utils.Metrics;
 import hu.tryharddood.advancedkits.Utils.Updater;
 import me.libraryaddict.inventory.InventoryApi;
 import net.milkbowl.vault.economy.Economy;
@@ -27,19 +26,27 @@ import java.util.Collections;
 
 public class AdvancedKits extends JavaPlugin
 {
-
-    public static ClearInventory clearInventory;
     public static Economy econ = null;
-
     public static            Integer              ServerVersion;
     private static transient AdvancedKits         instance;
+    private static transient I18n                 i18n;
+    private static transient KitManager           kitManager;
     private static           ConsoleCommandSender console;
-    public transient         I18n                 i18n;
     private                  Configuration        configuration;
 
     public static AdvancedKits getInstance()
     {
         return instance;
+    }
+
+    public static I18n getI18n()
+    {
+        return i18n;
+    }
+
+    public static KitManager getKitManager()
+    {
+        return kitManager;
     }
 
     public static void log(String message)
@@ -65,7 +72,7 @@ public class AdvancedKits extends JavaPlugin
             i18n.onDisable();
         }
 
-        for (Kit kit : KitManager.getKits())
+        for (Kit kit : kitManager.getKits())
         {
             try
             {
@@ -91,12 +98,10 @@ public class AdvancedKits extends JavaPlugin
         if (version.contains("1_8"))
         {
             ServerVersion = 18;
-            clearInventory = new ClearInventory_1_8();
         }
         else if (version.contains("1_9"))
         {
             ServerVersion = 19;
-            clearInventory = new ClearInventory_1_9();
         }
         else
         {
@@ -115,11 +120,13 @@ public class AdvancedKits extends JavaPlugin
         i18n.onEnable();
         i18n.updateLocale("en");
 
-        this.configuration = new Configuration(this);
-        this.configuration.loadConfiguration();
-        KitManager.load();
+        kitManager = new KitManager(this);
+        kitManager.load();
 
-        if (this.configuration.isEconomy())
+        configuration = new Configuration(this);
+        configuration.loadConfiguration();
+
+        if (configuration.isEconomy())
         {
             setupVault(getServer().getPluginManager());
         }
@@ -139,18 +146,12 @@ public class AdvancedKits extends JavaPlugin
         {
             Metrics metrics = new Metrics(this);
             metrics.start();
+
+            new Updater(this, 11193);
         }
         catch (IOException e)
         {
             log(ChatColor.RED + "- Failed to initalize Metrics");
-        }
-
-        try
-        {
-            new Updater(this, 11193);
-        }
-        catch (IOException ignored)
-        {
         }
     }
 

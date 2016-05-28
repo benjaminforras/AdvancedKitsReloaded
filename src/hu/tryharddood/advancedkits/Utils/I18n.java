@@ -1,6 +1,7 @@
-package hu.tryharddood.advancedkits;
+package hu.tryharddood.advancedkits.Utils;
 
-import net.md_5.bungee.api.ChatColor;
+import hu.tryharddood.advancedkits.AdvancedKits;
+import org.bukkit.ChatColor;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;

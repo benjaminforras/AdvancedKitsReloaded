@@ -3,7 +3,7 @@ package hu.tryharddood.advancedkits.Commands.SubCommands;
 import hu.tryharddood.advancedkits.AdvancedKits;
 import hu.tryharddood.advancedkits.Commands.Subcommand;
 import hu.tryharddood.advancedkits.Variables;
-import net.md_5.bungee.api.ChatColor;
+import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 

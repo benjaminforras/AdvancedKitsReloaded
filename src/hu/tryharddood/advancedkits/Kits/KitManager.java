@@ -9,6 +9,7 @@ import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
 import java.io.IOException;
@@ -19,14 +20,20 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import static hu.tryharddood.advancedkits.I18n.tl;
+import static hu.tryharddood.advancedkits.Utils.I18n.tl;
 
 
 public class KitManager
 {
-    private static final ArrayList<Kit> Kits = new ArrayList<>();
+    private final ArrayList<Kit> Kits = new ArrayList<>();
+    private JavaPlugin plugin;
 
-    public static boolean canBuy(Player player, Kit kit)
+    public KitManager(final JavaPlugin plugin)
+    {
+        this.plugin = plugin;
+    }
+
+    public boolean canBuy(Player player, Kit kit)
     {
         if (!AdvancedKits.getInstance().getConfiguration().isEconomy()) return false;
         if (getUnlocked(kit, player.getName())) return false;
@@ -37,7 +44,7 @@ public class KitManager
         return (money - cost) >= 0 && (!kit.isPermonly() || player.hasPermission(kit.getPermission()));
     }
 
-    public static boolean canUse(Player player, Kit kit)
+    public boolean canUse(Player player, Kit kit)
     {
         if (!kit.isPermonly() || kit.isPermonly() && player.hasPermission(Variables.KIT_USE_KIT_PERMISSION.replaceAll("[kitname]", kit.getName())))
         {
@@ -58,7 +65,7 @@ public class KitManager
         return false;
     }
 
-    public static boolean CheckCooldown(Player player, Kit kit)
+    public boolean CheckCooldown(Player player, Kit kit)
     {
         YamlConfiguration config = kit.getYaml();
 
@@ -71,7 +78,7 @@ public class KitManager
         return System.currentTimeMillis() >= delay;
     }
 
-    public static void deleteKit(Kit kit)
+    public void deleteKit(Kit kit)
     {
         File config = kit.getSaveFile();
 
@@ -83,10 +90,10 @@ public class KitManager
         {
             AdvancedKits.log(ChatColor.RED + kit.getName() + " could not be deleted.");
         }
-        KitManager.load();
+        load();
     }
 
-    public static String getDelay(Player player, Kit kit)
+    public String getDelay(Player player, Kit kit)
     {
         YamlConfiguration config = kit.getYaml();
 
@@ -102,7 +109,7 @@ public class KitManager
         return DATE_FORMAT.format(date);
     }
 
-    public static Kit getKit(String kitname)
+    public Kit getKit(String kitname)
     {
         for (Kit kit : Kits)
         {
@@ -114,24 +121,24 @@ public class KitManager
         return null;
     }
 
-    public static List<Kit> getKits()
+    public List<Kit> getKits()
     {
         return Kits;
     }
 
-    public static List<String> getLores(Player player, Kit kit)
+    public List<String> getLores(Player player, Kit kit)
     {
         List<String> list = new ArrayList<>();
 
-        if (kit.getUses() > 0 && (kit.getUses() - KitManager.getUses(kit, player) > 0))
+        if (kit.getUses() > 0 && (kit.getUses() - getUses(kit, player) > 0))
         {
             list.add(ChatColor.RED + "");
-            list.add(ChatColor.RED + "" + ChatColor.BOLD + tl("kit_time_use", (kit.getUses() - KitManager.getUses(kit, player))));
+            list.add(ChatColor.RED + "" + ChatColor.BOLD + tl("kit_time_use", (kit.getUses() - getUses(kit, player))));
         }
 
         if (AdvancedKits.getInstance().getConfiguration().isEconomy())
         {
-            if (KitManager.getUnlocked(kit, player.getName()))
+            if (getUnlocked(kit, player.getName()))
             {
                 list.add(ChatColor.GREEN + "");
                 list.add(ChatColor.GREEN + "" + ChatColor.BOLD + tl("unlocked"));
@@ -197,7 +204,7 @@ public class KitManager
     }
 
     @SuppressWarnings("unchecked")
-    private static void getProperties(String name, YamlConfiguration configuration)
+    private void getProperties(String name, YamlConfiguration configuration)
     {
         Kit kit = new Kit(name);
         if (Kits.contains(kit))
@@ -248,7 +255,6 @@ public class KitManager
                     AdvancedKits.log(ChatColor.RED + "" + object.toString());
                     AdvancedKits.log(ChatColor.GOLD + "=====================================================");
                     AdvancedKits.log(ChatColor.GREEN + "Skipping item");
-                    continue;
                 }
             }
         }
@@ -261,7 +267,7 @@ public class KitManager
 
         kit.setClearinv(configuration.getBoolean("Flags.ClearInv", false));
 
-        kit.setClearinv(configuration.getBoolean("Flags.FirstJoin", false));
+        kit.setFirstjoin(configuration.getBoolean("Flags.FirstJoin", false));
 
         kit.setUses(configuration.getInt("Flags.Uses", 0));
 
@@ -284,14 +290,14 @@ public class KitManager
         Kits.add(kit);
     }
 
-    public static boolean getUnlocked(Kit kit, String player)
+    public boolean getUnlocked(Kit kit, String player)
     {
         YamlConfiguration config = kit.getYaml();
 
         return config != null && config.contains("Unlocked." + player) && config.getBoolean("Unlocked." + player);
     }
 
-    public static int getUses(Kit kit, Player player)
+    public int getUses(Kit kit, Player player)
     {
         YamlConfiguration config = kit.getYaml();
         if (!config.contains("Uses." + player.getName()))
@@ -301,10 +307,10 @@ public class KitManager
         return config.getInt("Uses." + player.getName());
     }
 
-    public static void load()
+    public void load()
     {
         YamlConfiguration configuration;
-        final File        folder = new File(AdvancedKits.getInstance().getDataFolder() + File.separator + "kits");
+        final File        folder = new File(plugin.getDataFolder() + File.separator + "kits");
 
         if (!folder.isDirectory())
         {
@@ -353,7 +359,7 @@ public class KitManager
         AdvancedKits.log(ChatColor.GREEN + "- " + Kits.size() + " kit loaded");
     }
 
-    public static void setDelay(Player player, double delay, Kit kit)
+    public void setDelay(Player player, double delay, Kit kit)
     {
         YamlConfiguration config = kit.getYaml();
 
@@ -373,7 +379,7 @@ public class KitManager
         }
     }
 
-    public static void setUnlocked(Kit kit, String player)
+    public void setUnlocked(Kit kit, String player)
     {
         YamlConfiguration config = kit.getYaml();
 
@@ -388,13 +394,13 @@ public class KitManager
         }
     }
 
-    public static boolean getFirstJoin(Player player, Kit kit)
+    public boolean getFirstJoin(Player player, Kit kit)
     {
         YamlConfiguration config = kit.getYaml();
         return config.getBoolean("FirstJoin." + player.getUniqueId(), false);
     }
 
-    public static void setFirstJoin(Player player, Kit kit)
+    public void setFirstJoin(Player player, Kit kit)
     {
         YamlConfiguration config = kit.getYaml();
 
@@ -409,10 +415,18 @@ public class KitManager
         }
     }
 
-    public static void setUses(Kit kit, Player player, int uses)
+    public void setUses(Kit kit, Player player, int uses)
     {
         YamlConfiguration config = kit.getYaml();
 
         config.set("Uses." + player.getName(), uses);
+        try
+        {
+            config.save(kit.getSaveFile());
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
+        }
     }
 }

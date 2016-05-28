@@ -3,13 +3,12 @@ package hu.tryharddood.advancedkits.Commands.SubCommands;
 import hu.tryharddood.advancedkits.AdvancedKits;
 import hu.tryharddood.advancedkits.Commands.Subcommand;
 import hu.tryharddood.advancedkits.Configuration.Configuration;
-import hu.tryharddood.advancedkits.Kits.KitManager;
 import hu.tryharddood.advancedkits.Variables;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 
-import static hu.tryharddood.advancedkits.I18n.tl;
+import static hu.tryharddood.advancedkits.Utils.I18n.tl;
 
 
 /**
@@ -56,7 +55,7 @@ public class ReloadCommand extends Subcommand
 
         AdvancedKits.getInstance().getConfiguration().loadConfiguration();
 
-        KitManager.load();
+        AdvancedKits.getKitManager().load();
         sender.sendMessage(AdvancedKits.getInstance().getConfiguration().getChatPrefix() + " " + ChatColor.GREEN + tl("kit_reload"));
     }
 

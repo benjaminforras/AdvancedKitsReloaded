@@ -70,13 +70,14 @@ public class Kit
         setVisible(true);
         setPermonly(false);
         setClearinv(false);
+        setFirstjoin(false);
         setCost(0);
         setDelay(0.0);
         setIcon(Material.EMERALD_BLOCK);
         itemStacks.forEach(this::AddItem);
         armors.forEach(this::AddArmor);
         setSave(false);
-        KitManager.load();
+        AdvancedKits.getKitManager().load();
     }
 
     public ArrayList<ItemStack> getArmor()
@@ -284,6 +285,6 @@ public class Kit
     public void setFirstjoin(Boolean firstjoin)
     {
         this.firstjoin = firstjoin;
-        setProperty("Flags.FirstJoin", visible);
+        setProperty("Flags.FirstJoin", firstjoin);
     }
 }

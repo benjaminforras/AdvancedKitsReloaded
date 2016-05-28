@@ -7,7 +7,7 @@ import org.bukkit.command.CommandSender;
 import java.util.HashMap;
 import java.util.List;
 
-import static hu.tryharddood.advancedkits.I18n.tl;
+import static hu.tryharddood.advancedkits.Utils.I18n.tl;
 
 
 /**
@@ -42,6 +42,7 @@ public class CommandHandler implements CommandExecutor
             if (!match)
             {
                 sender.sendMessage(tl("chat_unknown"));
+                sender.sendMessage(tl("chat_help"));
             }
         }
         else

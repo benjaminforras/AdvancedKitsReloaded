@@ -1,7 +1,7 @@
 package hu.tryharddood.advancedkits.Commands;
 
+import hu.tryharddood.advancedkits.AdvancedKits;
 import hu.tryharddood.advancedkits.Kits.Kit;
-import hu.tryharddood.advancedkits.Kits.KitManager;
 import hu.tryharddood.advancedkits.Variables;
 import me.libraryaddict.inventory.ItemBuilder;
 import me.libraryaddict.inventory.PageInventory;
@@ -14,7 +14,7 @@ import org.bukkit.inventory.ItemStack;
 import java.util.ArrayList;
 import java.util.List;
 
-import static hu.tryharddood.advancedkits.I18n.tl;
+import static hu.tryharddood.advancedkits.Utils.I18n.tl;
 
 
 /**
@@ -61,7 +61,7 @@ public class MainCommand extends Subcommand
 
         PageInventory inv = new PageInventory(player);
 
-        List<Kit>   kits  = KitManager.getKits();
+        List<Kit>   kits  = AdvancedKits.getKitManager().getKits();
         ItemStack[] items = new ItemStack[kits.size()];
 
         Kit          kit;
@@ -69,7 +69,7 @@ public class MainCommand extends Subcommand
         int          delete = 0;
         for (int i = 0; i < kits.size(); i++)
         {
-            if (!kits.get(i).isVisible() || (!player.hasPermission(Variables.KITADMIN_PERMISSION) && KitManager.getUses(kits.get(i), player) > 0))
+            if (!kits.get(i).isVisible() || (!player.hasPermission(Variables.KITADMIN_PERMISSION) && AdvancedKits.getKitManager().getUses(kits.get(i), player) > 0))
             {
                 delete++;
                 continue;
@@ -78,15 +78,15 @@ public class MainCommand extends Subcommand
 
             kit = kits.get(i);
 
-            if (!KitManager.CheckCooldown(player, kit))
+            if (!AdvancedKits.getKitManager().CheckCooldown(player, kit))
             {
                 lore.add("§8");
                 lore.add(ChatColor.RED + "" + ChatColor.BOLD + tl("kituse_wait").replaceAll("\\{(\\D*?)\\}", "") + ":");
-                lore.add(ChatColor.WHITE + "" + ChatColor.BOLD + "- " + KitManager.getDelay(player, kit));
+                lore.add(ChatColor.WHITE + "" + ChatColor.BOLD + "- " + AdvancedKits.getKitManager().getDelay(player, kit));
                 lore.add("§8");
             }
 
-            items[i - delete] = new ItemBuilder(kit.getIcon()).setTitle(ChatColor.translateAlternateColorCodes('&', kit.getName())).addLores(lore).addLores(KitManager.getLores(player, kit)).build();
+            items[i - delete] = new ItemBuilder(kit.getIcon()).setTitle(ChatColor.translateAlternateColorCodes('&', kit.getName())).addLores(lore).addLores(AdvancedKits.getKitManager().getLores(player, kit)).build();
         }
         inv.setPages(items);
         inv.setTitle("Kits");

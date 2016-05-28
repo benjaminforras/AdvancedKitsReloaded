@@ -1,8 +1,8 @@
 package hu.tryharddood.advancedkits.Commands.SubCommands;
 
+import hu.tryharddood.advancedkits.AdvancedKits;
 import hu.tryharddood.advancedkits.Commands.Subcommand;
 import hu.tryharddood.advancedkits.Kits.Kit;
-import hu.tryharddood.advancedkits.Kits.KitManager;
 import hu.tryharddood.advancedkits.Variables;
 import me.libraryaddict.inventory.ItemBuilder;
 import me.libraryaddict.inventory.PageInventory;
@@ -16,8 +16,8 @@ import org.bukkit.inventory.ItemStack;
 
 import java.util.List;
 
-import static hu.tryharddood.advancedkits.I18n.tl;
 import static hu.tryharddood.advancedkits.Listeners.InventoryListener.*;
+import static hu.tryharddood.advancedkits.Utils.I18n.tl;
 
 
 /**
@@ -62,7 +62,7 @@ public class ViewCommand extends Subcommand
     public void onCommand(CommandSender sender, Command cmd, String label, String[] args)
     {
         Player player = (Player) sender;
-        Kit    kit    = KitManager.getKit(args[1]);
+        Kit    kit    = AdvancedKits.getKitManager().getKit(args[1]);
         if (kit == null)
         {
             sendMessage(sender, tl("error_kit_not_found"), ChatColor.RED);
@@ -85,14 +85,14 @@ public class ViewCommand extends Subcommand
         }
 
         {
-            if (KitManager.canUse(player, kit))
+            if (AdvancedKits.getKitManager().canUse(player, kit))
             {
                 items[inventorySize - 4] = new ItemBuilder(Material.STAINED_GLASS_PANE, DyeColor.GREEN.getData()).setTitle(ChatColor.GREEN + "" + ChatColor.BOLD + ChatColor.stripColor(tl("gui_button_use"))).build();
             }
 
-            items[inventorySize - 5] = new ItemBuilder(Material.STAINED_GLASS_PANE, DyeColor.WHITE.getData()).setTitle(ChatColor.GREEN + "" + ChatColor.BOLD + ChatColor.stripColor(tl("gui_button_back"))).addLores(KitManager.getLores(player, kit)).build();
+            items[inventorySize - 5] = new ItemBuilder(Material.STAINED_GLASS_PANE, DyeColor.WHITE.getData()).setTitle(ChatColor.GREEN + "" + ChatColor.BOLD + ChatColor.stripColor(tl("gui_button_back"))).addLores(AdvancedKits.getKitManager().getLores(player, kit)).build();
 
-            if (KitManager.canBuy(player, kit))
+            if (AdvancedKits.getKitManager().canBuy(player, kit))
             {
                 items[inventorySize - 6] = new ItemBuilder(Material.STAINED_GLASS_PANE, DyeColor.RED.getData()).setTitle(ChatColor.GREEN + "" + ChatColor.BOLD + ChatColor.stripColor(tl("gui_button_buy"))).build();
             }

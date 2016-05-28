@@ -3,7 +3,6 @@ package hu.tryharddood.advancedkits.Commands.SubCommands;
 import hu.tryharddood.advancedkits.AdvancedKits;
 import hu.tryharddood.advancedkits.Commands.Subcommand;
 import hu.tryharddood.advancedkits.Kits.Kit;
-import hu.tryharddood.advancedkits.Kits.KitManager;
 import hu.tryharddood.advancedkits.Variables;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -12,7 +11,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import static hu.tryharddood.advancedkits.I18n.tl;
+import static hu.tryharddood.advancedkits.Utils.I18n.tl;
 
 
 /**
@@ -56,7 +55,7 @@ public class BuyCommand extends Subcommand
     public void onCommand(CommandSender sender, Command cmd, String label, String[] args)
     {
         Player player = (Player) sender;
-        Kit    kit    = KitManager.getKit(args[1]);
+        Kit    kit    = AdvancedKits.getKitManager().getKit(args[1]);
         if (kit == null)
         {
             sendMessage(player, tl("error_kit_not_found"), ChatColor.RED);
@@ -71,7 +70,7 @@ public class BuyCommand extends Subcommand
             return;
         }
 
-        if (KitManager.getUnlocked(kit, player.getName()))
+        if (AdvancedKits.getKitManager().getUnlocked(kit, player.getName()))
         {
             sendMessage(player, tl("error_kitbuy_bought_already"), ChatColor.RED);
             closeGUI(player, "Details");
@@ -90,7 +89,7 @@ public class BuyCommand extends Subcommand
         if ((balance - kit.getCost()) >= 0)
         {
             AdvancedKits.econ.withdrawPlayer(oPlayer, kit.getCost());
-            KitManager.setUnlocked(kit, player.getName());
+            AdvancedKits.getKitManager().setUnlocked(kit, player.getName());
 
             sendMessage(player, tl("kitbuy_success_message", kit.getName()), ChatColor.GREEN);
             closeGUI(player, "Details");

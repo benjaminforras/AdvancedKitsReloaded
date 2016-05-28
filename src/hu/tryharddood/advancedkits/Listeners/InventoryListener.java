@@ -2,8 +2,7 @@ package hu.tryharddood.advancedkits.Listeners;
 
 import hu.tryharddood.advancedkits.AdvancedKits;
 import hu.tryharddood.advancedkits.Kits.Kit;
-import hu.tryharddood.advancedkits.Kits.KitManager;
-import hu.tryharddood.advancedkits.Utils.TitleAPI.TitleAPI;
+import hu.tryharddood.advancedkits.Utils.Title;
 import hu.tryharddood.advancedkits.Variables;
 import me.libraryaddict.inventory.ItemBuilder;
 import me.libraryaddict.inventory.PageInventory;
@@ -24,7 +23,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static hu.tryharddood.advancedkits.I18n.tl;
+import static hu.tryharddood.advancedkits.Utils.I18n.tl;
 
 
 /**
@@ -71,7 +70,7 @@ public class InventoryListener implements Listener
             CreateInventory(player, null, event, invName);
         }
 
-        if (invName.contains(ChatColor.stripColor(tl("gui_button_edit"))))
+        if (invName.contains("Edit"))
         {
             EditInventory(player, new Kit(invName.substring(7)), event);
         }
@@ -94,7 +93,7 @@ public class InventoryListener implements Listener
 
         if (invName.contains("Kits") && itemStack.getType() != Material.PAPER)
         {
-            Kit kit = KitManager.getKit(ChatColor.stripColor(itemName));
+            Kit kit = AdvancedKits.getKitManager().getKit(ChatColor.stripColor(itemName));
             if (kit == null)
             {
                 return;
@@ -113,14 +112,14 @@ public class InventoryListener implements Listener
             }
 
             {
-                if (KitManager.canUse(player, kit))
+                if (AdvancedKits.getKitManager().canUse(player, kit))
                 {
                     items[inventorySize - 4] = new ItemBuilder(Material.STAINED_GLASS_PANE, DyeColor.GREEN.getData()).setTitle(ChatColor.GREEN + "" + ChatColor.BOLD + ChatColor.stripColor(tl("gui_button_use"))).build();
                 }
 
-                items[inventorySize - 5] = new ItemBuilder(Material.STAINED_GLASS_PANE, DyeColor.WHITE.getData()).setTitle(ChatColor.GREEN + "" + ChatColor.BOLD + ChatColor.stripColor(tl("gui_button_back"))).addLores(KitManager.getLores(player, kit)).build();
+                items[inventorySize - 5] = new ItemBuilder(Material.STAINED_GLASS_PANE, DyeColor.WHITE.getData()).setTitle(ChatColor.GREEN + "" + ChatColor.BOLD + ChatColor.stripColor(tl("gui_button_back"))).addLores(AdvancedKits.getKitManager().getLores(player, kit)).build();
 
-                if (KitManager.canBuy(player, kit))
+                if (AdvancedKits.getKitManager().canBuy(player, kit))
                 {
                     items[inventorySize - 6] = new ItemBuilder(Material.STAINED_GLASS_PANE, DyeColor.RED.getData()).setTitle(ChatColor.GREEN + "" + ChatColor.BOLD + ChatColor.stripColor(tl("gui_button_buy"))).build();
                 }
@@ -159,7 +158,7 @@ public class InventoryListener implements Listener
 
         if (invName.contains("Details"))
         {
-            Kit kit = KitManager.getKit(invName.substring(10));
+            Kit kit = AdvancedKits.getKitManager().getKit(invName.substring(10));
             if (kit == null)
             {
                 return;
@@ -195,7 +194,7 @@ public class InventoryListener implements Listener
 
     private void CreateInventory(Player player, Kit kit, InventoryClickEvent event, String invName)
     {
-        kit = KitManager.getKit(invName.substring(9));
+        kit = AdvancedKits.getKitManager().getKit(invName.substring(9));
         if (kit != null)
         {
             player.sendMessage(AdvancedKits.getInstance().getConfiguration().getChatPrefix() + " " + tl("error_kit_create_exists"));
@@ -254,7 +253,7 @@ public class InventoryListener implements Listener
                 event.setCancelled(true);
                 player.closeInventory();
 
-                TitleAPI.sendTitle(player, 2, 20, 2, "", ChatColor.RED + tl("kit_create"));
+                Title.sendTitle(player, 2, 20, 2, "", ChatColor.RED + tl("kit_create"));
             }
 
             if (itemName.equalsIgnoreCase(ChatColor.RED + "" + ChatColor.BOLD + ChatColor.stripColor(tl("gui_button_cancel"))))
@@ -359,12 +358,12 @@ public class InventoryListener implements Listener
                 }
                 kit.setArmor(armors);
                 kit.setSave(false);
-                KitManager.load();
+                AdvancedKits.getKitManager().load();
 
                 event.setCancelled(true);
                 player.closeInventory();
 
-                TitleAPI.sendTitle(player, 2, 20, 2, "", ChatColor.GREEN + tl("kit_edit"));
+                Title.sendTitle(player, 2, 20, 2, "", ChatColor.GREEN + tl("kit_edit"));
             }
 
             if (itemName.equalsIgnoreCase(ChatColor.RED + "" + ChatColor.BOLD + ChatColor.stripColor(tl("gui_button_cancel"))))

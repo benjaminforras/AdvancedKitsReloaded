@@ -1,13 +1,13 @@
 package hu.tryharddood.advancedkits.Commands;
 
 import hu.tryharddood.advancedkits.AdvancedKits;
-import hu.tryharddood.advancedkits.Utils.TitleAPI.TitleAPI;
+import hu.tryharddood.advancedkits.Utils.Title;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import static hu.tryharddood.advancedkits.I18n.tl;
+import static hu.tryharddood.advancedkits.Utils.I18n.tl;
 
 
 /**
@@ -23,7 +23,7 @@ public abstract class Subcommand
 
         if (commandSender instanceof Player)
         {
-            TitleAPI.sendTitle((Player) commandSender, 2, 20, 2, "", color + message);
+            Title.sendTitle((Player) commandSender, 2, 20, 2, "", color + message);
         }
     }
 

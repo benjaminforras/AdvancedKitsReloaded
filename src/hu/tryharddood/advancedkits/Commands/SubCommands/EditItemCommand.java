@@ -14,7 +14,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import java.util.Arrays;
 import java.util.List;
 
-import static hu.tryharddood.advancedkits.I18n.tl;
+import static hu.tryharddood.advancedkits.Utils.I18n.tl;
 
 
 /**

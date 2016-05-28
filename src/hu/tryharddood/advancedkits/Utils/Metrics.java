@@ -25,7 +25,7 @@
  * authors and contributors and should not be interpreted as representing official policies,
  * either expressed or implied, of anybody else.
  */
-package hu.tryharddood.advancedkits;
+package hu.tryharddood.advancedkits.Utils;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Server;

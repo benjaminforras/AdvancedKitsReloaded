@@ -98,7 +98,7 @@ public class Configuration
             this.instance.setupVault(this.instance.getServer().getPluginManager());
         }
 
-        instance.i18n.updateLocale(getLocale());
+        AdvancedKits.getI18n().updateLocale(getLocale());
         AdvancedKits.log(ChatColor.GREEN + "Configuration loaded successfully");
     }
 }

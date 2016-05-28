@@ -1,4 +1,4 @@
-package hu.tryharddood.advancedkits.Utils.TitleAPI;
+package hu.tryharddood.advancedkits.Utils;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -13,7 +13,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 
-public class TitleAPI extends JavaPlugin implements Listener
+public class Title extends JavaPlugin implements Listener
 {
 
     public static void clearTitle(Player player)
@@ -69,10 +69,6 @@ public class TitleAPI extends JavaPlugin implements Listener
         if (footer == null) footer = "";
         footer = ChatColor.translateAlternateColorCodes('&', footer);
 
-        TabTitleSendEvent tabTitleSendEvent = new TabTitleSendEvent(player, header, footer);
-        Bukkit.getPluginManager().callEvent(tabTitleSendEvent);
-        if (tabTitleSendEvent.isCancelled()) return;
-
         header = header.replaceAll("%player%", player.getDisplayName());
         footer = footer.replaceAll("%player%", player.getDisplayName());
 
@@ -101,10 +97,6 @@ public class TitleAPI extends JavaPlugin implements Listener
 
     public static void sendTitle(Player player, Integer fadeIn, Integer stay, Integer fadeOut, String title, String subtitle)
     {
-        TitleSendEvent titleSendEvent = new TitleSendEvent(player, title, subtitle);
-        Bukkit.getPluginManager().callEvent(titleSendEvent);
-        if (titleSendEvent.isCancelled()) return;
-
         try
         {
             Object         e;

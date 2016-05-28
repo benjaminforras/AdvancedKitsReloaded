@@ -3,7 +3,6 @@ package hu.tryharddood.advancedkits.Commands.SubCommands;
 import hu.tryharddood.advancedkits.AdvancedKits;
 import hu.tryharddood.advancedkits.Commands.Subcommand;
 import hu.tryharddood.advancedkits.Kits.Kit;
-import hu.tryharddood.advancedkits.Kits.KitManager;
 import hu.tryharddood.advancedkits.Variables;
 import me.libraryaddict.inventory.ItemBuilder;
 import org.bukkit.Bukkit;
@@ -15,7 +14,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 
-import static hu.tryharddood.advancedkits.I18n.tl;
+import static hu.tryharddood.advancedkits.Utils.I18n.tl;
 
 
 /**
@@ -59,7 +58,7 @@ public class CreateCommand extends Subcommand
     public void onCommand(CommandSender sender, Command cmd, String label, String[] args)
     {
         Player player = (Player) sender;
-        Kit    kit    = KitManager.getKit(args[1]);
+        Kit    kit    = AdvancedKits.getKitManager().getKit(args[1]);
         if (kit != null)
         {
             player.sendMessage(AdvancedKits.getInstance().getConfiguration().getChatPrefix() + " " + tl("error_kit_create_exists"));

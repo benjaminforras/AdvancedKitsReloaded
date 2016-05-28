@@ -3,7 +3,6 @@ package hu.tryharddood.advancedkits.Commands.SubCommands;
 import hu.tryharddood.advancedkits.AdvancedKits;
 import hu.tryharddood.advancedkits.Commands.Subcommand;
 import hu.tryharddood.advancedkits.Kits.Kit;
-import hu.tryharddood.advancedkits.Kits.KitManager;
 import hu.tryharddood.advancedkits.Listeners.InventoryListener;
 import hu.tryharddood.advancedkits.Variables;
 import org.bukkit.Bukkit;
@@ -17,7 +16,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.List;
 
-import static hu.tryharddood.advancedkits.I18n.tl;
+import static hu.tryharddood.advancedkits.Utils.I18n.tl;
 
 
 /**
@@ -31,14 +30,25 @@ public class UseCommand extends Subcommand
     {
         if (kit.getUses() > 0)
         {
-            KitManager.setUses(kit, player, (KitManager.getUses(kit, player) + 1));
+            AdvancedKits.getKitManager().setUses(kit, player, (AdvancedKits.getKitManager().getUses(kit, player) + 1));
         }
 
         PlayerInventory inv = player.getInventory();
         if (kit.isClearinv())
         {
-            AdvancedKits.clearInventory.clearArmor(player);
-            AdvancedKits.clearInventory.clearInventory(player);
+            if (AdvancedKits.ServerVersion == 19)
+            {
+                player.getInventory().setArmorContents(null);
+                player.getInventory().setExtraContents(null);
+                player.getInventory().setItemInMainHand(null);
+                player.getInventory().setItemInOffHand(null);
+                player.getInventory().clear();
+            }
+            else
+            {
+                player.getInventory().setArmorContents(null);
+                player.getInventory().clear();
+            }
         }
 
         ItemMeta itemMeta;
@@ -107,7 +117,7 @@ public class UseCommand extends Subcommand
 
         player.updateInventory();
 
-        KitManager.setDelay(player, kit.getDelay(), kit);
+        AdvancedKits.getKitManager().setDelay(player, kit.getDelay(), kit);
         closeGUI(player, "Details");
         sendMessage(player, tl("kituse_success"), ChatColor.GREEN);
 
@@ -151,13 +161,13 @@ public class UseCommand extends Subcommand
     public void onCommand(CommandSender sender, Command cmd, String label, String[] args)
     {
         Player player = (Player) sender;
-        Kit    kit    = KitManager.getKit(args[1]);
+        Kit    kit    = AdvancedKits.getKitManager().getKit(args[1]);
         if (kit == null)
         {
             sendMessage(player, tl("error_kit_not_found"), ChatColor.RED);
             return;
         }
-        if (kit.getUses() > 0 && (kit.getUses() - KitManager.getUses(kit, player)) <= 0 && !player.hasPermission(Variables.KITADMIN_PERMISSION))
+        if (kit.getUses() > 0 && (kit.getUses() - AdvancedKits.getKitManager().getUses(kit, player)) <= 0 && !player.hasPermission(Variables.KITADMIN_PERMISSION))
         {
             sendMessage(player, tl("cant_use_anymore"), ChatColor.RED);
             closeGUI(player, "Details");
@@ -165,7 +175,7 @@ public class UseCommand extends Subcommand
             return;
         }
 
-        if (AdvancedKits.getInstance().getConfiguration().isEconomy() && !KitManager.getUnlocked(kit, player.getName()))
+        if (AdvancedKits.getInstance().getConfiguration().isEconomy() && !AdvancedKits.getKitManager().getUnlocked(kit, player.getName()))
         {
             sendMessage(player, tl("kituse_error_notunlocked"), ChatColor.RED);
             closeGUI(player, "Details");
@@ -185,10 +195,10 @@ public class UseCommand extends Subcommand
         {
             if (!player.hasPermission(Variables.KITDELAY_BYPASS))
             {
-                if (!KitManager.CheckCooldown(player, kit))
+                if (!AdvancedKits.getKitManager().CheckCooldown(player, kit))
                 {
                     closeGUI(player, "Details");
-                    sendMessage(player, tl("kituse_wait", KitManager.getDelay(player, kit)), ChatColor.RED);
+                    sendMessage(player, tl("kituse_wait", AdvancedKits.getKitManager().getDelay(player, kit)), ChatColor.RED);
                     return;
                 }
             }

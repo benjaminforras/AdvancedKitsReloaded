@@ -2,7 +2,6 @@ package hu.tryharddood.advancedkits.Listeners;
 
 import hu.tryharddood.advancedkits.AdvancedKits;
 import hu.tryharddood.advancedkits.Commands.SubCommands.UseCommand;
-import hu.tryharddood.advancedkits.Kits.KitManager;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -22,14 +21,14 @@ public class PlayerListener implements Listener
         AdvancedKits.getInstance().getServer().getScheduler().scheduleSyncDelayedTask(AdvancedKits.getInstance(), () -> {
             Player player = event.getPlayer();
 
-            KitManager.getKits().stream().forEach(kit ->
-                                                  {
-                                                      if (!KitManager.getFirstJoin(player, kit))
-                                                      {
-                                                          UseCommand.GiveItems(player, kit);
-                                                          KitManager.setFirstJoin(player, kit);
-                                                      }
-                                                  });
+            AdvancedKits.getKitManager().getKits().stream().forEach(kit ->
+                                                                    {
+                                                                        if (!AdvancedKits.getKitManager().getFirstJoin(player, kit))
+                                                                        {
+                                                                            UseCommand.GiveItems(player, kit);
+                                                                            AdvancedKits.getKitManager().setFirstJoin(player, kit);
+                                                                        }
+                                                                    });
         }, 2L);
     }
 }
