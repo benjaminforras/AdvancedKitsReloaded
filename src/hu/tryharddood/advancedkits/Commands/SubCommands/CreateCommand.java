@@ -2,9 +2,9 @@ package hu.tryharddood.advancedkits.Commands.SubCommands;
 
 import hu.tryharddood.advancedkits.AdvancedKits;
 import hu.tryharddood.advancedkits.Commands.Subcommand;
+import hu.tryharddood.advancedkits.InventoryApi.ItemBuilder;
 import hu.tryharddood.advancedkits.Kits.Kit;
 import hu.tryharddood.advancedkits.Variables;
-import me.libraryaddict.inventory.ItemBuilder;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.DyeColor;
@@ -61,7 +61,7 @@ public class CreateCommand extends Subcommand
         Kit    kit    = AdvancedKits.getKitManager().getKit(args[1]);
         if (kit != null)
         {
-            player.sendMessage(AdvancedKits.getInstance().getConfiguration().getChatPrefix() + " " + tl("error_kit_create_exists"));
+            player.sendMessage(AdvancedKits.getConfiguration().getChatPrefix() + " " + tl("error_kit_create_exists"));
             return;
         }
 

@@ -60,7 +60,7 @@ public class DeleteCommand extends Subcommand
         }
 
         AdvancedKits.getKitManager().deleteKit(kit);
-        sender.sendMessage(AdvancedKits.getInstance().getConfiguration().getChatPrefix() + " " + tl("kit_delete"));
+        sender.sendMessage(AdvancedKits.getConfiguration().getChatPrefix() + " " + tl("kit_delete"));
 
         if (sender instanceof Player) closeGUI((Player) sender, "Details");
     }

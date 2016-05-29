@@ -2,10 +2,10 @@ package hu.tryharddood.advancedkits.Commands.SubCommands;
 
 import hu.tryharddood.advancedkits.AdvancedKits;
 import hu.tryharddood.advancedkits.Commands.Subcommand;
+import hu.tryharddood.advancedkits.InventoryApi.ItemBuilder;
+import hu.tryharddood.advancedkits.InventoryApi.PageInventory;
 import hu.tryharddood.advancedkits.Kits.Kit;
 import hu.tryharddood.advancedkits.Variables;
-import me.libraryaddict.inventory.ItemBuilder;
-import me.libraryaddict.inventory.PageInventory;
 import org.bukkit.ChatColor;
 import org.bukkit.DyeColor;
 import org.bukkit.Material;

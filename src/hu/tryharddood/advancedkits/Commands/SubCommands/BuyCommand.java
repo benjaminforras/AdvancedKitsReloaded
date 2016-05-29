@@ -78,7 +78,7 @@ public class BuyCommand extends Subcommand
             return;
         }
 
-        if (!AdvancedKits.getInstance().getConfiguration().isEconomy())
+        if (!AdvancedKits.getConfiguration().isEconomy())
         {
             sendMessage(player, "Economy support disabled..", ChatColor.RED);
             closeGUI(player, "Details");

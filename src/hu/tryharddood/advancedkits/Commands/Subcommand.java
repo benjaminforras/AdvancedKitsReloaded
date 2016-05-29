@@ -19,7 +19,7 @@ public abstract class Subcommand
 {
     public static void sendMessage(CommandSender commandSender, String message, ChatColor color)
     {
-        commandSender.sendMessage(AdvancedKits.getInstance().getConfiguration().getChatPrefix() + " " + message);
+        commandSender.sendMessage(AdvancedKits.getConfiguration().getChatPrefix() + " " + message);
 
         if (commandSender instanceof Player)
         {

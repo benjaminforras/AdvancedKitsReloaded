@@ -24,6 +24,7 @@ public class Kit
     private Boolean permonly;
     private Boolean clearinv;
     private Boolean firstjoin;
+    private Boolean save = false;
 
     private String permission;
 
@@ -36,8 +37,6 @@ public class Kit
 
     private ArrayList<String> worlds   = new ArrayList<>();
     private ArrayList<String> commands = new ArrayList<>();
-
-    private Boolean save = false;
 
     public Kit(String kitname)
     {

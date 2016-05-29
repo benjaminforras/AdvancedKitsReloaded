@@ -1,7 +1,6 @@
-package me.libraryaddict.inventory;
+package hu.tryharddood.advancedkits.InventoryApi;
 
-import me.libraryaddict.inventory.events.NamedCloseEvent;
-import me.libraryaddict.inventory.events.PageCloseEvent;
+import hu.tryharddood.advancedkits.InventoryApi.events.PageCloseEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -12,6 +11,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.util.HashMap;
 
@@ -73,10 +73,6 @@ public abstract class ClickInventory<E>
                 invs[isPlayerInventory() ? 1 : 0] = null;
             }
         }
-        if (this instanceof NamedInventory)
-        {
-            Bukkit.getPluginManager().callEvent(new NamedCloseEvent((NamedInventory) this));
-        }
         if (this instanceof PageInventory)
         {
             Bukkit.getPluginManager().callEvent(new PageCloseEvent((PageInventory) this));
@@ -89,14 +85,7 @@ public abstract class ClickInventory<E>
         {
             getPlayer().getInventory().clear();
             getPlayer().getInventory().setContents(previousContents);
-            Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, new Runnable()
-            {
-                @Override
-                public void run()
-                {
-                    getPlayer().updateInventory();
-                }
-            });
+            Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, () -> getPlayer().updateInventory());
         }
     }
 
@@ -275,15 +264,11 @@ public abstract class ClickInventory<E>
                     this.previousContents = invs[1].previousContents;
                 }
             }
-            Object[] object = new Object[2];
-            object[slot] = this;
 
-            /*
-             * E[] inv = (E[]) (getPlayer().hasMetadata(getClass().getSimpleName()) ?
-             * getPlayer().getMetadata(getClass().getSimpleName()).get(0).value( ) : (E[])
-             * Array.newInstance(getClass(), 2)); inv[slot] = (E) this;
-             */
-            getPlayer().setMetadata(getClass().getSimpleName(), new FixedMetadataValue(plugin, object));
+            E[] inv = (E[]) (getPlayer().hasMetadata(getClass().getSimpleName()) ? getPlayer().getMetadata(getClass().getSimpleName()).get(0).value() : (E[]) Array.newInstance(getClass(), 2));
+            inv[slot] = (E) this;
+
+            getPlayer().setMetadata(getClass().getSimpleName(), new FixedMetadataValue(plugin, inv));
         }
         else
         {

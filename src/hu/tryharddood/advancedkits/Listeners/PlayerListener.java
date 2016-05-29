@@ -18,17 +18,14 @@ public class PlayerListener implements Listener
     @EventHandler
     public void onPlayerJoin(PlayerLoginEvent event)
     {
-        AdvancedKits.getInstance().getServer().getScheduler().scheduleSyncDelayedTask(AdvancedKits.getInstance(), () -> {
-            Player player = event.getPlayer();
-
-            AdvancedKits.getKitManager().getKits().stream().forEach(kit ->
-                                                                    {
-                                                                        if (!AdvancedKits.getKitManager().getFirstJoin(player, kit))
-                                                                        {
-                                                                            UseCommand.GiveItems(player, kit);
-                                                                            AdvancedKits.getKitManager().setFirstJoin(player, kit);
-                                                                        }
-                                                                    });
-        }, 2L);
+        Player player = event.getPlayer();
+        AdvancedKits.getInstance().getServer().getScheduler().scheduleSyncDelayedTask(AdvancedKits.getInstance(), () -> AdvancedKits.getKitManager().getKits().stream().forEach(kit ->
+        {
+            if (!AdvancedKits.getKitManager().getFirstJoin(player, kit))
+            {
+                UseCommand.GiveItems(player, kit);
+                AdvancedKits.getKitManager().setFirstJoin(player, kit);
+            }
+        }), 2L);
     }
 }

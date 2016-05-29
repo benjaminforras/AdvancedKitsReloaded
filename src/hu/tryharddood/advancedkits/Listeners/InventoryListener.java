@@ -1,12 +1,12 @@
 package hu.tryharddood.advancedkits.Listeners;
 
 import hu.tryharddood.advancedkits.AdvancedKits;
+import hu.tryharddood.advancedkits.InventoryApi.ItemBuilder;
+import hu.tryharddood.advancedkits.InventoryApi.PageInventory;
+import hu.tryharddood.advancedkits.InventoryApi.events.PagesClickEvent;
 import hu.tryharddood.advancedkits.Kits.Kit;
 import hu.tryharddood.advancedkits.Utils.Title;
 import hu.tryharddood.advancedkits.Variables;
-import me.libraryaddict.inventory.ItemBuilder;
-import me.libraryaddict.inventory.PageInventory;
-import me.libraryaddict.inventory.events.PagesClickEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.DyeColor;
@@ -67,7 +67,7 @@ public class InventoryListener implements Listener
 
         if (invName.contains("Create"))
         {
-            CreateInventory(player, null, event, invName);
+            CreateInventory(player, event, invName);
         }
 
         if (invName.contains("Edit"))
@@ -192,12 +192,12 @@ public class InventoryListener implements Listener
         }
     }
 
-    private void CreateInventory(Player player, Kit kit, InventoryClickEvent event, String invName)
+    private void CreateInventory(Player player, InventoryClickEvent event, String invName)
     {
-        kit = AdvancedKits.getKitManager().getKit(invName.substring(9));
+        Kit kit = AdvancedKits.getKitManager().getKit(invName.substring(9));
         if (kit != null)
         {
-            player.sendMessage(AdvancedKits.getInstance().getConfiguration().getChatPrefix() + " " + tl("error_kit_create_exists"));
+            player.sendMessage(AdvancedKits.getConfiguration().getChatPrefix() + " " + tl("error_kit_create_exists"));
             return;
         }
 

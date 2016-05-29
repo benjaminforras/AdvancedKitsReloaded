@@ -1,7 +1,7 @@
-package me.libraryaddict.inventory;
+package hu.tryharddood.advancedkits.InventoryApi;
 
-import me.libraryaddict.inventory.events.PagesClickEvent;
-import me.libraryaddict.inventory.events.PagesTurnEvent;
+import hu.tryharddood.advancedkits.InventoryApi.events.PagesClickEvent;
+import hu.tryharddood.advancedkits.InventoryApi.events.PagesTurnEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -18,7 +18,6 @@ import static hu.tryharddood.advancedkits.Utils.I18n.tl;
 
 public final class PageInventory extends ClickInventory<Object>
 {
-
     private final HashMap<Integer, ItemStack[]> pages = new HashMap<>();
     private ItemStack backAPage;
     private ItemStack forwardsAPage;

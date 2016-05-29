@@ -1,4 +1,4 @@
-package me.libraryaddict.inventory;
+package hu.tryharddood.advancedkits.InventoryApi;
 
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.ChatColor;
@@ -56,21 +56,6 @@ public class InventoryApi implements Listener
         }
         if (builder.length() == 0) return null;
         return builder.toString();
-    }
-
-    private static NamedInventory[] getNamedInventories(Player p)
-    {
-        if (!p.hasMetadata("NamedInventory")) return new NamedInventory[2];
-        return ((NamedInventory[]) p.getMetadata("NamedInventory").get(0).value()).clone();
-    }
-
-    /**
-     * Gets the named inventory of a player
-     */
-    public static NamedInventory getNamedInventory(Player p)
-    {
-        NamedInventory[] invs = getNamedInventories(p);
-        return invs[0];
     }
 
     private static PageInventory[] getPageInventories(Player p)

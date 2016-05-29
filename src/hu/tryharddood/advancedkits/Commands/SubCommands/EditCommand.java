@@ -2,9 +2,9 @@ package hu.tryharddood.advancedkits.Commands.SubCommands;
 
 import hu.tryharddood.advancedkits.AdvancedKits;
 import hu.tryharddood.advancedkits.Commands.Subcommand;
+import hu.tryharddood.advancedkits.InventoryApi.ItemBuilder;
 import hu.tryharddood.advancedkits.Kits.Kit;
 import hu.tryharddood.advancedkits.Variables;
-import me.libraryaddict.inventory.ItemBuilder;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.DyeColor;

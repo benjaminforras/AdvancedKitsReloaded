@@ -2,7 +2,7 @@ package hu.tryharddood.advancedkits;
 
 import hu.tryharddood.advancedkits.Commands.CommandHandler;
 import hu.tryharddood.advancedkits.Commands.SubCommands.*;
-import hu.tryharddood.advancedkits.Configuration.Configuration;
+import hu.tryharddood.advancedkits.InventoryApi.InventoryApi;
 import hu.tryharddood.advancedkits.Kits.Kit;
 import hu.tryharddood.advancedkits.Kits.KitManager;
 import hu.tryharddood.advancedkits.Listeners.InventoryListener;
@@ -11,7 +11,6 @@ import hu.tryharddood.advancedkits.Listeners.SignListener;
 import hu.tryharddood.advancedkits.Utils.I18n;
 import hu.tryharddood.advancedkits.Utils.Metrics;
 import hu.tryharddood.advancedkits.Utils.Updater;
-import me.libraryaddict.inventory.InventoryApi;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.ChatColor;
 import org.bukkit.command.ConsoleCommandSender;
@@ -32,7 +31,7 @@ public class AdvancedKits extends JavaPlugin
     private static transient I18n                 i18n;
     private static transient KitManager           kitManager;
     private static           ConsoleCommandSender console;
-    private                  Configuration        configuration;
+    private static           Configuration        configuration;
 
     public static AdvancedKits getInstance()
     {
@@ -44,6 +43,11 @@ public class AdvancedKits extends JavaPlugin
         return i18n;
     }
 
+    public static Configuration getConfiguration()
+    {
+        return configuration;
+    }
+
     public static KitManager getKitManager()
     {
         return kitManager;
@@ -52,16 +56,6 @@ public class AdvancedKits extends JavaPlugin
     public static void log(String message)
     {
         console.sendMessage("[" + AdvancedKits.getInstance().getDescription().getName() + "] " + message);
-    }
-
-    public Configuration getConfiguration()
-    {
-        return configuration;
-    }
-
-    public void setConfiguration(Configuration configuration)
-    {
-        this.configuration = configuration;
     }
 
     @Override
@@ -124,22 +118,13 @@ public class AdvancedKits extends JavaPlugin
         kitManager.load();
 
         configuration = new Configuration(this);
-        configuration.loadConfiguration();
-
-        if (configuration.isEconomy())
-        {
-            setupVault(getServer().getPluginManager());
-        }
+        configuration.load();
 
         getServer().getPluginManager().registerEvents(new PlayerListener(), this);
         getServer().getPluginManager().registerEvents(new InventoryListener(), this);
         getServer().getPluginManager().registerEvents(new SignListener(), this);
-
-        if (InventoryApi.getInstance() == null)
-        {
-            getServer().getPluginManager().registerEvents(new InventoryApi(), this);
-            InventoryApi.setInstance(this);
-        }
+        getServer().getPluginManager().registerEvents(new InventoryApi(), this);
+        InventoryApi.setInstance(this);
 
         log(ChatColor.GREEN + "- Initalizing Metrics");
         try

@@ -1,4 +1,4 @@
-package me.libraryaddict.inventory;
+package hu.tryharddood.advancedkits.InventoryApi;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;

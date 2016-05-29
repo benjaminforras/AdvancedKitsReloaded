@@ -64,7 +64,7 @@ public class SignListener implements Listener
             if (sign.getLine(1) == null)
             {
                 AdvancedKits.log(ChatColor.RED + "Error: Kit doesn't exists. Sign location: " + sign.getBlock().getLocation().toString());
-                player.sendMessage(AdvancedKits.getInstance().getConfiguration().getChatPrefix() + ChatColor.RED + "Error: Kit doesn't exists. Sign location: " + sign.getBlock().getLocation().toString());
+                player.sendMessage(AdvancedKits.getConfiguration().getChatPrefix() + ChatColor.RED + "Error: Kit doesn't exists. Sign location: " + sign.getBlock().getLocation().toString());
                 return;
             }
 
@@ -72,7 +72,7 @@ public class SignListener implements Listener
             if (kit == null)
             {
                 AdvancedKits.log(ChatColor.RED + "Error: Kit doesn't exists. Sign location: " + sign.getBlock().getLocation().toString());
-                player.sendMessage(AdvancedKits.getInstance().getConfiguration().getChatPrefix() + ChatColor.RED + "Error: Kit doesn't exists. Sign location: " + sign.getBlock().getLocation().toString());
+                player.sendMessage(AdvancedKits.getConfiguration().getChatPrefix() + ChatColor.RED + "Error: Kit doesn't exists. Sign location: " + sign.getBlock().getLocation().toString());
                 return;
             }
 

@@ -103,13 +103,13 @@ public class EditItemCommand extends Subcommand
 
             if (!isNumeric(value))
             {
-                player.sendMessage(AdvancedKits.getInstance().getConfiguration().getChatPrefix() + " " + ChatColor.RED + tl("kitadmin_flag_integer"));
+                player.sendMessage(AdvancedKits.getConfiguration().getChatPrefix() + " " + ChatColor.RED + tl("kitadmin_flag_integer"));
                 return;
             }
             List<String> lore = itemMeta.getLore();
             if (lore.size() <= Integer.valueOf(value))
             {
-                player.sendMessage(AdvancedKits.getInstance().getConfiguration().getChatPrefix() + " " + ChatColor.RED + "Cannot find the selected lore.");
+                player.sendMessage(AdvancedKits.getConfiguration().getChatPrefix() + " " + ChatColor.RED + "Cannot find the selected lore.");
                 return;
             }
 
@@ -122,7 +122,7 @@ public class EditItemCommand extends Subcommand
 
             if (!isNumeric(value))
             {
-                player.sendMessage(AdvancedKits.getInstance().getConfiguration().getChatPrefix() + " " + ChatColor.RED + tl("kitadmin_flag_integer"));
+                player.sendMessage(AdvancedKits.getConfiguration().getChatPrefix() + " " + ChatColor.RED + tl("kitadmin_flag_integer"));
                 return;
             }
             itemStack.setDurability(Short.valueOf(value));
@@ -133,7 +133,7 @@ public class EditItemCommand extends Subcommand
 
             if (!isNumeric(value))
             {
-                player.sendMessage(AdvancedKits.getInstance().getConfiguration().getChatPrefix() + " " + ChatColor.RED + tl("kitadmin_flag_integer"));
+                player.sendMessage(AdvancedKits.getConfiguration().getChatPrefix() + " " + ChatColor.RED + tl("kitadmin_flag_integer"));
                 return;
             }
             itemStack.setAmount(Integer.valueOf(value));

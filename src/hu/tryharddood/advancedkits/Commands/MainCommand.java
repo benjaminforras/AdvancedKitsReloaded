@@ -1,10 +1,10 @@
 package hu.tryharddood.advancedkits.Commands;
 
 import hu.tryharddood.advancedkits.AdvancedKits;
+import hu.tryharddood.advancedkits.InventoryApi.ItemBuilder;
+import hu.tryharddood.advancedkits.InventoryApi.PageInventory;
 import hu.tryharddood.advancedkits.Kits.Kit;
 import hu.tryharddood.advancedkits.Variables;
-import me.libraryaddict.inventory.ItemBuilder;
-import me.libraryaddict.inventory.PageInventory;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;

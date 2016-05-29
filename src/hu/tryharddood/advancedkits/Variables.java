@@ -15,5 +15,4 @@ public class Variables
     public static final String KIT_BUY_PERMISSION     = "advancedkits.kit.buy";
     public static final String KIT_USE_PERMISSION     = "advancedkits.kit.use";
     public static final String KIT_USE_KIT_PERMISSION = "advancedkits.kit.use.[kitname]";
-
 }

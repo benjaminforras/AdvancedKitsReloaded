@@ -1,23 +1,22 @@
-package me.libraryaddict.inventory.events;
+package hu.tryharddood.advancedkits.InventoryApi.events;
 
-import me.libraryaddict.inventory.NamedInventory;
-import me.libraryaddict.inventory.Page;
+import hu.tryharddood.advancedkits.InventoryApi.PageInventory;
 import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 
-public class NamedPageClickEvent extends ItemClickEvent
+public class PagesTurnEvent extends ItemClickEvent
 {
     private static final HandlerList handlers = new HandlerList();
-    private final NamedInventory inv;
-    private final Page           page;
+    private final PageInventory inv;
+    private final int           newPage;
 
-    public NamedPageClickEvent(NamedInventory inventory, Page page, int slot, InventoryClickEvent invEvent)
+    public PagesTurnEvent(PageInventory inventory, int slot, InventoryClickEvent invEvent, int newPage)
     {
         super(slot, invEvent);
         this.inv = inventory;
-        this.page = page;
+        this.newPage = newPage;
     }
 
     public static HandlerList getHandlerList()
@@ -32,7 +31,7 @@ public class NamedPageClickEvent extends ItemClickEvent
     }
 
     @Override
-    public NamedInventory getInventory()
+    public PageInventory getInventory()
     {
         return inv;
     }
@@ -44,9 +43,9 @@ public class NamedPageClickEvent extends ItemClickEvent
         return null;
     }
 
-    public Page getPage()
+    public int getNewPage()
     {
-        return page;
+        return newPage;
     }
 
     @Override
@@ -54,5 +53,4 @@ public class NamedPageClickEvent extends ItemClickEvent
     {
         return inv.getPlayer();
     }
-
 }

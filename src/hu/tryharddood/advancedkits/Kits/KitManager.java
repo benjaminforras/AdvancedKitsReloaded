@@ -35,7 +35,7 @@ public class KitManager
 
     public boolean canBuy(Player player, Kit kit)
     {
-        if (!AdvancedKits.getInstance().getConfiguration().isEconomy()) return false;
+        if (!AdvancedKits.getConfiguration().isEconomy()) return false;
         if (getUnlocked(kit, player.getName())) return false;
 
         double money = AdvancedKits.econ.getBalance(Bukkit.getOfflinePlayer(player.getUniqueId()));
@@ -48,7 +48,7 @@ public class KitManager
     {
         if (!kit.isPermonly() || kit.isPermonly() && player.hasPermission(Variables.KIT_USE_KIT_PERMISSION.replaceAll("[kitname]", kit.getName())))
         {
-            if (!AdvancedKits.getInstance().getConfiguration().isEconomy() || AdvancedKits.getInstance().getConfiguration().isEconomy() && getUnlocked(kit, player.getName()))
+            if (!AdvancedKits.getConfiguration().isEconomy() || AdvancedKits.getConfiguration().isEconomy() && getUnlocked(kit, player.getName()))
             {
                 if (!kit.getWorlds().contains(player.getWorld().getName()))
                 {
@@ -136,7 +136,7 @@ public class KitManager
             list.add(ChatColor.RED + "" + ChatColor.BOLD + tl("kit_time_use", (kit.getUses() - getUses(kit, player))));
         }
 
-        if (AdvancedKits.getInstance().getConfiguration().isEconomy())
+        if (AdvancedKits.getConfiguration().isEconomy())
         {
             if (getUnlocked(kit, player.getName()))
             {
