@@ -70,7 +70,7 @@ public class BuyCommand extends Subcommand
             return;
         }
 
-        if (AdvancedKits.getKitManager().getUnlocked(kit, player.getName()))
+        if (AdvancedKits.getKitManager().getUnlocked(kit, player))
         {
             sendMessage(player, tl("error_kitbuy_bought_already"), ChatColor.RED);
             closeGUI(player, "Details");
@@ -89,7 +89,7 @@ public class BuyCommand extends Subcommand
         if ((balance - kit.getCost()) >= 0)
         {
             AdvancedKits.econ.withdrawPlayer(oPlayer, kit.getCost());
-            AdvancedKits.getKitManager().setUnlocked(kit, player.getName());
+            AdvancedKits.getKitManager().setUnlocked(kit, player);
 
             sendMessage(player, tl("kitbuy_success_message", kit.getName()), ChatColor.GREEN);
             closeGUI(player, "Details");

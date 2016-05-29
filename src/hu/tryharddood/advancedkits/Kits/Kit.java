@@ -1,6 +1,7 @@
 package hu.tryharddood.advancedkits.Kits;
 
 import hu.tryharddood.advancedkits.AdvancedKits;
+import hu.tryharddood.advancedkits.Variables;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.inventory.ItemStack;
@@ -14,26 +15,28 @@ import java.util.stream.Collectors;
 
 public class Kit
 {
+    private final Object[] flags = new Object[Flags.values().length];
+
     private final YamlConfiguration saveFile;
     private       String            kitname;
 
     private ArrayList<ItemStack> itemStacks = new ArrayList<>();
     private ArrayList<ItemStack> armor      = new ArrayList<>();
 
-    private Boolean visible;
-    private Boolean permonly;
-    private Boolean clearinv;
-    private Boolean firstjoin;
+    //private Boolean visible;
+    //private Boolean permonly;
+    //private Boolean clearinv;
+    //private Boolean firstjoin;
     private Boolean save = false;
 
-    private String permission;
+    //private String permission;
 
-    private Material icon;
+    //private Material icon;
 
-    private Integer cost;
-    private Integer uses;
+    //private Integer cost;
+    //private Integer uses;
 
-    private Double delay;
+    //private Double delay;
 
     private ArrayList<String> worlds   = new ArrayList<>();
     private ArrayList<String> commands = new ArrayList<>();
@@ -190,100 +193,154 @@ public class Kit
 
     public Boolean isVisible()
     {
-        return visible;
+        //return visible;
+
+        return (Boolean) getFlag(Flags.VISIBLE, false);
     }
 
     public void setVisible(Boolean visible)
     {
-        this.visible = visible;
-        setProperty("Flags.Visible", visible);
+        //this.visible = visible;
+        //setProperty("Flags.Visible", visible);
+
+        setFlag(Flags.VISIBLE, visible);
     }
 
     public Boolean isPermonly()
     {
-        return permonly;
+        //return permonly;
+
+        return (Boolean) getFlag(Flags.PERMONLY, false);
     }
 
     public void setPermonly(Boolean permonly)
     {
-        this.permonly = permonly;
-        setProperty("Flags.PermissionOnly", permonly);
+        //this.permonly = permonly;
+        //setProperty("Flags.PermissionOnly", permonly);
+
+        setFlag(Flags.PERMONLY, permonly);
     }
 
     public Boolean isClearinv()
     {
-        return clearinv;
+        //return clearinv;
+
+        return (Boolean) getFlag(Flags.CLEARINV, false);
     }
 
     public void setClearinv(Boolean clearinv)
     {
-        this.clearinv = clearinv;
-        setProperty("Flags.ClearInv", clearinv);
+        //this.clearinv = clearinv;
+        //setProperty("Flags.ClearInv", clearinv);
+
+        setFlag(Flags.CLEARINV, clearinv);
     }
 
     public String getPermission()
     {
-        return permission;
+        //return permission;
+
+        return (String) getFlag(Flags.PERMISSION, Variables.KIT_USE_KIT_PERMISSION.replaceAll("[kitname]", getName()));
     }
 
     public void setPermission(String permission)
     {
-        this.permission = permission;
-        setProperty("Flags.Permission", permission);
+        //this.permission = permission;
+        //setProperty("Flags.Permission", permission);
+
+        setFlag(Flags.PERMISSION, permission);
     }
 
     public Material getIcon()
     {
-        return icon;
+        //return icon;
+
+        return Material.matchMaterial(getFlag(Flags.ICON, Material.EMERALD_BLOCK.toString()).toString());
     }
 
     public void setIcon(Material icon)
     {
-        this.icon = icon;
-        setProperty("Flags.Icon", icon.toString());
+        //this.icon = icon;
+        //setProperty("Flags.Icon", icon.toString());
+
+        setFlag(Flags.ICON, icon.toString());
     }
 
     public Integer getCost()
     {
-        return cost;
+        //return cost;
+
+        return (Integer) getFlag(Flags.COST, 0);
     }
 
     public void setCost(Integer cost)
     {
-        this.cost = cost;
-        setProperty("Flags.Cost", cost);
+        //this.cost = cost;
+        //setProperty("Flags.Cost", cost);
+
+        setFlag(Flags.COST, cost);
     }
 
     public Integer getUses()
     {
-        return uses;
+        //return uses;
+
+        return (Integer) getFlag(Flags.USES, 0);
     }
 
     public void setUses(Integer uses)
     {
-        this.uses = uses;
-        setProperty("Flags.Uses", uses);
+        //this.uses = uses;
+        //setProperty("Flags.Uses", uses);
+
+        setFlag(Flags.USES, uses);
     }
 
     public Double getDelay()
     {
-        return delay;
+        //return delay;
+
+        return (Double) getFlag(Flags.DELAY, 0.0);
     }
 
     public void setDelay(Double delay)
     {
-        this.delay = delay;
-        setProperty("Flags.Delay", delay);
+        //this.delay = delay;
+        //setProperty("Flags.Delay", delay);
+
+        setFlag(Flags.DELAY, delay);
     }
 
     public Boolean isFirstjoin()
     {
-        return firstjoin;
+        return (Boolean) getFlag(Flags.FIRSTJOIN, false);
     }
 
     public void setFirstjoin(Boolean firstjoin)
     {
-        this.firstjoin = firstjoin;
-        setProperty("Flags.FirstJoin", firstjoin);
+        //this.firstjoin = firstjoin;
+        //setProperty("Flags.FirstJoin", firstjoin);
+
+        setFlag(Flags.FIRSTJOIN, firstjoin);
+    }
+
+    public void setFlag(Flags flag, Object value)
+    {
+        this.flags[flag.getId()] = value;
+        setProperty("Flags." + flag.toString(), value);
+    }
+
+    private Object getFlag(Flags flag, Object defvalue)
+    {
+        if(this.flags[flag.getId()] == null)
+        {
+            return defvalue;
+        }
+        return this.flags[flag.getId()];
+    }
+
+    private Object getFlag(Flags flag)
+    {
+        return getFlag(flag, null);
     }
 }

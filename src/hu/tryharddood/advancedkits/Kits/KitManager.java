@@ -36,7 +36,7 @@ public class KitManager
     public boolean canBuy(Player player, Kit kit)
     {
         if (!AdvancedKits.getConfiguration().isEconomy()) return false;
-        if (getUnlocked(kit, player.getName())) return false;
+        if (getUnlocked(kit, player)) return false;
 
         double money = AdvancedKits.econ.getBalance(Bukkit.getOfflinePlayer(player.getUniqueId()));
         int    cost  = kit.getCost();
@@ -48,7 +48,7 @@ public class KitManager
     {
         if (!kit.isPermonly() || kit.isPermonly() && player.hasPermission(Variables.KIT_USE_KIT_PERMISSION.replaceAll("[kitname]", kit.getName())))
         {
-            if (!AdvancedKits.getConfiguration().isEconomy() || AdvancedKits.getConfiguration().isEconomy() && getUnlocked(kit, player.getName()))
+            if (!AdvancedKits.getConfiguration().isEconomy() || AdvancedKits.getConfiguration().isEconomy() && getUnlocked(kit, player))
             {
                 if (!kit.getWorlds().contains(player.getWorld().getName()))
                 {
@@ -63,19 +63,6 @@ public class KitManager
             }
         }
         return false;
-    }
-
-    public boolean CheckCooldown(Player player, Kit kit)
-    {
-        YamlConfiguration config = kit.getYaml();
-
-        if (config == null)
-        {
-            return false;
-        }
-
-        Long delay = config.getLong("LastUse." + player.getName());
-        return System.currentTimeMillis() >= delay;
     }
 
     public void deleteKit(Kit kit)
@@ -93,21 +80,6 @@ public class KitManager
         load();
     }
 
-    public String getDelay(Player player, Kit kit)
-    {
-        YamlConfiguration config = kit.getYaml();
-
-        if (config == null)
-        {
-            return null;
-        }
-
-        Long             delay       = config.getLong("LastUse." + player.getName());
-        Date             date        = new Date(delay);
-        SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-
-        return DATE_FORMAT.format(date);
-    }
 
     public Kit getKit(String kitname)
     {
@@ -138,7 +110,7 @@ public class KitManager
 
         if (AdvancedKits.getConfiguration().isEconomy())
         {
-            if (getUnlocked(kit, player.getName()))
+            if (getUnlocked(kit, player))
             {
                 list.add(ChatColor.GREEN + "");
                 list.add(ChatColor.GREEN + "" + ChatColor.BOLD + tl("unlocked"));
@@ -259,7 +231,7 @@ public class KitManager
             }
         }
 
-        kit.setPermonly(configuration.getBoolean("Flags.PermissionOnly", false));
+        /*kit.setPermonly(configuration.getBoolean("Flags.PermissionOnly", false));
 
         kit.setPermission(configuration.getString("Flags.Permission", Variables.KIT_USE_KIT_PERMISSION.replaceAll("[kitname]", name)));
 
@@ -275,7 +247,21 @@ public class KitManager
 
         kit.setDelay(configuration.getDouble("Flags.Delay", 0));
 
-        kit.setCost(configuration.getInt("Flags.Cost", 0));
+        kit.setCost(configuration.getInt("Flags.Cost", 0));*/
+
+        if(configuration.getConfigurationSection("Flags") != null)
+        {
+            for(String s : configuration.getConfigurationSection("Flags").getKeys(false))
+            {
+                for(Flags flag : Flags.values())
+                {
+                    if(s.equalsIgnoreCase(flag.toString()))
+                    {
+                        kit.setFlag(flag, configuration.get("Flags." + s));
+                    }
+                }
+            }
+        }
 
         if (configuration.getStringList("Flags.World") != null)
         {
@@ -288,23 +274,6 @@ public class KitManager
         }
 
         Kits.add(kit);
-    }
-
-    public boolean getUnlocked(Kit kit, String player)
-    {
-        YamlConfiguration config = kit.getYaml();
-
-        return config != null && config.contains("Unlocked." + player) && config.getBoolean("Unlocked." + player);
-    }
-
-    public int getUses(Kit kit, Player player)
-    {
-        YamlConfiguration config = kit.getYaml();
-        if (!config.contains("Uses." + player.getName()))
-        {
-            return 0;
-        }
-        return config.getInt("Uses." + player.getName());
     }
 
     public void load()
@@ -359,55 +328,63 @@ public class KitManager
         AdvancedKits.log(ChatColor.GREEN + "- " + Kits.size() + " kit loaded");
     }
 
-    public void setDelay(Player player, double delay, Kit kit)
+    public boolean CheckCooldown(Player player, Kit kit)
     {
-        YamlConfiguration config = kit.getYaml();
-
-        if (config == null)
-        {
-            return;
-        }
-
-        config.set("LastUse." + player.getName(), (System.currentTimeMillis() + (delay * 3600000)));
-        try
-        {
-            config.save(kit.getSaveFile());
-        }
-        catch (IOException e)
-        {
-            e.printStackTrace();
-        }
+        Long delay = Double.valueOf(getProperty(player, kit, Properties.LASTUSE, 0.0).toString()).longValue();
+        return System.currentTimeMillis() >= delay;
     }
 
-    public void setUnlocked(Kit kit, String player)
+    public String getDelay(Player player, Kit kit)
     {
-        YamlConfiguration config = kit.getYaml();
+        Long             delay       = Double.valueOf(getProperty(player, kit, Properties.LASTUSE, 0.0).toString()).longValue();
+        Date             date        = new Date(delay);
+        SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
-        config.set("Unlocked." + player, true);
-        try
-        {
-            config.save(kit.getSaveFile());
-        }
-        catch (IOException e)
-        {
-            e.printStackTrace();
-        }
+        return DATE_FORMAT.format(date);
+    }
+
+    public boolean getUnlocked(Kit kit, Player player)
+    {
+        return (Boolean) getProperty(player, kit, Properties.UNLOCKED, false);
+    }
+
+    public int getUses(Kit kit, Player player)
+    {
+        return (Integer) getProperty(player, kit, Properties.USES, 0);
+    }
+
+    public void setDelay(Player player, double delay, Kit kit)
+    {
+        setProperty(player, kit, Properties.LASTUSE, (System.currentTimeMillis() + (delay * 3600000)));
+    }
+
+    public void setUnlocked(Kit kit, Player player)
+    {
+        setProperty(player, kit, Properties.UNLOCKED, true);
     }
 
     public boolean getFirstJoin(Player player, Kit kit)
     {
-        YamlConfiguration config = kit.getYaml();
-        return config.getBoolean("FirstJoin." + player.getUniqueId(), false);
+        return (Boolean) getProperty(player, kit, Properties.FIRSTJOIN, false);
     }
 
     public void setFirstJoin(Player player, Kit kit)
     {
-        YamlConfiguration config = kit.getYaml();
+        setProperty(player, kit, Properties.FIRSTJOIN, true);
+    }
 
-        config.set("FirstJoin." + player.getUniqueId(), true);
+    public void setUses(Kit kit, Player player, int uses)
+    {
+        setProperty(player, kit, Properties.USES, uses);
+    }
+
+    private void setProperty(Player player, Kit kit, Properties property, Object value)
+    {
         try
         {
-            config.save(kit.getSaveFile());
+            YamlConfiguration yamlConfiguration = kit.getYaml();
+            yamlConfiguration.set(player.getUniqueId() + "." + property.toString(), value);
+            yamlConfiguration.save(kit.getSaveFile());
         }
         catch (IOException e)
         {
@@ -415,18 +392,9 @@ public class KitManager
         }
     }
 
-    public void setUses(Kit kit, Player player, int uses)
+    private Object getProperty(Player player, Kit kit, Properties property, Object defvalue)
     {
-        YamlConfiguration config = kit.getYaml();
-
-        config.set("Uses." + player.getName(), uses);
-        try
-        {
-            config.save(kit.getSaveFile());
-        }
-        catch (IOException e)
-        {
-            e.printStackTrace();
-        }
+        YamlConfiguration yamlConfiguration = kit.getYaml();
+        return yamlConfiguration.get(player.getUniqueId() + "." + property.toString(), defvalue);
     }
 }

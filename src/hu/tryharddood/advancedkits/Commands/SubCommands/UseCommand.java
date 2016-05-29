@@ -175,7 +175,7 @@ public class UseCommand extends Subcommand
             return;
         }
 
-        if (AdvancedKits.getConfiguration().isEconomy() && !AdvancedKits.getKitManager().getUnlocked(kit, player.getName()))
+        if (AdvancedKits.getConfiguration().isEconomy() && !AdvancedKits.getKitManager().getUnlocked(kit, player))
         {
             sendMessage(player, tl("kituse_error_notunlocked"), ChatColor.RED);
             closeGUI(player, "Details");
