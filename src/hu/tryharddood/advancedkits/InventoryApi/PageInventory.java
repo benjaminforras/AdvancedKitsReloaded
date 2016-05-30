@@ -180,6 +180,14 @@ public final class PageInventory extends ClickInventory<Object>
     /**
      * Auto fills out the pages with these items
      */
+    public void setPages(ArrayList<ItemStack> allItems)
+    {
+        setPages(allItems.toArray(new ItemStack[allItems.size()]));
+    }
+
+    /**
+     * Auto fills out the pages with these items
+     */
     public void setPages(ItemStack... allItems)
     {
         pages.clear();
@@ -229,14 +237,6 @@ public final class PageInventory extends ClickInventory<Object>
             pages.put(0, items);
         }
         setPage(getCurrentPage());
-    }
-
-    /**
-     * Auto fills out the pages with these items
-     */
-    public void setPages(ArrayList<ItemStack> allItems)
-    {
-        setPages(allItems.toArray(new ItemStack[allItems.size()]));
     }
 
     protected String getPageTitle()

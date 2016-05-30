@@ -1,5 +1,7 @@
 package hu.tryharddood.advancedkits.Kits;
 
+import org.bukkit.Material;
+
 /**
  * Class:
  *
@@ -26,6 +28,7 @@ public enum Flags
             flag.id = (ids++);
         }
     }
+
     private int id;
 
     public String getName()
@@ -40,6 +43,20 @@ public enum Flags
         if (this == COST) return "cost";
         if (this == DELAY) return "delay";
         return "Unknown";
+    }
+
+    public Class getType()
+    {
+        if (this == VISIBLE) return Boolean.class;
+        if (this == PERMONLY) return Boolean.class;
+        if (this == USES) return Integer.class;
+        if (this == FIRSTJOIN) return Boolean.class;
+        if (this == CLEARINV) return Boolean.class;
+        if (this == PERMISSION) return String.class;
+        if (this == ICON) return Material.class;
+        if (this == COST) return Integer.class;
+        if (this == DELAY) return Double.class;
+        return this.getClass();
     }
 
     public String toString()

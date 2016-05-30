@@ -330,16 +330,16 @@ public class Kit
         setProperty("Flags." + flag.toString(), value);
     }
 
-    private Object getFlag(Flags flag, Object defvalue)
+    public Object getFlag(Flags flag, Object defvalue)
     {
-        if(this.flags[flag.getId()] == null)
+        if (this.flags[flag.getId()] == null)
         {
             return defvalue;
         }
         return this.flags[flag.getId()];
     }
 
-    private Object getFlag(Flags flag)
+    public Object getFlag(Flags flag)
     {
         return getFlag(flag, null);
     }

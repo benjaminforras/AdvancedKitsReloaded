@@ -81,7 +81,8 @@ public class UpdateCommand extends Subcommand
                     downloadedFileSize += count;
 
                     currentProgress = (int) ((((double) downloadedFileSize) / ((double) completeFileSize)) * 100d);
-                    AdvancedKits.log(ChatColor.GREEN + "Downloaded: " + currentProgress + "%");
+                    if(((int) (currentProgress * 0x55555556L >> 30) & 45) == 0)
+                        AdvancedKits.log(ChatColor.GREEN + "Downloaded: " + currentProgress + "%");
 
                     fileOutputStream.write(data, 0, count);
                 }

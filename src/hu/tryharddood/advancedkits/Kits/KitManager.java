@@ -4,7 +4,6 @@ import hu.tryharddood.advancedkits.AdvancedKits;
 import hu.tryharddood.advancedkits.Variables;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.Material;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
@@ -249,13 +248,13 @@ public class KitManager
 
         kit.setCost(configuration.getInt("Flags.Cost", 0));*/
 
-        if(configuration.getConfigurationSection("Flags") != null)
+        if (configuration.getConfigurationSection("Flags") != null)
         {
-            for(String s : configuration.getConfigurationSection("Flags").getKeys(false))
+            for (String s : configuration.getConfigurationSection("Flags").getKeys(false))
             {
-                for(Flags flag : Flags.values())
+                for (Flags flag : Flags.values())
                 {
-                    if(s.equalsIgnoreCase(flag.toString()))
+                    if (s.equalsIgnoreCase(flag.toString()))
                     {
                         kit.setFlag(flag, configuration.get("Flags." + s));
                     }

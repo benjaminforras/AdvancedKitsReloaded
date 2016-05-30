@@ -21,6 +21,7 @@ public enum Properties
             prop.id = (ids++);
         }
     }
+
     private int id;
 
     public String getName()
