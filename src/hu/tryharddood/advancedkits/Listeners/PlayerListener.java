@@ -21,10 +21,13 @@ public class PlayerListener implements Listener
         Player player = event.getPlayer();
         AdvancedKits.getInstance().getServer().getScheduler().scheduleSyncDelayedTask(AdvancedKits.getInstance(), () -> AdvancedKits.getKitManager().getKits().stream().forEach(kit ->
         {
-            if (!AdvancedKits.getKitManager().getFirstJoin(player, kit))
+            if(kit.isFirstjoin())
             {
-                UseCommand.GiveItems(player, kit);
-                AdvancedKits.getKitManager().setFirstJoin(player, kit);
+                if (!AdvancedKits.getKitManager().getFirstJoin(player, kit))
+                {
+                    UseCommand.GiveItems(player, kit);
+                    AdvancedKits.getKitManager().setFirstJoin(player, kit);
+                }
             }
         }), 2L);
     }

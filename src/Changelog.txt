@@ -1,2 +1,4 @@
-- Added autoupdate (/kit update)
-- Fixed firstjoin
+- Fixed FirstJoin flag.. Once and for all.
+- Changed the way of saving and loading flags.
+- Changed the Unlocked/FirstJoin/Uses/LastTime checkings.
+- These changes will cause some problem ( You have to rebuy/unlock the kits again )
