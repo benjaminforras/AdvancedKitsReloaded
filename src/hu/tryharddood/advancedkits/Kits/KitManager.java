@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import static hu.tryharddood.advancedkits.Utils.I18n.tl;
@@ -312,6 +313,13 @@ public class KitManager
                     {
                         name = name.substring(0, pos);
                     }
+
+					if(Pattern.compile("[^A-Za-z0-9_]+", Pattern.CASE_INSENSITIVE).matcher(name).find())
+					{
+						AdvancedKits.log(ChatColor.RED + "Error when trying to load " + name);
+						AdvancedKits.log(ChatColor.RED + "- The name contains special charaters.");
+						continue;
+					}
 
                     configuration = YamlConfiguration.loadConfiguration(file);
                     configuration.load(file);
