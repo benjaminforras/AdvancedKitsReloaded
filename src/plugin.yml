@@ -1,9 +1,9 @@
 name: AdvancedKitsReloaded
 main: hu.tryharddood.advancedkits.AdvancedKits
-version: 3.0.18
+version: 3.0.20
 author: TryHardDood
 website: https://infinityhosting.hu
-softdepend: [Vault, AuthMe]
+softdepend: [Vault]
 commands:
   kit:
     aliases: [akits, akit, kits]
