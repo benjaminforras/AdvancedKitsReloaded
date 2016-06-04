@@ -10,59 +10,59 @@ import org.bukkit.inventory.ItemStack;
 
 public abstract class ItemClickEvent extends Event implements Cancellable
 {
-    private static final HandlerList handlers = new HandlerList();
-    protected final int                 slot;
-    private final   InventoryClickEvent invEvent;
-    private         boolean             cancelled;
+	private static final HandlerList handlers = new HandlerList();
+	protected final int slot;
+	private final InventoryClickEvent invEvent;
+	private boolean cancelled;
 
-    public ItemClickEvent(int slot, InventoryClickEvent invEvent)
-    {
-        this.slot = slot;
-        this.invEvent = invEvent;
-    }
+	public ItemClickEvent(int slot, InventoryClickEvent invEvent)
+	{
+		this.slot = slot;
+		this.invEvent = invEvent;
+	}
 
-    public static HandlerList getHandlerList()
-    {
-        return handlers;
-    }
+	public static HandlerList getHandlerList()
+	{
+		return handlers;
+	}
 
-    public InventoryClickEvent getEvent()
-    {
-        return invEvent;
-    }
+	public InventoryClickEvent getEvent()
+	{
+		return invEvent;
+	}
 
-    @Override
-    public HandlerList getHandlers()
-    {
-        return handlers;
-    }
+	@Override
+	public HandlerList getHandlers()
+	{
+		return handlers;
+	}
 
-    protected abstract ClickInventory<?> getInventory();
+	protected abstract ClickInventory<?> getInventory();
 
-    public abstract ItemStack getItemStack();
+	public abstract ItemStack getItemStack();
 
-    public String getName()
-    {
-        return getInventory().getName();
-    }
+	public String getName()
+	{
+		return getInventory().getName();
+	}
 
-    public abstract Player getPlayer();
+	public abstract Player getPlayer();
 
-    public int getSlot()
-    {
-        return slot;
-    }
+	public int getSlot()
+	{
+		return slot;
+	}
 
-    @Override
-    public boolean isCancelled()
-    {
-        return cancelled;
-    }
+	@Override
+	public boolean isCancelled()
+	{
+		return cancelled;
+	}
 
-    @Override
-    public void setCancelled(boolean cancel)
-    {
-        cancelled = cancel;
-    }
+	@Override
+	public void setCancelled(boolean cancel)
+	{
+		cancelled = cancel;
+	}
 
 }

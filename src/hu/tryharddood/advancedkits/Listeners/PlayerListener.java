@@ -16,27 +16,27 @@ import org.bukkit.event.player.PlayerLoginEvent;
 public class PlayerListener implements Listener
 {
 
-    @EventHandler
-    public void onPlayerJoin(PlayerLoginEvent event)
-    {
-        final Player player = event.getPlayer();
-        AdvancedKits.getInstance().getServer().getScheduler().scheduleSyncDelayedTask(AdvancedKits.getInstance(), new Runnable()
-        {
-            @Override
-            public void run()
-            {
-                for (Kit kit : AdvancedKits.getKitManager().getKits())
-                {
-                    if (kit.isFirstjoin())
-                    {
-                        if (!AdvancedKits.getKitManager().getFirstJoin(player, kit))
-                        {
-                            UseCommand.GiveItems(player, kit);
-                            AdvancedKits.getKitManager().setFirstJoin(player, kit);
-                        }
-                    }
-                }
-            }
-        }, 2L);
-    }
+	@EventHandler
+	public void onPlayerJoin(PlayerLoginEvent event)
+	{
+		final Player player = event.getPlayer();
+		AdvancedKits.getInstance().getServer().getScheduler().scheduleSyncDelayedTask(AdvancedKits.getInstance(), new Runnable()
+		{
+			@Override
+			public void run()
+			{
+				for (Kit kit : AdvancedKits.getKitManager().getKits())
+				{
+					if (kit.isFirstjoin())
+					{
+						if (!AdvancedKits.getKitManager().getFirstJoin(player, kit))
+						{
+							UseCommand.GiveItems(player, kit);
+							AdvancedKits.getKitManager().setFirstJoin(player, kit);
+						}
+					}
+				}
+			}
+		}, 2L);
+	}
 }

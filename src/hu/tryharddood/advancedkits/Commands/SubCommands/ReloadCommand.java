@@ -17,41 +17,41 @@ import static hu.tryharddood.advancedkits.Utils.I18n.tl;
  */
 public class ReloadCommand extends Subcommand
 {
-    @Override
-    public String getPermission()
-    {
-        return Variables.RELOAD_PERMISSION;
-    }
+	@Override
+	public String getPermission()
+	{
+		return Variables.RELOAD_PERMISSION;
+	}
 
-    @Override
-    public String getUsage()
-    {
-        return "/kit reload";
-    }
+	@Override
+	public String getUsage()
+	{
+		return "/kit reload";
+	}
 
-    @Override
-    public String getDescription()
-    {
-        return "Reloads the plugin's configuration.";
-    }
+	@Override
+	public String getDescription()
+	{
+		return "Reloads the plugin's configuration.";
+	}
 
-    @Override
-    public int getArgs()
-    {
-        return 1;
-    }
+	@Override
+	public int getArgs()
+	{
+		return 1;
+	}
 
-    @Override
-    public boolean playerOnly()
-    {
-        return false;
-    }
+	@Override
+	public boolean playerOnly()
+	{
+		return false;
+	}
 
-    @Override
-    public void onCommand(CommandSender sender, Command cmd, String label, String[] args)
-    {
-        AdvancedKits.getConfiguration().load();
-        AdvancedKits.getKitManager().load();
-        sender.sendMessage(AdvancedKits.getConfiguration().getChatPrefix() + " " + ChatColor.GREEN + tl("kit_reload"));
-    }
+	@Override
+	public void onCommand(CommandSender sender, Command cmd, String label, String[] args)
+	{
+		AdvancedKits.getConfiguration().load();
+		AdvancedKits.getKitManager().load();
+		sender.sendMessage(AdvancedKits.getConfiguration().getChatPrefix() + " " + ChatColor.GREEN + tl("kit_reload"));
+	}
 }

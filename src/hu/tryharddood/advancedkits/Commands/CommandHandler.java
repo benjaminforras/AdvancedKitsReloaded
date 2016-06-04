@@ -17,40 +17,40 @@ import static hu.tryharddood.advancedkits.Utils.I18n.tl;
  */
 public class CommandHandler implements CommandExecutor
 {
-    private static HashMap<List<String>, Subcommand> commands = new HashMap<>();
+	private static HashMap<List<String>, Subcommand> commands = new HashMap<>();
 
-    public static void addComand(List<String> cmds, Subcommand s)
-    {
-        commands.put(cmds, s);
-    }
+	public static void addComand(List<String> cmds, Subcommand s)
+	{
+		commands.put(cmds, s);
+	}
 
-    public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args)
-    {
-        if (args.length >= 1)
-        {
-            boolean match = false;
+	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args)
+	{
+		if (args.length >= 1)
+		{
+			boolean match = false;
 
-            for (List<String> s : commands.keySet())
-            {
-                if (s.contains(args[0]))
-                {
-                    commands.get(s).runCommand(sender, cmd, label, args);
-                    match = true;
-                }
-            }
+			for (List<String> s : commands.keySet())
+			{
+				if (s.contains(args[0]))
+				{
+					commands.get(s).runCommand(sender, cmd, label, args);
+					match = true;
+				}
+			}
 
-            if (!match)
-            {
-                sender.sendMessage(tl("chat_unknown"));
-                sender.sendMessage(tl("chat_help"));
-            }
-        }
-        else
-        {
-            new MainCommand().runCommand(sender, cmd, label, args);
-        }
+			if (!match)
+			{
+				sender.sendMessage(tl("chat_unknown"));
+				sender.sendMessage(tl("chat_help"));
+			}
+		}
+		else
+		{
+			new MainCommand().runCommand(sender, cmd, label, args);
+		}
 
-        return true;
-    }
+		return true;
+	}
 
 }

@@ -24,121 +24,121 @@ import static hu.tryharddood.advancedkits.Utils.I18n.tl;
  */
 public class EditItemCommand extends Subcommand
 {
-    @Override
-    public String getPermission()
-    {
-        return Variables.KITADMIN_PERMISSION;
-    }
+	@Override
+	public String getPermission()
+	{
+		return Variables.KITADMIN_PERMISSION;
+	}
 
-    @Override
-    public String getUsage()
-    {
-        return "/kit edititem <name|addlore|dellore|amount|durability>  [value]";
-    }
+	@Override
+	public String getUsage()
+	{
+		return "/kit edititem <name|addlore|dellore|amount|durability>  [value]";
+	}
 
-    @Override
-    public String getDescription()
-    {
-        return "Sets an item's variable.";
-    }
+	@Override
+	public String getDescription()
+	{
+		return "Sets an item's variable.";
+	}
 
-    @Override
-    public int getArgs()
-    {
-        return -1;
-    }
+	@Override
+	public int getArgs()
+	{
+		return -1;
+	}
 
-    @Override
-    public boolean playerOnly()
-    {
-        return true;
-    }
+	@Override
+	public boolean playerOnly()
+	{
+		return true;
+	}
 
-    @Override
-    public void onCommand(CommandSender sender, Command cmd, String label, String[] args)
-    {
-        Player player = (Player) sender;
-        if (args.length <= 2)
-        {
-            sender.sendMessage(tl("chat_usage") + ":");
-            sender.sendMessage(ChatColor.GREEN + getUsage() + ChatColor.GRAY + " - " + ChatColor.BLUE + getDescription());
-            return;
-        }
+	@Override
+	public void onCommand(CommandSender sender, Command cmd, String label, String[] args)
+	{
+		Player player = (Player) sender;
+		if (args.length <= 2)
+		{
+			sender.sendMessage(tl("chat_usage") + ":");
+			sender.sendMessage(ChatColor.GREEN + getUsage() + ChatColor.GRAY + " - " + ChatColor.BLUE + getDescription());
+			return;
+		}
 
-        ItemStack itemStack;
-        if (AdvancedKits.ServerVersion == 19)
-        {
-            itemStack = player.getInventory().getItemInMainHand();
-        }
-        else
-        {
-            itemStack = player.getItemInHand();
-        }
-        if (itemStack == null || itemStack.getType() == Material.AIR)
-        {
-            sendMessage(player, tl("not_air"), ChatColor.RED);
-            return;
-        }
+		ItemStack itemStack;
+		if (AdvancedKits.ServerVersion == 19)
+		{
+			itemStack = player.getInventory().getItemInMainHand();
+		}
+		else
+		{
+			itemStack = player.getItemInHand();
+		}
+		if (itemStack == null || itemStack.getType() == Material.AIR)
+		{
+			sendMessage(player, tl("not_air"), ChatColor.RED);
+			return;
+		}
 
-        String[] strings  = Arrays.copyOfRange(args, 1, args.length);
-        ItemMeta itemMeta = itemStack.getItemMeta();
+		String[] strings = Arrays.copyOfRange(args, 1, args.length);
+		ItemMeta itemMeta = itemStack.getItemMeta();
 
-        if (strings[0].equalsIgnoreCase("name"))
-        {
-            String name = strings[1];
-            itemMeta.setDisplayName(ChatColor.translateAlternateColorCodes('&', name));
-        }
-        else if (strings[0].equalsIgnoreCase("addlore"))
-        {
-            String       value = getArgString(strings, 1);
-            List<String> lore;
+		if (strings[0].equalsIgnoreCase("name"))
+		{
+			String name = strings[1];
+			itemMeta.setDisplayName(ChatColor.translateAlternateColorCodes('&', name));
+		}
+		else if (strings[0].equalsIgnoreCase("addlore"))
+		{
+			String value = getArgString(strings, 1);
+			List<String> lore;
 
-            lore = itemMeta.getLore();
-            lore.add(ChatColor.translateAlternateColorCodes('&', value));
-            itemMeta.setLore(lore);
-        }
-        else if (strings[0].equalsIgnoreCase("dellore"))
-        {
-            String value = getArgString(strings, 1);
+			lore = itemMeta.getLore();
+			lore.add(ChatColor.translateAlternateColorCodes('&', value));
+			itemMeta.setLore(lore);
+		}
+		else if (strings[0].equalsIgnoreCase("dellore"))
+		{
+			String value = getArgString(strings, 1);
 
-            if (!isNumeric(value))
-            {
-                player.sendMessage(AdvancedKits.getConfiguration().getChatPrefix() + " " + ChatColor.RED + tl("kitadmin_flag_integer"));
-                return;
-            }
-            List<String> lore = itemMeta.getLore();
-            if (lore.size() <= Integer.valueOf(value))
-            {
-                player.sendMessage(AdvancedKits.getConfiguration().getChatPrefix() + " " + ChatColor.RED + "Cannot find the selected lore.");
-                return;
-            }
+			if (!isNumeric(value))
+			{
+				player.sendMessage(AdvancedKits.getConfiguration().getChatPrefix() + " " + ChatColor.RED + tl("kitadmin_flag_integer"));
+				return;
+			}
+			List<String> lore = itemMeta.getLore();
+			if (lore.size() <= Integer.valueOf(value))
+			{
+				player.sendMessage(AdvancedKits.getConfiguration().getChatPrefix() + " " + ChatColor.RED + "Cannot find the selected lore.");
+				return;
+			}
 
-            lore.remove((int) Integer.valueOf(value));
-            itemMeta.setLore(lore);
-        }
-        else if (strings[0].equalsIgnoreCase("durability"))
-        {
-            String value = getArgString(strings, 1);
+			lore.remove((int) Integer.valueOf(value));
+			itemMeta.setLore(lore);
+		}
+		else if (strings[0].equalsIgnoreCase("durability"))
+		{
+			String value = getArgString(strings, 1);
 
-            if (!isNumeric(value))
-            {
-                player.sendMessage(AdvancedKits.getConfiguration().getChatPrefix() + " " + ChatColor.RED + tl("kitadmin_flag_integer"));
-                return;
-            }
-            itemStack.setDurability(Short.valueOf(value));
-        }
-        else if (strings[0].equalsIgnoreCase("amount"))
-        {
-            String value = getArgString(strings, 1);
+			if (!isNumeric(value))
+			{
+				player.sendMessage(AdvancedKits.getConfiguration().getChatPrefix() + " " + ChatColor.RED + tl("kitadmin_flag_integer"));
+				return;
+			}
+			itemStack.setDurability(Short.valueOf(value));
+		}
+		else if (strings[0].equalsIgnoreCase("amount"))
+		{
+			String value = getArgString(strings, 1);
 
-            if (!isNumeric(value))
-            {
-                player.sendMessage(AdvancedKits.getConfiguration().getChatPrefix() + " " + ChatColor.RED + tl("kitadmin_flag_integer"));
-                return;
-            }
-            itemStack.setAmount(Integer.valueOf(value));
-        }
-        itemStack.setItemMeta(itemMeta);
-        player.updateInventory();
-    }
+			if (!isNumeric(value))
+			{
+				player.sendMessage(AdvancedKits.getConfiguration().getChatPrefix() + " " + ChatColor.RED + tl("kitadmin_flag_integer"));
+				return;
+			}
+			itemStack.setAmount(Integer.valueOf(value));
+		}
+		itemStack.setItemMeta(itemMeta);
+		player.updateInventory();
+	}
 }
