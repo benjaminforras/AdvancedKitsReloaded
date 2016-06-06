@@ -1,7 +1,7 @@
-package hu.tryharddood.advancedkits.Commands.SubCommands;
+package advancedkits.Commands.SubCommands;
 
-import hu.tryharddood.advancedkits.Commands.Subcommand;
-import hu.tryharddood.advancedkits.Variables;
+import advancedkits.Commands.Subcommand;
+import advancedkits.Variables;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;

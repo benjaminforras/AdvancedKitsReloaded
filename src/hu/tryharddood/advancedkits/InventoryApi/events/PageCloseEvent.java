@@ -1,6 +1,6 @@
-package hu.tryharddood.advancedkits.InventoryApi.events;
+package advancedkits.InventoryApi.events;
 
-import hu.tryharddood.advancedkits.InventoryApi.PageInventory;
+import advancedkits.InventoryApi.PageInventory;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;

@@ -1,8 +1,8 @@
-package hu.tryharddood.advancedkits.Commands.SubCommands;
+package advancedkits.Commands.SubCommands;
 
-import hu.tryharddood.advancedkits.AdvancedKits;
-import hu.tryharddood.advancedkits.Commands.Subcommand;
-import hu.tryharddood.advancedkits.Variables;
+import advancedkits.AdvancedKits;
+import advancedkits.Commands.Subcommand;
+import advancedkits.Variables;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.command.Command;
@@ -14,7 +14,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import java.util.Arrays;
 import java.util.List;
 
-import static hu.tryharddood.advancedkits.Utils.I18n.tl;
+import static advancedkits.Utils.I18n.tl;
 
 
 /**

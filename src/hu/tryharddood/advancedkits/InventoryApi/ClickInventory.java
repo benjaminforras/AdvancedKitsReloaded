@@ -1,6 +1,6 @@
-package hu.tryharddood.advancedkits.InventoryApi;
+package advancedkits.InventoryApi;
 
-import hu.tryharddood.advancedkits.InventoryApi.events.PageCloseEvent;
+import advancedkits.InventoryApi.events.PageCloseEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;

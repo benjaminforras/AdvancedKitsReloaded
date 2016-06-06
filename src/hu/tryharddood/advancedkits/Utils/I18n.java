@@ -1,6 +1,6 @@
-package hu.tryharddood.advancedkits.Utils;
+package advancedkits.Utils;
 
-import hu.tryharddood.advancedkits.AdvancedKits;
+import advancedkits.AdvancedKits;
 import org.bukkit.ChatColor;
 import org.bukkit.plugin.java.JavaPlugin;
 

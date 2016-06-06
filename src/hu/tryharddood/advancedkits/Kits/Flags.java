@@ -1,4 +1,4 @@
-package hu.tryharddood.advancedkits.Kits;
+package advancedkits.Kits;
 
 import org.bukkit.Material;
 

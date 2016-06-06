@@ -1,10 +1,10 @@
-package hu.tryharddood.advancedkits.Commands;
+package advancedkits.Commands;
 
-import hu.tryharddood.advancedkits.AdvancedKits;
-import hu.tryharddood.advancedkits.InventoryApi.ItemBuilder;
-import hu.tryharddood.advancedkits.InventoryApi.PageInventory;
-import hu.tryharddood.advancedkits.Kits.Kit;
-import hu.tryharddood.advancedkits.Variables;
+import advancedkits.AdvancedKits;
+import advancedkits.InventoryApi.ItemBuilder;
+import advancedkits.InventoryApi.PageInventory;
+import advancedkits.Kits.Kit;
+import advancedkits.Variables;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -14,7 +14,7 @@ import org.bukkit.inventory.ItemStack;
 import java.util.ArrayList;
 import java.util.List;
 
-import static hu.tryharddood.advancedkits.Utils.I18n.tl;
+import static advancedkits.Utils.I18n.tl;
 
 
 /**

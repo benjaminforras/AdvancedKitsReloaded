@@ -1,6 +1,7 @@
-package hu.tryharddood.advancedkits;
+package advancedkits;
 
 import org.bukkit.ChatColor;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.BufferedWriter;
@@ -14,6 +15,8 @@ public class Configuration
 	private static String       locale;
 	private static Boolean      economy;
 	private static Boolean      useOnBuy;
+	private static File langFile = null;
+	private static FileConfiguration langConfig;
 	private final  AdvancedKits instance;
 
 	public Configuration(AdvancedKits instance)
@@ -44,6 +47,16 @@ public class Configuration
 	public void setEconomy(Boolean value)
 	{
 		economy = value;
+	}
+
+	public static FileConfiguration getLangConfig()
+	{
+		return langConfig;
+	}
+
+	public static File getLangFile()
+	{
+		return langFile;
 	}
 
 	private void writeChatPrefix(BufferedWriter out) throws IOException
@@ -97,7 +110,10 @@ public class Configuration
 		}
 		catch (IOException e)
 		{
+			AdvancedKits.log(ChatColor.RED + "Please send this to the author of this plugin:");
+			AdvancedKits.log(" -- StackTrace --");
 			e.printStackTrace();
+			System.out.println(" -- End of StackTrace --");
 		}
 	}
 
@@ -175,5 +191,30 @@ public class Configuration
 			instance.setupVault(instance.getServer().getPluginManager());
 		}
 		AdvancedKits.getI18n().updateLocale(locale);
+	}
+
+	public static void loadLangConfig()
+	{
+		String localeFileName = locale + "_locale.yml";
+		try
+		{
+			langFile = new File(AdvancedKits.getInstance().getDataFolder(), localeFileName);
+			if (!langFile.exists()) {
+				AdvancedKits.getInstance().saveResource(localeFileName, false);
+			}
+			AdvancedKits.log(ChatColor.GREEN + "Locale: \"" + locale + "\" | Locale file: " + localeFileName);
+		}
+		catch (IllegalArgumentException iaex)
+		{
+			langFile = new File(AdvancedKits.getInstance().getDataFolder(), "en_locale.yml");
+			if (!langFile.exists()) {
+				AdvancedKits.getInstance().saveResource("en_locale.yml", false);
+			}
+			AdvancedKits.log(ChatColor.RED + "Wrong locale setup, using \"en\"");
+		}
+		finally
+		{
+			langConfig = YamlConfiguration.loadConfiguration(langFile);
+		}
 	}
 }

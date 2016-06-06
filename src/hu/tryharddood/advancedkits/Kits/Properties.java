@@ -1,4 +1,4 @@
-package hu.tryharddood.advancedkits.Kits;
+package advancedkits.Kits;
 
 /**
  * Class:

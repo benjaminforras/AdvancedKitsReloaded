@@ -1,3 +1,4 @@
+- Added: Maven dependencies
 - Added: French translation ( Thanks to N1D4L0S )
 - Added: use-on-buy to config.yml ( If a player buys a kit, he or she automatically uses it )
 - Code: Removed setCursor() functions.

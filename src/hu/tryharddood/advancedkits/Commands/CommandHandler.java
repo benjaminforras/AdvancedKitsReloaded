@@ -1,4 +1,4 @@
-package hu.tryharddood.advancedkits.Commands;
+package advancedkits.Commands;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -7,7 +7,7 @@ import org.bukkit.command.CommandSender;
 import java.util.HashMap;
 import java.util.List;
 
-import static hu.tryharddood.advancedkits.Utils.I18n.tl;
+import static advancedkits.Utils.I18n.tl;
 
 
 /**

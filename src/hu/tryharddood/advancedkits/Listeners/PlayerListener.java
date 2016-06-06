@@ -1,8 +1,8 @@
-package hu.tryharddood.advancedkits.Listeners;
+package advancedkits.Listeners;
 
-import hu.tryharddood.advancedkits.AdvancedKits;
-import hu.tryharddood.advancedkits.Commands.SubCommands.UseCommand;
-import hu.tryharddood.advancedkits.Kits.Kit;
+import advancedkits.AdvancedKits;
+import advancedkits.Commands.SubCommands.UseCommand;
+import advancedkits.Kits.Kit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;

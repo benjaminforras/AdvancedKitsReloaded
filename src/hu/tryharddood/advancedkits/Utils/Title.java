@@ -1,15 +1,14 @@
-package hu.tryharddood.advancedkits.Utils;
+package advancedkits.Utils;
 
+import advancedkits.AdvancedKits;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
-import org.bukkit.event.Listener;
-import org.bukkit.plugin.java.JavaPlugin;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 
-public class Title extends JavaPlugin implements Listener
+public class Title
 {
 
 	public static void clearTitle(Player player)
@@ -17,7 +16,7 @@ public class Title extends JavaPlugin implements Listener
 		sendTitle(player, 0, 0, 0, "", "");
 	}
 
-	public static Class<?> getNMSClass(String name)
+	private static Class<?> getNMSClass(String name)
 	{
 		String version = Bukkit.getServer().getClass().getPackage().getName().split("\\.")[3];
 		try
@@ -26,18 +25,15 @@ public class Title extends JavaPlugin implements Listener
 		}
 		catch (ClassNotFoundException e)
 		{
+			AdvancedKits.log(ChatColor.RED + "Please send this to the author of this plugin:");
+			AdvancedKits.log(" -- StackTrace --");
 			e.printStackTrace();
+			System.out.println(" -- End of StackTrace --");
 			return null;
 		}
 	}
 
-	@Deprecated
-	public static void sendFullTitle(Player player, Integer fadeIn, Integer stay, Integer fadeOut, String title, String subtitle)
-	{
-		sendTitle(player, fadeIn, stay, fadeOut, title, subtitle);
-	}
-
-	public static void sendPacket(Player player, Object packet)
+	private static void sendPacket(Player player, Object packet)
 	{
 		try
 		{
@@ -47,14 +43,11 @@ public class Title extends JavaPlugin implements Listener
 		}
 		catch (Exception e)
 		{
+			AdvancedKits.log(ChatColor.RED + "Please send this to the author of this plugin:");
+			AdvancedKits.log(" -- StackTrace --");
 			e.printStackTrace();
+			System.out.println(" -- End of StackTrace --");
 		}
-	}
-
-	@Deprecated
-	public static void sendSubtitle(Player player, Integer fadeIn, Integer stay, Integer fadeOut, String message)
-	{
-		sendTitle(player, fadeIn, stay, fadeOut, null, message);
 	}
 
 	public static void sendTabTitle(Player player, String header, String footer)
@@ -87,14 +80,11 @@ public class Title extends JavaPlugin implements Listener
 		}
 		catch (Exception ex)
 		{
+			AdvancedKits.log(ChatColor.RED + "Please send this to the author of this plugin:");
+			AdvancedKits.log(" -- StackTrace --");
 			ex.printStackTrace();
+			System.out.println(" -- End of StackTrace --");
 		}
-	}
-
-	@Deprecated
-	public static void sendTitle(Player player, Integer fadeIn, Integer stay, Integer fadeOut, String message)
-	{
-		sendTitle(player, fadeIn, stay, fadeOut, message, null);
 	}
 
 	public static void sendTitle(Player player, Integer fadeIn, Integer stay, Integer fadeOut, String title, String subtitle)
@@ -146,7 +136,10 @@ public class Title extends JavaPlugin implements Listener
 		}
 		catch (Exception var11)
 		{
+			AdvancedKits.log(ChatColor.RED + "Please send this to the author of this plugin:");
+			AdvancedKits.log(" -- StackTrace --");
 			var11.printStackTrace();
+			System.out.println(" -- End of StackTrace --");
 		}
 	}
 }

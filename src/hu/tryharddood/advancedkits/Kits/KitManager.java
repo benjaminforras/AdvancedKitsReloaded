@@ -1,7 +1,7 @@
-package hu.tryharddood.advancedkits.Kits;
+package advancedkits.Kits;
 
-import hu.tryharddood.advancedkits.AdvancedKits;
-import hu.tryharddood.advancedkits.Variables;
+import advancedkits.AdvancedKits;
+import advancedkits.Variables;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.InvalidConfigurationException;
@@ -20,7 +20,7 @@ import java.util.Map;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-import static hu.tryharddood.advancedkits.Utils.I18n.tl;
+import static advancedkits.Utils.I18n.tl;
 
 
 public class KitManager
@@ -342,7 +342,10 @@ public class KitManager
 				}
 				catch (IOException | InvalidConfigurationException e)
 				{
+					AdvancedKits.log(ChatColor.RED + "Please send this to the author of this plugin:");
+					AdvancedKits.log(" -- StackTrace --");
 					e.printStackTrace();
+					System.out.println(" -- End of StackTrace --");
 				}
 			}
 		}
@@ -409,7 +412,10 @@ public class KitManager
 		}
 		catch (IOException e)
 		{
+			AdvancedKits.log(ChatColor.RED + "Please send this to the author of this plugin:");
+			AdvancedKits.log(" -- StackTrace --");
 			e.printStackTrace();
+			System.out.println(" -- End of StackTrace --");
 		}
 	}
 

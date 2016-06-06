@@ -1,8 +1,8 @@
-package hu.tryharddood.advancedkits.Listeners;
+package advancedkits.Listeners;
 
-import hu.tryharddood.advancedkits.AdvancedKits;
-import hu.tryharddood.advancedkits.Kits.Kit;
-import hu.tryharddood.advancedkits.Variables;
+import advancedkits.AdvancedKits;
+import advancedkits.Kits.Kit;
+import advancedkits.Variables;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.block.Sign;

@@ -1,4 +1,4 @@
-package hu.tryharddood.advancedkits.InventoryApi;
+package advancedkits.InventoryApi;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;

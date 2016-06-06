@@ -1,12 +1,12 @@
-package hu.tryharddood.advancedkits.Listeners;
+package advancedkits.Listeners;
 
-import hu.tryharddood.advancedkits.AdvancedKits;
-import hu.tryharddood.advancedkits.InventoryApi.ItemBuilder;
-import hu.tryharddood.advancedkits.InventoryApi.PageInventory;
-import hu.tryharddood.advancedkits.InventoryApi.events.PagesClickEvent;
-import hu.tryharddood.advancedkits.Kits.Kit;
-import hu.tryharddood.advancedkits.Utils.Title;
-import hu.tryharddood.advancedkits.Variables;
+import advancedkits.AdvancedKits;
+import advancedkits.InventoryApi.ItemBuilder;
+import advancedkits.InventoryApi.PageInventory;
+import advancedkits.InventoryApi.events.PagesClickEvent;
+import advancedkits.Kits.Kit;
+import advancedkits.Utils.Title;
+import advancedkits.Variables;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.DyeColor;
@@ -23,7 +23,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static hu.tryharddood.advancedkits.Utils.I18n.tl;
+import static advancedkits.Utils.I18n.tl;
 
 
 /**

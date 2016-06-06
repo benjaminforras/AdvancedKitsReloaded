@@ -1,6 +1,6 @@
-package hu.tryharddood.advancedkits.InventoryApi.events;
+package advancedkits.InventoryApi.events;
 
-import hu.tryharddood.advancedkits.InventoryApi.PageInventory;
+import advancedkits.InventoryApi.PageInventory;
 import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -19,14 +19,11 @@ public class PagesTurnEvent extends ItemClickEvent
 		this.newPage = newPage;
 	}
 
-	public static HandlerList getHandlerList()
-	{
+	public HandlerList getHandlers() {
 		return handlers;
 	}
 
-	@Override
-	public HandlerList getHandlers()
-	{
+	public static HandlerList getHandlerList() {
 		return handlers;
 	}
 

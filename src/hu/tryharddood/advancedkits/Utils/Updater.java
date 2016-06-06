@@ -1,5 +1,7 @@
-package hu.tryharddood.advancedkits.Utils;
+package advancedkits.Utils;
 
+import advancedkits.AdvancedKits;
+import org.bukkit.ChatColor;
 import org.bukkit.plugin.Plugin;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -123,7 +125,10 @@ public class Updater extends Thread
 					{
 					}
 				}
+				AdvancedKits.log(ChatColor.RED + "Please send this to the author of this plugin:");
+				AdvancedKits.log(" -- StackTrace --");
 				e.printStackTrace();
+				System.out.println(" -- End of StackTrace --");
 			}
 		}
 	}

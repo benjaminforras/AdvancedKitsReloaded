@@ -1,16 +1,16 @@
-package hu.tryharddood.advancedkits;
+package advancedkits;
 
-import hu.tryharddood.advancedkits.Commands.CommandHandler;
-import hu.tryharddood.advancedkits.Commands.SubCommands.*;
-import hu.tryharddood.advancedkits.InventoryApi.InventoryApi;
-import hu.tryharddood.advancedkits.Kits.Kit;
-import hu.tryharddood.advancedkits.Kits.KitManager;
-import hu.tryharddood.advancedkits.Listeners.InventoryListener;
-import hu.tryharddood.advancedkits.Listeners.PlayerListener;
-import hu.tryharddood.advancedkits.Listeners.SignListener;
-import hu.tryharddood.advancedkits.Utils.I18n;
-import hu.tryharddood.advancedkits.Utils.Metrics;
-import hu.tryharddood.advancedkits.Utils.Updater;
+import advancedkits.Commands.CommandHandler;
+import advancedkits.Commands.SubCommands.*;
+import advancedkits.InventoryApi.InventoryApi;
+import advancedkits.Kits.Kit;
+import advancedkits.Kits.KitManager;
+import advancedkits.Listeners.InventoryListener;
+import advancedkits.Listeners.PlayerListener;
+import advancedkits.Listeners.SignListener;
+import advancedkits.Utils.I18n;
+import advancedkits.Utils.Metrics;
+import advancedkits.Utils.Updater;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.ChatColor;
 import org.bukkit.command.ConsoleCommandSender;
@@ -76,7 +76,10 @@ public class AdvancedKits extends JavaPlugin
 			}
 			catch (IOException e)
 			{
+				AdvancedKits.log(ChatColor.RED + "Please send this to the author of this plugin:");
+				AdvancedKits.log(" -- StackTrace --");
 				e.printStackTrace();
+				System.out.println(" -- End of StackTrace --");
 			}
 		}
 

@@ -1,6 +1,6 @@
-package hu.tryharddood.advancedkits.InventoryApi.events;
+package advancedkits.InventoryApi.events;
 
-import hu.tryharddood.advancedkits.InventoryApi.ClickInventory;
+import advancedkits.InventoryApi.ClickInventory;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;

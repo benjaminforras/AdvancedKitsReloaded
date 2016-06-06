@@ -1,13 +1,13 @@
-package hu.tryharddood.advancedkits.Commands;
+package advancedkits.Commands;
 
-import hu.tryharddood.advancedkits.AdvancedKits;
-import hu.tryharddood.advancedkits.Utils.Title;
+import advancedkits.AdvancedKits;
+import advancedkits.Utils.Title;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import static hu.tryharddood.advancedkits.Utils.I18n.tl;
+import static advancedkits.Utils.I18n.tl;
 
 
 /**

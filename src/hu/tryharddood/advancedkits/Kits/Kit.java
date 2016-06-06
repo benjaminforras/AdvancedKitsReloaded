@@ -1,7 +1,8 @@
-package hu.tryharddood.advancedkits.Kits;
+package advancedkits.Kits;
 
-import hu.tryharddood.advancedkits.AdvancedKits;
-import hu.tryharddood.advancedkits.Variables;
+import advancedkits.AdvancedKits;
+import advancedkits.Variables;
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.inventory.ItemStack;
@@ -115,7 +116,10 @@ public class Kit
 			}
 			catch (IOException e)
 			{
+				AdvancedKits.log(ChatColor.RED + "Please send this to the author of this plugin:");
+				AdvancedKits.log(" -- StackTrace --");
 				e.printStackTrace();
+				System.out.println(" -- End of StackTrace --");
 			}
 		}
 		return file;
@@ -141,8 +145,11 @@ public class Kit
 		}
 		catch (Exception e)
 		{
+			AdvancedKits.log("Couldn't set property '" + key + "' for '" + this.kitname + "'");
+			AdvancedKits.log(ChatColor.RED + "Please send this to the author of this plugin:");
+			AdvancedKits.log(" -- StackTrace --");
 			e.printStackTrace();
-			AdvancedKits.log("Couldn't set property '" + key + "' for zone '" + this.kitname + "'");
+			System.out.println(" -- End of StackTrace --");
 		}
 	}
 
