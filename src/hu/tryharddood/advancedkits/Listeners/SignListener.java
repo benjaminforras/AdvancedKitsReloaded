@@ -33,7 +33,7 @@ public class SignListener implements Listener
 			if (event.getClickedBlock().getState() instanceof Sign)
 			{
 				Player player = event.getPlayer();
-				Sign sign = (Sign) event.getClickedBlock().getState();
+				Sign   sign   = (Sign) event.getClickedBlock().getState();
 
 				if (sign.getLine(0).equalsIgnoreCase(ChatColor.GRAY + "[" + ChatColor.DARK_BLUE + "Kits" + ChatColor.GRAY + "]"))
 				{

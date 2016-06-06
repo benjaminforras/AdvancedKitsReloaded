@@ -80,7 +80,7 @@ public class EditItemCommand extends Subcommand
 			return;
 		}
 
-		String[] strings = Arrays.copyOfRange(args, 1, args.length);
+		String[] strings  = Arrays.copyOfRange(args, 1, args.length);
 		ItemMeta itemMeta = itemStack.getItemMeta();
 
 		if (strings[0].equalsIgnoreCase("name"))
@@ -90,7 +90,7 @@ public class EditItemCommand extends Subcommand
 		}
 		else if (strings[0].equalsIgnoreCase("addlore"))
 		{
-			String value = getArgString(strings, 1);
+			String       value = getArgString(strings, 1);
 			List<String> lore;
 
 			lore = itemMeta.getLore();

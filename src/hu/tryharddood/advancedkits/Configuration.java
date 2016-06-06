@@ -10,14 +10,20 @@ import java.io.IOException;
 
 public class Configuration
 {
-	private static String chatPrefix;
-	private static String locale;
-	private static Boolean economy;
-	private final AdvancedKits instance;
+	private static String       chatPrefix;
+	private static String       locale;
+	private static Boolean      economy;
+	private static Boolean      useOnBuy;
+	private final  AdvancedKits instance;
 
 	public Configuration(AdvancedKits instance)
 	{
 		this.instance = instance;
+	}
+
+	public Boolean getUseOnBuy()
+	{
+		return useOnBuy;
 	}
 
 	public String getChatPrefix()
@@ -46,6 +52,15 @@ public class Configuration
 		out.write("# You can change the prefix in game, so it's looking more unique.");
 		out.newLine();
 		out.write("chat-prefix: \"&7[&6AdvancedKits&7]\"");
+		out.newLine();
+	}
+
+	private void writeUseOnBuy(BufferedWriter out) throws IOException
+	{
+		out.newLine();
+		out.write("# If this option is true, the player who buys a kit will automatically use it.");
+		out.newLine();
+		out.write("use-on-buy: false");
 		out.newLine();
 	}
 
@@ -116,7 +131,7 @@ public class Configuration
 		}
 
 		YamlConfiguration config = YamlConfiguration.loadConfiguration(configFile);
-		BufferedWriter out = new BufferedWriter(new FileWriter(configFile, true));
+		BufferedWriter    out    = new BufferedWriter(new FileWriter(configFile, true));
 
 		if (config.contains("chat-prefix"))
 		{
@@ -134,6 +149,15 @@ public class Configuration
 		else
 		{
 			writeUseEconomy(out);
+		}
+
+		if (config.contains("use-on-buy"))
+		{
+			useOnBuy = config.getBoolean("use-on-buy", false);
+		}
+		else
+		{
+			writeUseOnBuy(out);
 		}
 
 		if (config.contains("locale"))

@@ -22,12 +22,12 @@ public final class PageInventory extends ClickInventory<Object>
 	private ItemStack backAPage;
 	private ItemStack forwardsAPage;
 	private ItemStack exitInventory;
-	private int currentPage;
+	private int       currentPage;
 	private boolean dynamicInventorySize = true;
 	private boolean pageDisplayedInTitle;
-	private String title = "Inventory";
-	private int inventorySize = 54;
-	private String titleFormat = "%Title% - Page %Page%";
+	private String title         = "Inventory";
+	private int    inventorySize = 54;
+	private String titleFormat   = "%Title% - Page %Page%";
 
 	public PageInventory(Player player)
 	{
@@ -135,7 +135,7 @@ public final class PageInventory extends ClickInventory<Object>
 	private ItemStack[] getItemsForPage()
 	{
 		ItemStack[] pageItems = pages.get(Math.max(getCurrentPage(), 0));
-		int pageSize = pageItems.length;
+		int         pageSize  = pageItems.length;
 		if (pages.size() > 1 || this.getExitInventory() != null)
 		{
 			pageSize += 9;
@@ -194,11 +194,11 @@ public final class PageInventory extends ClickInventory<Object>
 	public void setPages(ItemStack... allItems)
 	{
 		pages.clear();
-		int invPage = 0;
-		boolean usePages = getExitInventory() != null || allItems.length > inventorySize;
-		ItemStack[] items = null;
-		int currentSlot = 0;
-		int baseSize = isPlayerInventory() ? 36 : inventorySize;
+		int         invPage     = 0;
+		boolean     usePages    = getExitInventory() != null || allItems.length > inventorySize;
+		ItemStack[] items       = null;
+		int         currentSlot = 0;
+		int         baseSize    = isPlayerInventory() ? 36 : inventorySize;
 		for (int currentItem = 0; currentItem < allItems.length; currentItem++)
 		{
 			if (items == null)

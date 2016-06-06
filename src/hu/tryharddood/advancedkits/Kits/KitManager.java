@@ -45,7 +45,7 @@ public class KitManager
 		}
 
 		double money = AdvancedKits.econ.getBalance(Bukkit.getOfflinePlayer(player.getUniqueId()));
-		int cost = kit.getCost();
+		int    cost  = kit.getCost();
 
 		if ((money - cost) >= 0)
 		{
@@ -293,7 +293,7 @@ public class KitManager
 	public void load()
 	{
 		YamlConfiguration configuration;
-		final File folder = new File(plugin.getDataFolder() + File.separator + "kits");
+		final File        folder = new File(plugin.getDataFolder() + File.separator + "kits");
 
 		if (!folder.isDirectory())
 		{
@@ -311,7 +311,7 @@ public class KitManager
 		}
 
 		String name;
-		int pos;
+		int    pos;
 
 		Kits.clear();
 
@@ -357,8 +357,8 @@ public class KitManager
 
 	public String getDelay(Player player, Kit kit)
 	{
-		Long delay = Double.valueOf(getProperty(player, kit, Properties.LASTUSE, 0.0).toString()).longValue();
-		Date date = new Date(delay);
+		Long             delay       = Double.valueOf(getProperty(player, kit, Properties.LASTUSE, 0.0).toString()).longValue();
+		Date             date        = new Date(delay);
 		SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
 		return DATE_FORMAT.format(date);

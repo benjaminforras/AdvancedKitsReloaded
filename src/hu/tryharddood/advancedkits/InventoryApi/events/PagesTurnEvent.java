@@ -10,7 +10,7 @@ public class PagesTurnEvent extends ItemClickEvent
 {
 	private static final HandlerList handlers = new HandlerList();
 	private final PageInventory inv;
-	private final int newPage;
+	private final int           newPage;
 
 	public PagesTurnEvent(PageInventory inventory, int slot, InventoryClickEvent invEvent, int newPage)
 	{

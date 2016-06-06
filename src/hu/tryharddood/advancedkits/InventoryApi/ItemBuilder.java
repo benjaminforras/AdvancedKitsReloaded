@@ -23,9 +23,9 @@ public class ItemBuilder
 	@SuppressWarnings("Convert2Diamond")
 	private final HashMap<Enchantment, Integer> enchants = new HashMap<>();
 	@SuppressWarnings("Convert2Diamond")
-	private final List<String> lore = new ArrayList<>();
-	private int amount;
-	private Color color;
+	private final List<String>                  lore     = new ArrayList<>();
+	private int      amount;
+	private Color    color;
 	private Material mat;
 	private String title = null;
 
@@ -155,7 +155,7 @@ public class ItemBuilder
 			Bukkit.getLogger().warning("Air material!");
 		}
 		ItemStack item = new ItemStack(mat, this.amount, this.data);
-		ItemMeta meta = item.getItemMeta();
+		ItemMeta  meta = item.getItemMeta();
 		if (meta != null)
 		{
 			if (this.title != null)

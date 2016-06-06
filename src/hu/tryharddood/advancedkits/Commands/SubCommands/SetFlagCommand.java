@@ -74,7 +74,7 @@ public class SetFlagCommand extends Subcommand
 		}
 
 		String[] strings = Arrays.copyOfRange(args, 2, args.length);
-		String value = getArgString(strings, 1);
+		String   value   = getArgString(strings, 1);
 
 		Boolean found = false;
 

@@ -13,10 +13,10 @@ import java.net.URL;
 
 public class Updater extends Thread
 {
-	private final Plugin plugin;
-	private final int id;
+	private final Plugin  plugin;
+	private final int     id;
 	private final boolean log;
-	private URL url;
+	private       URL     url;
 
 	public Updater(Plugin plugin, int resourceID) throws IOException
 	{
@@ -64,7 +64,7 @@ public class Updater extends Thread
 			BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
 
 			String content = "";
-			String line = null;
+			String line    = null;
 			while ((line = in.readLine()) != null)
 			{
 				content = content + line;
@@ -131,7 +131,7 @@ public class Updater extends Thread
 	private boolean isUpdated(String latestversion, String currentversion)
 	{
 		int currentVersion = 0;
-		int latestVersion = 0;
+		int latestVersion  = 0;
 		try
 		{
 			currentVersion = Integer.parseInt(currentversion.replaceAll("\\.", ""));

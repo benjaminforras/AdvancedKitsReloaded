@@ -18,14 +18,14 @@ import java.util.HashMap;
 public abstract class ClickInventory<E>
 {
 	protected static JavaPlugin plugin;
-	private final Player player;
-	private final String inventoryName;
+	private final    Player     player;
+	private final    String     inventoryName;
 	private final HashMap<Object, Object> savedData = new HashMap<>();
-	protected Inventory currentInventory;
-	private boolean inventoryInUse;
-	private boolean modifiable;
-	private boolean playerInventoryUsed;
-	private ItemStack[] previousContents;
+	protected Inventory   currentInventory;
+	private   boolean     inventoryInUse;
+	private   boolean     modifiable;
+	private   boolean     playerInventoryUsed;
+	private   ItemStack[] previousContents;
 
 	public ClickInventory(String inventoryName, Player player)
 	{
@@ -179,9 +179,9 @@ public abstract class ClickInventory<E>
 		 * fires. Make sure you cancel the click event you used to get this.. And didn't open a new
 		 * inventory as the old one closed.
 		 */
-		boolean isSwitchingInventory = isInventoryInUse();
-		ItemStack heldItem = null;
-		ClickInventory<E>[] invs = new ClickInventory[2];
+		boolean             isSwitchingInventory = isInventoryInUse();
+		ItemStack           heldItem             = null;
+		ClickInventory<E>[] invs                 = new ClickInventory[2];
 		for (String inv : new String[]{"PageInventory", "NamedInventory"})
 		{
 			if (getPlayer().hasMetadata(inv))
@@ -215,10 +215,10 @@ public abstract class ClickInventory<E>
 			}
 			try
 			{
-				Object player = getPlayer().getClass().getDeclaredMethod("getHandle").invoke(getPlayer());
-				Class<?> c = Class.forName(player.getClass().getName().replace("Player", "Human"));
-				Object defaultContainer = c.getField("defaultContainer").get(player);
-				Field activeContainer = c.getField("activeContainer");
+				Object   player           = getPlayer().getClass().getDeclaredMethod("getHandle").invoke(getPlayer());
+				Class<?> c                = Class.forName(player.getClass().getName().replace("Player", "Human"));
+				Object   defaultContainer = c.getField("defaultContainer").get(player);
+				Field    activeContainer  = c.getField("activeContainer");
 				if (activeContainer.get(player) == defaultContainer)
 				{
 					getPlayer().openInventory(currentInventory);

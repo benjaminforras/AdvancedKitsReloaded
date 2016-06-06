@@ -2,12 +2,8 @@ package hu.tryharddood.advancedkits.Utils;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.Server;
-import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.lang.reflect.Constructor;
@@ -45,7 +41,7 @@ public class Title extends JavaPlugin implements Listener
 	{
 		try
 		{
-			Object handle = player.getClass().getMethod("getHandle").invoke(player);
+			Object handle           = player.getClass().getMethod("getHandle").invoke(player);
 			Object playerConnection = handle.getClass().getField("playerConnection").get(handle);
 			playerConnection.getClass().getMethod("sendPacket", getNMSClass("Packet")).invoke(playerConnection, packet);
 		}
@@ -80,11 +76,11 @@ public class Title extends JavaPlugin implements Listener
 
 		try
 		{
-			Object tabHeader = getNMSClass("IChatBaseComponent").getDeclaredClasses()[0].getMethod("a", String.class).invoke(null, "{\"text\":\"" + header + "\"}");
-			Object tabFooter = getNMSClass("IChatBaseComponent").getDeclaredClasses()[0].getMethod("a", String.class).invoke(null, "{\"text\":\"" + footer + "\"}");
+			Object         tabHeader        = getNMSClass("IChatBaseComponent").getDeclaredClasses()[0].getMethod("a", String.class).invoke(null, "{\"text\":\"" + header + "\"}");
+			Object         tabFooter        = getNMSClass("IChatBaseComponent").getDeclaredClasses()[0].getMethod("a", String.class).invoke(null, "{\"text\":\"" + footer + "\"}");
 			Constructor<?> titleConstructor = getNMSClass("PacketPlayOutPlayerListHeaderFooter").getConstructor(getNMSClass("IChatBaseComponent"));
-			Object packet = titleConstructor.newInstance(tabHeader);
-			Field field = packet.getClass().getDeclaredField("b");
+			Object         packet           = titleConstructor.newInstance(tabHeader);
+			Field          field            = packet.getClass().getDeclaredField("b");
 			field.setAccessible(true);
 			field.set(packet, tabFooter);
 			sendPacket(player, packet);
@@ -105,12 +101,12 @@ public class Title extends JavaPlugin implements Listener
 	{
 		try
 		{
-			Object e;
-			Object chatTitle;
-			Object chatSubtitle;
+			Object         e;
+			Object         chatTitle;
+			Object         chatSubtitle;
 			Constructor<?> subtitleConstructor;
-			Object titlePacket;
-			Object subtitlePacket;
+			Object         titlePacket;
+			Object         subtitlePacket;
 
 			if (title != null)
 			{
@@ -153,30 +149,4 @@ public class Title extends JavaPlugin implements Listener
 			var11.printStackTrace();
 		}
 	}
-
-	@Override
-	public void onEnable()
-	{
-		getConfig().options().copyDefaults(true);
-		saveConfig();
-		Server server = getServer();
-		ConsoleCommandSender console = server.getConsoleSender();
-		console.sendMessage(ChatColor.AQUA + getDescription().getName() + " V" + getDescription().getVersion() + " has been enabled!");
-		Bukkit.getPluginManager().registerEvents(this, this);
-	}
-
-	@EventHandler
-	public void onPlayerJoin(PlayerJoinEvent event)
-	{
-		if (getConfig().getBoolean("Title On Join"))
-		{
-			sendTitle(event.getPlayer(), 20, 50, 20, getConfig().getString("Title Message"), getConfig().getString("Subtitle Message"));
-		}
-
-		if (getConfig().getBoolean("Tab Header Enabled"))
-		{
-			sendTabTitle(event.getPlayer(), getConfig().getString("Tab Header Message"), getConfig().getString("Tab Footer Message"));
-		}
-	}
-
 }

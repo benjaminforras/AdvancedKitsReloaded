@@ -8,6 +8,9 @@
 # You need an Economy plugin, like Essentials
 use-economy: true
 
+# If this option is true, the player who buys a kit will automatically use it.
+use-on-buy: false
+
 # You can change the chat prefix.
 # So it's looks more unique :)
 chat-prefix: '&7[&6AdvancedKits&7]'

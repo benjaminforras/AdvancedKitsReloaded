@@ -55,7 +55,7 @@ public class BuyCommand extends Subcommand
 	public void onCommand(CommandSender sender, Command cmd, String label, String[] args)
 	{
 		Player player = (Player) sender;
-		Kit kit = AdvancedKits.getKitManager().getKit(args[1]);
+		Kit    kit    = AdvancedKits.getKitManager().getKit(args[1]);
 		if (kit == null)
 		{
 			sendMessage(player, tl("error_kit_not_found"), ChatColor.RED);
@@ -85,11 +85,16 @@ public class BuyCommand extends Subcommand
 			return;
 		}
 		OfflinePlayer oPlayer = Bukkit.getOfflinePlayer(player.getUniqueId());
-		double balance = AdvancedKits.econ.getBalance(oPlayer);
+		double        balance = AdvancedKits.econ.getBalance(oPlayer);
 		if ((balance - kit.getCost()) >= 0)
 		{
 			AdvancedKits.econ.withdrawPlayer(oPlayer, kit.getCost());
 			AdvancedKits.getKitManager().setUnlocked(kit, player);
+
+			if (AdvancedKits.getConfiguration().getUseOnBuy())
+			{
+				Bukkit.dispatchCommand(player, "kit use " + kit.getName());
+			}
 
 			sendMessage(player, tl("kitbuy_success_message", kit.getName()), ChatColor.GREEN);
 			closeGUI(player, "Details");

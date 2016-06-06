@@ -25,13 +25,15 @@ import java.util.Collections;
 
 public class AdvancedKits extends JavaPlugin
 {
-	public static Economy econ = null;
-	public static Integer ServerVersion;
-	private static transient AdvancedKits instance;
-	private static transient I18n i18n;
-	private static transient KitManager kitManager;
-	private static ConsoleCommandSender console;
-	private static Configuration configuration;
+	public static Economy econ          = null;
+	public static Integer ServerVersion = 0;
+
+	private static transient AdvancedKits         instance;
+	private static transient I18n                 i18n;
+	private static transient KitManager           kitManager;
+	private static transient Configuration        configuration;
+	private static           ConsoleCommandSender console;
+
 
 	public static AdvancedKits getInstance()
 	{
@@ -87,7 +89,7 @@ public class AdvancedKits extends JavaPlugin
 		console = getServer().getConsoleSender();
 		instance = this;
 
-		String a = getServer().getClass().getPackage().getName();
+		String a       = getServer().getClass().getPackage().getName();
 		String version = a.substring(a.lastIndexOf('.') + 1);
 		if (version.contains("1_8"))
 		{

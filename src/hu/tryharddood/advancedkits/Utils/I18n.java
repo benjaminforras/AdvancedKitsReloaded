@@ -18,9 +18,9 @@ import java.util.regex.Pattern;
 
 public class I18n
 {
-	private static final String MESSAGES = "messages";
-	private static final Pattern NODOUBLEMARK = Pattern.compile("''");
-	private static final ResourceBundle NULL_BUNDLE = new ResourceBundle()
+	private static final String         MESSAGES     = "messages";
+	private static final Pattern        NODOUBLEMARK = Pattern.compile("''");
+	private static final ResourceBundle NULL_BUNDLE  = new ResourceBundle()
 	{
 		public Enumeration<String> getKeys()
 		{
@@ -35,7 +35,7 @@ public class I18n
 	private static I18n instance;
 	private final transient Locale defaultLocale = Locale.getDefault();
 	private final transient ResourceBundle defaultBundle;
-	private final transient JavaPlugin plugin;
+	private final transient JavaPlugin     plugin;
 	private transient Locale currentLocale = defaultLocale;
 	private transient ResourceBundle customBundle;
 	private transient ResourceBundle localeBundle;
@@ -117,7 +117,7 @@ public class I18n
 
 	private String format(final String string, final Object... objects)
 	{
-		String format = translate(string);
+		String        format        = translate(string);
 		MessageFormat messageFormat = messageFormatCache.get(format);
 		if (messageFormat == null)
 		{

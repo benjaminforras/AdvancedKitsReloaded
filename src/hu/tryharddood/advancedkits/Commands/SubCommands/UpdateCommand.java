@@ -60,7 +60,7 @@ public class UpdateCommand extends Subcommand
 			URL download = new URL("http://tryharddood.szervere.eu/docs/advancedkitsreloaded/latest/AdvancedKitsReloaded.jar");
 
 			BufferedInputStream bufferedInputStream = null;
-			FileOutputStream fileOutputStream = null;
+			FileOutputStream    fileOutputStream    = null;
 			try
 			{
 				AdvancedKits.log(ChatColor.GOLD + "Trying to download from: " + "http://tryharddood.szervere.eu/docs/advancedkitsreloaded/latest/AdvancedKitsReloaded.jar");
@@ -71,11 +71,11 @@ public class UpdateCommand extends Subcommand
 				fileOutputStream = new FileOutputStream("plugins" + File.separator + plugin.getDescription().getName() + ".jar");
 
 				long downloadedFileSize = 0;
-				long completeFileSize = httpURLConnection.getContentLength();
+				long completeFileSize   = httpURLConnection.getContentLength();
 
 				final byte data[] = new byte[1024];
-				int count;
-				int currentProgress;
+				int        count;
+				int        currentProgress;
 				while ((count = bufferedInputStream.read(data, 0, 1024)) != -1)
 				{
 					downloadedFileSize += count;

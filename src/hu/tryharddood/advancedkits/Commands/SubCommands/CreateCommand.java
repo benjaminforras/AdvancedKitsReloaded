@@ -58,15 +58,15 @@ public class CreateCommand extends Subcommand
 	public void onCommand(CommandSender sender, Command cmd, String label, String[] args)
 	{
 		Player player = (Player) sender;
-		Kit kit = AdvancedKits.getKitManager().getKit(args[1]);
+		Kit    kit    = AdvancedKits.getKitManager().getKit(args[1]);
 		if (kit != null)
 		{
 			player.sendMessage(AdvancedKits.getConfiguration().getChatPrefix() + " " + tl("error_kit_create_exists"));
 			return;
 		}
 
-		int inventorySize = 54;
-		Inventory inventory = Bukkit.createInventory(null, inventorySize, "Create - " + args[1]);
+		int       inventorySize = 54;
+		Inventory inventory     = Bukkit.createInventory(null, inventorySize, "Create - " + args[1]);
 
 		inventory.setItem(inventorySize - 4, new ItemBuilder(Material.STAINED_GLASS_PANE, DyeColor.GREEN.getData()).setTitle(ChatColor.GREEN + "" + ChatColor.BOLD + ChatColor.stripColor(tl("gui_button_create"))).build());
 		inventory.setItem(inventorySize - 6, new ItemBuilder(Material.STAINED_GLASS_PANE, DyeColor.RED.getData()).setTitle(ChatColor.RED + "" + ChatColor.BOLD + ChatColor.stripColor(tl("gui_button_cancel"))).build());

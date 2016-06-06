@@ -164,7 +164,7 @@ public class UseCommand extends Subcommand
 	public void onCommand(CommandSender sender, Command cmd, String label, String[] args)
 	{
 		Player player = (Player) sender;
-		Kit kit = AdvancedKits.getKitManager().getKit(args[1]);
+		Kit    kit    = AdvancedKits.getKitManager().getKit(args[1]);
 		if (kit == null)
 		{
 			sendMessage(player, tl("error_kit_not_found"), ChatColor.RED);

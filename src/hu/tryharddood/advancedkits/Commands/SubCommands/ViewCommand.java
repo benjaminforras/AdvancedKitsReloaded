@@ -62,7 +62,7 @@ public class ViewCommand extends Subcommand
 	public void onCommand(CommandSender sender, Command cmd, String label, String[] args)
 	{
 		Player player = (Player) sender;
-		Kit kit = AdvancedKits.getKitManager().getKit(args[1]);
+		Kit    kit    = AdvancedKits.getKitManager().getKit(args[1]);
 		if (kit == null)
 		{
 			sendMessage(sender, tl("error_kit_not_found"), ChatColor.RED);
@@ -70,7 +70,7 @@ public class ViewCommand extends Subcommand
 		}
 
 		List<ItemStack> itemStackList = kit.getItemStacks();
-		List<ItemStack> armor = kit.getArmor();
+		List<ItemStack> armor         = kit.getArmor();
 
 		int inventorySize = 54;
 

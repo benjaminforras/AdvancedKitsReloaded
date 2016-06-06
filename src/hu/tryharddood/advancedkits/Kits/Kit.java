@@ -18,10 +18,10 @@ public class Kit
 	private final Object[] flags = new Object[Flags.values().length];
 
 	private final YamlConfiguration saveFile;
-	private String kitname;
+	private       String            kitname;
 
 	private ArrayList<ItemStack> itemStacks = new ArrayList<>();
-	private ArrayList<ItemStack> armor = new ArrayList<>();
+	private ArrayList<ItemStack> armor      = new ArrayList<>();
 
 	//private Boolean visible;
 	//private Boolean permonly;
@@ -38,7 +38,7 @@ public class Kit
 
 	//private Double delay;
 
-	private ArrayList<String> worlds = new ArrayList<>();
+	private ArrayList<String> worlds   = new ArrayList<>();
 	private ArrayList<String> commands = new ArrayList<>();
 
 	public Kit(String kitname)

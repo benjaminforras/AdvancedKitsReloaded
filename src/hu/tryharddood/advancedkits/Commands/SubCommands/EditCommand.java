@@ -62,15 +62,15 @@ public class EditCommand extends Subcommand
 	public void onCommand(CommandSender sender, Command cmd, String label, String[] args)
 	{
 		Player player = (Player) sender;
-		Kit kit = AdvancedKits.getKitManager().getKit(args[1]);
+		Kit    kit    = AdvancedKits.getKitManager().getKit(args[1]);
 		if (kit == null)
 		{
 			sendMessage(player, tl("error_kit_not_found"), ChatColor.RED);
 			return;
 		}
 
-		int inventorySize = 54;
-		Inventory inventory = Bukkit.createInventory(null, inventorySize, "Edit - " + kit.getName());
+		int       inventorySize = 54;
+		Inventory inventory     = Bukkit.createInventory(null, inventorySize, "Edit - " + kit.getName());
 
 		kit.getItemStacks().forEach(inventory::addItem);
 

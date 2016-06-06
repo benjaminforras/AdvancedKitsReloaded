@@ -46,7 +46,7 @@ public class InventoryListener implements Listener
 
 	public static boolean isHelmet(Material type)
 	{
-		return type == Material.DIAMOND_HELMET || type == Material.IRON_HELMET || type == Material.GOLD_HELMET || type == Material.CHAINMAIL_HELMET || type == Material.LEATHER_HELMET;
+		return type == Material.DIAMOND_HELMET || type == Material.SKULL_ITEM || type == Material.PUMPKIN || type == Material.IRON_HELMET || type == Material.GOLD_HELMET || type == Material.CHAINMAIL_HELMET || type == Material.LEATHER_HELMET;
 	}
 
 	public static boolean isLeggings(Material type)
@@ -62,7 +62,7 @@ public class InventoryListener implements Listener
 			return;
 		}
 
-		Player player = (Player) event.getWhoClicked();
+		Player player  = (Player) event.getWhoClicked();
 		String invName = event.getInventory().getTitle();
 
 		if (invName.contains("Create"))
@@ -86,10 +86,10 @@ public class InventoryListener implements Listener
 			return;
 		}
 
-		Player player = event.getPlayer();
+		Player    player    = event.getPlayer();
 		ItemStack itemStack = event.getItemStack();
-		String itemName = event.getItemStack().getItemMeta().getDisplayName();
-		String invName = event.getInventory().getTitle();
+		String    itemName  = event.getItemStack().getItemMeta().getDisplayName();
+		String    invName   = event.getInventory().getTitle();
 
 		if (invName.contains("Kits") && itemStack.getType() != Material.PAPER)
 		{
@@ -102,8 +102,8 @@ public class InventoryListener implements Listener
 
 			int inventorySize = 54;
 
-			PageInventory inv = new PageInventory(player);
-			ItemStack[] items = itemStackList.toArray(new ItemStack[inventorySize]);
+			PageInventory inv   = new PageInventory(player);
+			ItemStack[]   items = itemStackList.toArray(new ItemStack[inventorySize]);
 
 			if (player.hasPermission(Variables.KITADMIN_PERMISSION))
 			{
@@ -274,7 +274,7 @@ public class InventoryListener implements Listener
 				if (isHelmet(event.getCursor().getType()))
 				{
 					event.setCurrentItem(event.getCursor());
-					event.setCursor(null);
+					player.setItemOnCursor(null);
 				}
 			}
 			else if (event.getRawSlot() == 28)
@@ -282,7 +282,7 @@ public class InventoryListener implements Listener
 				if (isChestplate(event.getCursor().getType()))
 				{
 					event.setCurrentItem(event.getCursor());
-					event.setCursor(null);
+					player.setItemOnCursor(null);
 				}
 			}
 			else if (event.getRawSlot() == 29)
@@ -290,7 +290,7 @@ public class InventoryListener implements Listener
 				if (isLeggings(event.getCursor().getType()))
 				{
 					event.setCurrentItem(event.getCursor());
-					event.setCursor(null);
+					player.setItemOnCursor(null);
 				}
 			}
 			else if (event.getRawSlot() == 30)
@@ -298,7 +298,7 @@ public class InventoryListener implements Listener
 				if (isBoots(event.getCursor().getType()))
 				{
 					event.setCurrentItem(event.getCursor());
-					event.setCursor(null);
+					player.setItemOnCursor(null);
 				}
 			}
 			event.setCancelled(true);
@@ -385,7 +385,7 @@ public class InventoryListener implements Listener
 				if (isHelmet(event.getCursor().getType()))
 				{
 					event.setCurrentItem(event.getCursor());
-					event.setCursor(null);
+					player.setItemOnCursor(null);
 				}
 			}
 			else if (event.getRawSlot() == 28)
@@ -393,7 +393,7 @@ public class InventoryListener implements Listener
 				if (isChestplate(event.getCursor().getType()))
 				{
 					event.setCurrentItem(event.getCursor());
-					event.setCursor(null);
+					player.setItemOnCursor(null);
 				}
 			}
 			else if (event.getRawSlot() == 29)
@@ -401,7 +401,7 @@ public class InventoryListener implements Listener
 				if (isLeggings(event.getCursor().getType()))
 				{
 					event.setCurrentItem(event.getCursor());
-					event.setCursor(null);
+					player.setItemOnCursor(null);
 				}
 			}
 			else if (event.getRawSlot() == 30)
@@ -409,7 +409,7 @@ public class InventoryListener implements Listener
 				if (isBoots(event.getCursor().getType()))
 				{
 					event.setCurrentItem(event.getCursor());
-					event.setCursor(null);
+					player.setItemOnCursor(null);
 				}
 			}
 			event.setCancelled(true);

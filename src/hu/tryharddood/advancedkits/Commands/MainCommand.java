@@ -61,12 +61,12 @@ public class MainCommand extends Subcommand
 
 		PageInventory inv = new PageInventory(player);
 
-		List<Kit> kits = AdvancedKits.getKitManager().getKits();
+		List<Kit>   kits  = AdvancedKits.getKitManager().getKits();
 		ItemStack[] items = new ItemStack[kits.size()];
 
-		Kit kit;
-		List<String> lore = new ArrayList<>();
-		int delete = 0;
+		Kit          kit;
+		List<String> lore   = new ArrayList<>();
+		int          delete = 0;
 		for (int i = 0; i < kits.size(); i++)
 		{
 			if (!kits.get(i).isVisible() && (!player.hasPermission(Variables.KITADMIN_PERMISSION) && AdvancedKits.getKitManager().getUses(kits.get(i), player) >= kits.get(i).getUses()))

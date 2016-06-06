@@ -148,7 +148,7 @@ public class Metrics
 	public static byte[] gzip(String input)
 	{
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
-		GZIPOutputStream gzos = null;
+		GZIPOutputStream      gzos = null;
 
 		try
 		{
@@ -532,12 +532,12 @@ public class Metrics
 	private void postPlugin(final boolean isPing) throws IOException
 	{
 		// Server software specific section
-		PluginDescriptionFile description = plugin.getDescription();
-		String pluginName = description.getName();
-		boolean onlineMode = Bukkit.getServer().getOnlineMode(); // TRUE if online mode is enabled
-		String pluginVersion = description.getVersion();
-		String serverVersion = Bukkit.getVersion();
-		int playersOnline = this.getOnlinePlayers();
+		PluginDescriptionFile description   = plugin.getDescription();
+		String                pluginName    = description.getName();
+		boolean               onlineMode    = Bukkit.getServer().getOnlineMode(); // TRUE if online mode is enabled
+		String                pluginVersion = description.getVersion();
+		String                serverVersion = Bukkit.getVersion();
+		int                   playersOnline = this.getOnlinePlayers();
 
 		// END server software specific section -- all code below does not use any code outside of this class / Java
 
@@ -552,11 +552,11 @@ public class Metrics
 		appendJSONPair(json, "players_online", Integer.toString(playersOnline));
 
 		// New data as of R6
-		String osname = System.getProperty("os.name");
-		String osarch = System.getProperty("os.arch");
-		String osversion = System.getProperty("os.version");
+		String osname       = System.getProperty("os.name");
+		String osarch       = System.getProperty("os.arch");
+		String osversion    = System.getProperty("os.version");
 		String java_version = System.getProperty("java.version");
-		int coreCount = Runtime.getRuntime().availableProcessors();
+		int    coreCount    = Runtime.getRuntime().availableProcessors();
 
 		// normalize os arch .. amd64 -> x86_64
 		if (osarch.equals("amd64"))
@@ -644,7 +644,7 @@ public class Metrics
 
 
 		byte[] uncompressed = json.toString().getBytes();
-		byte[] compressed = gzip(json.toString());
+		byte[] compressed   = gzip(json.toString());
 
 		// Headers
 		connection.addRequestProperty("User-Agent", "MCStats/" + REVISION);
@@ -667,8 +667,8 @@ public class Metrics
 		os.flush();
 
 		// Now read the response
-		final BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-		String response = reader.readLine();
+		final BufferedReader reader   = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+		String               response = reader.readLine();
 
 		// close resources
 		os.close();

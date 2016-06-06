@@ -109,8 +109,8 @@ public class InventoryApi implements Listener
 	 */
 	private static ItemStack setHiddenString(ItemStack itemToName, String name)
 	{
-		String itemName = ChatColor.WHITE + toReadable(itemToName.getType().name());
-		ItemMeta meta = itemToName.getItemMeta();
+		String   itemName = ChatColor.WHITE + toReadable(itemToName.getType().name());
+		ItemMeta meta     = itemToName.getItemMeta();
 		if (meta.hasDisplayName())
 		{
 			itemName = meta.getDisplayName();
