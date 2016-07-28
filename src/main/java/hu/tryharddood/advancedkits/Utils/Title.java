@@ -1,0 +1,135 @@
+package hu.tryharddood.advancedkits.Utils;
+
+import hu.tryharddood.advancedkits.AdvancedKits;
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.entity.Player;
+
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
+
+public class Title {
+
+	public static void clearTitle(Player player) {
+		sendTitle(player, 0, 0, 0, "", "");
+	}
+
+	private static Class<?> getNMSClass(String name) {
+		String version = Bukkit.getServer().getClass().getPackage().getName().split("\\.")[3];
+		try
+		{
+			return Class.forName("net.minecraft.server." + version + "." + name);
+		} catch (ClassNotFoundException e)
+		{
+			AdvancedKits.log(ChatColor.RED + "Please send this to the author of this plugin:");
+			AdvancedKits.log(" -- StackTrace --");
+			e.printStackTrace();
+			System.out.println(" -- End of StackTrace --");
+			return null;
+		}
+	}
+
+	private static void sendPacket(Player player, Object packet) {
+		try
+		{
+			Object handle           = player.getClass().getMethod("getHandle").invoke(player);
+			Object playerConnection = handle.getClass().getField("playerConnection").get(handle);
+			playerConnection.getClass().getMethod("sendPacket", getNMSClass("Packet")).invoke(playerConnection, packet);
+		} catch (Exception e)
+		{
+			AdvancedKits.log(ChatColor.RED + "Please send this to the author of this plugin:");
+			AdvancedKits.log(" -- StackTrace --");
+			e.printStackTrace();
+			System.out.println(" -- End of StackTrace --");
+		}
+	}
+
+	public static void sendTabTitle(Player player, String header, String footer) {
+		if (header == null)
+		{
+			header = "";
+		}
+		header = ChatColor.translateAlternateColorCodes('&', header);
+
+		if (footer == null)
+		{
+			footer = "";
+		}
+		footer = ChatColor.translateAlternateColorCodes('&', footer);
+
+		header = header.replaceAll("%player%", player.getDisplayName());
+		footer = footer.replaceAll("%player%", player.getDisplayName());
+
+		try
+		{
+			Object         tabHeader        = getNMSClass("IChatBaseComponent").getDeclaredClasses()[0].getMethod("a", String.class).invoke(null, "{\"text\":\"" + header + "\"}");
+			Object         tabFooter        = getNMSClass("IChatBaseComponent").getDeclaredClasses()[0].getMethod("a", String.class).invoke(null, "{\"text\":\"" + footer + "\"}");
+			Constructor<?> titleConstructor = getNMSClass("PacketPlayOutPlayerListHeaderFooter").getConstructor(getNMSClass("IChatBaseComponent"));
+			Object         packet           = titleConstructor.newInstance(tabHeader);
+			Field          field            = packet.getClass().getDeclaredField("b");
+			field.setAccessible(true);
+			field.set(packet, tabFooter);
+			sendPacket(player, packet);
+		} catch (Exception ex)
+		{
+			AdvancedKits.log(ChatColor.RED + "Please send this to the author of this plugin:");
+			AdvancedKits.log(" -- StackTrace --");
+			ex.printStackTrace();
+			System.out.println(" -- End of StackTrace --");
+		}
+	}
+
+	public static void sendTitle(Player player, Integer fadeIn, Integer stay, Integer fadeOut, String title, String subtitle) {
+		try
+		{
+			Object         e;
+			Object         chatTitle;
+			Object         chatSubtitle;
+			Constructor<?> subtitleConstructor;
+			Object         titlePacket;
+			Object         subtitlePacket;
+
+			if (title != null)
+			{
+				title = ChatColor.translateAlternateColorCodes('&', title);
+				title = title.replaceAll("%player%", player.getDisplayName());
+				// Times packets
+				e = getNMSClass("PacketPlayOutTitle").getDeclaredClasses()[0].getField("TIMES").get(null);
+				chatTitle = getNMSClass("IChatBaseComponent").getDeclaredClasses()[0].getMethod("a", new Class[]{String.class}).invoke(null, "{\"text\":\"" + title + "\"}");
+				subtitleConstructor = getNMSClass("PacketPlayOutTitle").getConstructor(getNMSClass("PacketPlayOutTitle").getDeclaredClasses()[0], getNMSClass("IChatBaseComponent"), Integer.TYPE, Integer.TYPE, Integer.TYPE);
+				titlePacket = subtitleConstructor.newInstance(e, chatTitle, fadeIn, stay, fadeOut);
+				sendPacket(player, titlePacket);
+
+				e = getNMSClass("PacketPlayOutTitle").getDeclaredClasses()[0].getField("TITLE").get(null);
+				chatTitle = getNMSClass("IChatBaseComponent").getDeclaredClasses()[0].getMethod("a", new Class[]{String.class}).invoke(null, "{\"text\":\"" + title + "\"}");
+				subtitleConstructor = getNMSClass("PacketPlayOutTitle").getConstructor(getNMSClass("PacketPlayOutTitle").getDeclaredClasses()[0], getNMSClass("IChatBaseComponent"));
+				titlePacket = subtitleConstructor.newInstance(e, chatTitle);
+				sendPacket(player, titlePacket);
+			}
+
+			if (subtitle != null)
+			{
+				subtitle = ChatColor.translateAlternateColorCodes('&', subtitle);
+				subtitle = subtitle.replaceAll("%player%", player.getDisplayName());
+				// Times packets
+				e = getNMSClass("PacketPlayOutTitle").getDeclaredClasses()[0].getField("TIMES").get(null);
+				chatSubtitle = getNMSClass("IChatBaseComponent").getDeclaredClasses()[0].getMethod("a", new Class[]{String.class}).invoke(null, "{\"text\":\"" + title + "\"}");
+				subtitleConstructor = getNMSClass("PacketPlayOutTitle").getConstructor(getNMSClass("PacketPlayOutTitle").getDeclaredClasses()[0], getNMSClass("IChatBaseComponent"), Integer.TYPE, Integer.TYPE, Integer.TYPE);
+				subtitlePacket = subtitleConstructor.newInstance(e, chatSubtitle, fadeIn, stay, fadeOut);
+				sendPacket(player, subtitlePacket);
+
+				e = getNMSClass("PacketPlayOutTitle").getDeclaredClasses()[0].getField("SUBTITLE").get(null);
+				chatSubtitle = getNMSClass("IChatBaseComponent").getDeclaredClasses()[0].getMethod("a", new Class[]{String.class}).invoke(null, "{\"text\":\"" + subtitle + "\"}");
+				subtitleConstructor = getNMSClass("PacketPlayOutTitle").getConstructor(getNMSClass("PacketPlayOutTitle").getDeclaredClasses()[0], getNMSClass("IChatBaseComponent"), Integer.TYPE, Integer.TYPE, Integer.TYPE);
+				subtitlePacket = subtitleConstructor.newInstance(e, chatSubtitle, fadeIn, stay, fadeOut);
+				sendPacket(player, subtitlePacket);
+			}
+		} catch (Exception var11)
+		{
+			AdvancedKits.log(ChatColor.RED + "Please send this to the author of this plugin:");
+			AdvancedKits.log(" -- StackTrace --");
+			var11.printStackTrace();
+			System.out.println(" -- End of StackTrace --");
+		}
+	}
+}

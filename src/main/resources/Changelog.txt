@@ -1,0 +1,1 @@
+Fixed: Setting the flags with boolean values.

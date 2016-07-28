@@ -1,4 +1,0 @@
-advancedkits.AdvancedKits
-advancedkits.InventoryApi.events.ItemClickEvent: org.bukkit.event.HandlerList getHandlerList()
-advancedkits.InventoryApi.events.PagesClickEvent: org.bukkit.event.HandlerList getHandlerList()
-advancedkits.InventoryApi.events.PagesTurnEvent: org.bukkit.event.HandlerList getHandlerList()

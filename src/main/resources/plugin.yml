@@ -1,8 +1,8 @@
-name: AdvancedKitsReloaded
+name: ${project.name}
 main: hu.tryharddood.advancedkits.AdvancedKits
-version: R3.0.25
+version: ${project.version}
 author: TryHardDood
-website: https://tryharddood.esy.es
+website: ${project.url}
 softdepend: [Vault]
 commands:
   kit:
