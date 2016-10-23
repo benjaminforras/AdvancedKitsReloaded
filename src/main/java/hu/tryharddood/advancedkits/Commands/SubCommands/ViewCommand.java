@@ -2,12 +2,9 @@ package hu.tryharddood.advancedkits.Commands.SubCommands;
 
 import hu.tryharddood.advancedkits.AdvancedKits;
 import hu.tryharddood.advancedkits.Commands.Subcommand;
-import hu.tryharddood.advancedkits.InventoryApi.ItemBuilder;
-import hu.tryharddood.advancedkits.InventoryApi.PageInventory;
 import hu.tryharddood.advancedkits.Kits.Kit;
 import hu.tryharddood.advancedkits.Variables;
 import org.bukkit.ChatColor;
-import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -15,7 +12,6 @@ import org.bukkit.inventory.ItemStack;
 
 import java.util.List;
 
-import static hu.tryharddood.advancedkits.Listeners.InventoryListener.*;
 import static hu.tryharddood.advancedkits.Utils.I18n.tl;
 
 
@@ -61,12 +57,18 @@ public class ViewCommand extends Subcommand {
 			return;
 		}
 
+		if (!player.hasPermission(Variables.KIT_VIEW_PERMISSION_KIT.replace("[kitname]", kit.getName())) && !player.hasPermission(Variables.KIT_VIEW_PERMISSION_ALL))
+		{
+			sendMessage(player, tl("error_no_permission"), ChatColor.RED);
+			return;
+		}
+
 		List<ItemStack> itemStackList = kit.getItemStacks();
 		List<ItemStack> armor         = kit.getArmor();
 
 		int inventorySize = 54;
 
-		PageInventory inv = new PageInventory(player);
+		/*PageInventory inv = new PageInventory(player);
 
 		ItemStack[] items = itemStackList.toArray(new ItemStack[inventorySize]);
 
@@ -117,6 +119,6 @@ public class ViewCommand extends Subcommand {
 
 		inv.setPages(items);
 		inv.setTitle("Details - " + kit.getName());
-		inv.openInventory();
+		inv.openInventory();*/
 	}
 }

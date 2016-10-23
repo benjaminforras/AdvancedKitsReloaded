@@ -4,14 +4,19 @@ import hu.tryharddood.advancedkits.AdvancedKits;
 import hu.tryharddood.advancedkits.Commands.Subcommand;
 import hu.tryharddood.advancedkits.Kits.Flags;
 import hu.tryharddood.advancedkits.Kits.Kit;
+import hu.tryharddood.advancedkits.MenuBuilder.chat.ChatMenuBuilder;
+import hu.tryharddood.advancedkits.MenuBuilder.chat.LineBuilder;
+import hu.tryharddood.advancedkits.MenuBuilder.chat.component.MenuComponentCheckbox;
 import hu.tryharddood.advancedkits.Utils.Minecraft;
 import hu.tryharddood.advancedkits.Variables;
+import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.Arrays;
 
@@ -82,25 +87,49 @@ public class SetFlagCommand extends Subcommand {
 				{
 					if (flag.getType().equals(Boolean.class))
 					{
-						kit.setFlag(flag, !(Boolean) kit.getFlag(flag, false));
-						player.sendMessage(AdvancedKits.getConfiguration().getChatPrefix() + " " + ChatColor.GOLD + tl("kitadmin_flag_set") + ": " + flag.getName());
-						player.sendMessage("               " + ChatColor.WHITE + "" + ChatColor.BOLD + ((Boolean) kit.getFlag(flag) ? ChatColor.GREEN + "" + ChatColor.BOLD + ChatColor.stripColor(tl("chat_on")) : ChatColor.RED + "" + ChatColor.BOLD + ChatColor.stripColor(tl("chat_off"))));
+						new ChatMenuBuilder().withLine(new LineBuilder().append("Click here to change the state of the flag: ").append(new MenuComponentCheckbox((Boolean) kit.getFlag(flag, false)).onChange((player1, oldValue, newValue) ->
+						{
+							kit.setFlag(flag, newValue);
+							player.sendMessage(ChatColor.GREEN + "Flag '" + ChatColor.GOLD + flag.getName() + ChatColor.GREEN + "' value has been changed to: " + ChatColor.GOLD + newValue);
+						}))).show(player);
 					}
 					else if (flag.getType().equals(Material.class))
 					{
 						ItemStack itemStack = AdvancedKits.ServerVersion.newerThan(Minecraft.Version.v1_9_R1) ? player.getInventory().getItemInMainHand() : player.getItemInHand();
-
 						if (itemStack == null || itemStack.getType() == Material.AIR)
 						{
-							player.sendMessage(AdvancedKits.getConfiguration().getChatPrefix() + " " + ChatColor.RED + tl("kitadmin_flag_wrong_icon") + ": ");
-							player.sendMessage("               " + ChatColor.WHITE + "" + ChatColor.BOLD + "AIR");
+							player.sendMessage(ChatColor.RED + LineBuilder.CenterUtil.line);
+							player.sendMessage(LineBuilder.CenterUtil.newline);
+
+							LineBuilder.CenterUtil.sendCenteredMessage(player, ChatColor.GOLD + "" + ChatColor.BOLD + "Attention!");
+							LineBuilder.CenterUtil.sendCenteredMessage(player, "You can't set the kit's icon to: ");
+							LineBuilder.CenterUtil.sendCenteredMessage(player, ChatColor.AQUA + "" + ChatColor.BOLD + Material.AIR.toString().toLowerCase());
+
+							player.sendMessage(LineBuilder.CenterUtil.newline);
+							player.sendMessage(ChatColor.RED + LineBuilder.CenterUtil.line);
+
 							kit.setSave(false);
 							return;
 						}
 
-						kit.setFlag(flag, itemStack.getType().toString());
-						player.sendMessage(AdvancedKits.getConfiguration().getChatPrefix() + " " + ChatColor.GREEN + tl("kitadmin_flag_success_icon") + ":");
-						player.sendMessage("               " + ChatColor.WHITE + "" + ChatColor.BOLD + itemStack.getType().toString());
+						ItemMeta itemMeta = itemStack.getItemMeta();
+
+						player.sendMessage(ChatColor.GREEN + LineBuilder.CenterUtil.line);
+						player.sendMessage(LineBuilder.CenterUtil.newline);
+
+						LineBuilder.CenterUtil.sendCenteredMessage(player, "Are you sure you want to set the kit's icon to: ");
+						LineBuilder.CenterUtil.sendCenteredMessage(player, itemMeta.hasDisplayName() ? itemMeta.getDisplayName() : ChatColor.AQUA + "" + ChatColor.BOLD + itemStack.getType().toString().toLowerCase());
+						new ChatMenuBuilder().withLine(new LineBuilder().append(player12 ->
+								{
+									kit.setFlag(flag, itemStack.getType().toString());
+									player.sendMessage(ChatColor.GREEN + "Flag '" + ChatColor.GOLD + flag.getName() + ChatColor.GREEN + "' value has been changed to: " + ChatColor.GOLD + itemStack.getType().toString());
+								},
+								new TextComponent(LineBuilder.CenterUtil.sendCenteredMessage2(ChatColor.GREEN + "" + ChatColor.BOLD + "Yes!")))
+								.append(LineBuilder.CenterUtil.sendCenteredMessage3(ChatColor.RED + "" + ChatColor.BOLD + "No!")))
+								.show(player);
+
+						player.sendMessage(LineBuilder.CenterUtil.newline);
+						player.sendMessage(ChatColor.GREEN + LineBuilder.CenterUtil.line);
 					}
 				}
 				else if (strings.length > 1)
@@ -108,8 +137,7 @@ public class SetFlagCommand extends Subcommand {
 					if (flag.getType().equals(String.class))
 					{
 						kit.setFlag(flag, value);
-						player.sendMessage(AdvancedKits.getConfiguration().getChatPrefix() + " " + ChatColor.GREEN + tl("kitadmin_flag_set") + ": " + flag.getName());
-						player.sendMessage("               " + ChatColor.WHITE + "" + ChatColor.BOLD + ChatColor.translateAlternateColorCodes('&', value));
+						player.sendMessage(ChatColor.GREEN + "Flag '" + ChatColor.GOLD + flag.getName() + ChatColor.GREEN + "' value has been changed to: " + ChatColor.GOLD + value);
 					}
 					else if (flag.getType().equals(Integer.class))
 					{
@@ -121,8 +149,7 @@ public class SetFlagCommand extends Subcommand {
 						}
 
 						kit.setFlag(flag, Integer.valueOf(value));
-						player.sendMessage(AdvancedKits.getConfiguration().getChatPrefix() + " " + ChatColor.GREEN + tl("kitadmin_flag_set") + ": " + flag.getName());
-						player.sendMessage("               " + ChatColor.WHITE + "" + ChatColor.BOLD + value);
+						player.sendMessage(ChatColor.GREEN + "Flag '" + ChatColor.GOLD + flag.getName() + ChatColor.GREEN + "' value has been changed to: " + ChatColor.GOLD + value);
 					}
 					else if (flag.getType().equals(Double.class))
 					{
@@ -134,8 +161,7 @@ public class SetFlagCommand extends Subcommand {
 						}
 
 						kit.setFlag(flag, Double.valueOf(value));
-						player.sendMessage(AdvancedKits.getConfiguration().getChatPrefix() + " " + ChatColor.GREEN + tl("kitadmin_flag_set") + ": " + flag.getName());
-						player.sendMessage("               " + ChatColor.WHITE + "" + ChatColor.BOLD + value);
+						player.sendMessage(ChatColor.GREEN + "Flag '" + ChatColor.GOLD + flag.getName() + ChatColor.GREEN + "' value has been changed to: " + ChatColor.GOLD + value);
 					}
 					else if (flag.getType().equals(Boolean.class))
 					{
@@ -147,14 +173,43 @@ public class SetFlagCommand extends Subcommand {
 						}
 
 						kit.setFlag(flag, Boolean.valueOf(value));
-						player.sendMessage(AdvancedKits.getConfiguration().getChatPrefix() + " " + ChatColor.GREEN + tl("kitadmin_flag_set") + ": " + flag.getName());
-						player.sendMessage("               " + ChatColor.WHITE + "" + ChatColor.BOLD + value);
+						player.sendMessage(ChatColor.GREEN + "Flag '" + ChatColor.GOLD + flag.getName() + ChatColor.GREEN + "' value has been changed to: " + ChatColor.GOLD + value);
 					}
 					else if (flag.getType().equals(Material.class))
 					{
-						kit.setFlag(flag, Material.matchMaterial(value));
-						player.sendMessage(AdvancedKits.getConfiguration().getChatPrefix() + " " + ChatColor.GREEN + tl("kitadmin_flag_set") + ": " + flag.getName());
-						player.sendMessage("               " + ChatColor.WHITE + "" + ChatColor.BOLD + value);
+						Material material = Material.matchMaterial(value);
+						if (material == null || material == Material.AIR)
+						{
+							player.sendMessage(ChatColor.RED + LineBuilder.CenterUtil.line);
+							player.sendMessage(LineBuilder.CenterUtil.newline);
+
+							LineBuilder.CenterUtil.sendCenteredMessage(player, ChatColor.GOLD + "" + ChatColor.BOLD + "Attention!");
+							LineBuilder.CenterUtil.sendCenteredMessage(player, "You can't set the kit's icon to: ");
+							LineBuilder.CenterUtil.sendCenteredMessage(player, ChatColor.AQUA + "" + ChatColor.BOLD + value.toLowerCase());
+
+							player.sendMessage(LineBuilder.CenterUtil.newline);
+							player.sendMessage(ChatColor.RED + LineBuilder.CenterUtil.line);
+
+							kit.setSave(false);
+							return;
+						}
+
+						player.sendMessage(ChatColor.GREEN + LineBuilder.CenterUtil.line);
+						player.sendMessage(LineBuilder.CenterUtil.newline);
+
+						LineBuilder.CenterUtil.sendCenteredMessage(player, "Are you sure you want to set the kit's icon to: ");
+						LineBuilder.CenterUtil.sendCenteredMessage(player, ChatColor.AQUA + "" + ChatColor.BOLD + material.toString().toLowerCase());
+						new ChatMenuBuilder().withLine(new LineBuilder().append(player12 ->
+								{
+									kit.setFlag(flag, material.toString());
+									player.sendMessage(ChatColor.GREEN + "Flag '" + ChatColor.GOLD + flag.getName() + ChatColor.GREEN + "' value has been changed to: " + ChatColor.GOLD + material.toString());
+								},
+								new TextComponent(LineBuilder.CenterUtil.sendCenteredMessage2(ChatColor.GREEN + "" + ChatColor.BOLD + "Yes!")))
+								.append(LineBuilder.CenterUtil.sendCenteredMessage3(ChatColor.RED + "" + ChatColor.BOLD + "No!")))
+								.show(player);
+
+						player.sendMessage(LineBuilder.CenterUtil.newline);
+						player.sendMessage(ChatColor.GREEN + LineBuilder.CenterUtil.line);
 					}
 				}
 			}
@@ -165,61 +220,85 @@ public class SetFlagCommand extends Subcommand {
 			{
 				if (kit.getWorlds().contains(value))
 				{
-					player.sendMessage(AdvancedKits.getConfiguration().getChatPrefix() + " " + ChatColor.RED + tl("kitadmin_flag_addworld_wrong") + " " + value);
+					player.sendMessage(ChatColor.RED + LineBuilder.CenterUtil.line);
+					player.sendMessage(LineBuilder.CenterUtil.newline);
+
+					LineBuilder.CenterUtil.sendCenteredMessage(player, ChatColor.GOLD + "" + ChatColor.BOLD + "Attention!");
+					LineBuilder.CenterUtil.sendCenteredMessage(player, tl("kitadmin_flag_addworld_wrong"));
+					LineBuilder.CenterUtil.sendCenteredMessage(player, ChatColor.AQUA + "" + ChatColor.BOLD + value.toLowerCase());
+
+					player.sendMessage(LineBuilder.CenterUtil.newline);
+					player.sendMessage(ChatColor.RED + LineBuilder.CenterUtil.line);
+
 					kit.setSave(false);
 					return;
 				}
 
 				kit.AddWorld(value);
-
-				player.sendMessage(AdvancedKits.getConfiguration().getChatPrefix() + " " + ChatColor.GREEN + tl("kitadmin_flag_addworld_success") + ": ");
-				player.sendMessage("               " + ChatColor.WHITE + "" + ChatColor.BOLD + value);
-				player.sendMessage("               " + ChatColor.WHITE + "" + ChatColor.BOLD + kit.getWorlds().toString());
+				player.sendMessage(ChatColor.GREEN + "Flag '" + ChatColor.GOLD + "blockedworlds" + ChatColor.GREEN + "' value has been changed to: " + ChatColor.GOLD + kit.getWorlds().toString());
 			}
 			else if (strings[0].equalsIgnoreCase("removeworld") || strings[0].equalsIgnoreCase("delworld"))
 			{
 				if (!kit.getWorlds().contains(value))
 				{
-					player.sendMessage(AdvancedKits.getConfiguration().getChatPrefix() + " " + ChatColor.RED + tl("kitadmin_flag_delworld_wrong") + " " + value);
+					player.sendMessage(ChatColor.RED + LineBuilder.CenterUtil.line);
+					player.sendMessage(LineBuilder.CenterUtil.newline);
+
+					LineBuilder.CenterUtil.sendCenteredMessage(player, ChatColor.GOLD + "" + ChatColor.BOLD + "Attention!");
+					LineBuilder.CenterUtil.sendCenteredMessage(player, tl("kitadmin_flag_delworld_wrong"));
+					LineBuilder.CenterUtil.sendCenteredMessage(player, ChatColor.AQUA + "" + ChatColor.BOLD + value.toLowerCase());
+
+					player.sendMessage(LineBuilder.CenterUtil.newline);
+					player.sendMessage(ChatColor.RED + LineBuilder.CenterUtil.line);
+
 					kit.setSave(false);
 					return;
 				}
 
 				kit.RemoveWorld(value);
-
-				player.sendMessage(AdvancedKits.getConfiguration().getChatPrefix() + " " + ChatColor.GREEN + tl("kitadmin_flag_delworld_success") + ": ");
-				player.sendMessage("               " + ChatColor.WHITE + "" + ChatColor.BOLD + value);
-				player.sendMessage("               " + ChatColor.WHITE + "" + ChatColor.BOLD + kit.getWorlds().toString());
+				player.sendMessage(ChatColor.GREEN + "Flag '" + ChatColor.GOLD + "blockedworlds" + ChatColor.GREEN + "' value has been changed to: " + ChatColor.GOLD + kit.getWorlds().toString());
 			}
 			else if (strings[0].equalsIgnoreCase("addcommand"))
 			{
 				if (kit.getCommands().contains(value))
 				{
-					player.sendMessage(AdvancedKits.getConfiguration().getChatPrefix() + " " + ChatColor.RED + tl("kitadmin_flag_addcommand_wrong") + " " + value);
+					player.sendMessage(ChatColor.RED + LineBuilder.CenterUtil.line);
+					player.sendMessage(LineBuilder.CenterUtil.newline);
+
+					LineBuilder.CenterUtil.sendCenteredMessage(player, ChatColor.GOLD + "" + ChatColor.BOLD + "Attention!");
+					LineBuilder.CenterUtil.sendCenteredMessage(player, tl("kitadmin_flag_addcommand_wrong"));
+					LineBuilder.CenterUtil.sendCenteredMessage(player, ChatColor.AQUA + "" + ChatColor.BOLD + value.toLowerCase());
+
+					player.sendMessage(LineBuilder.CenterUtil.newline);
+					player.sendMessage(ChatColor.RED + LineBuilder.CenterUtil.line);
+
 					kit.setSave(false);
 					return;
 				}
 
 				kit.AddCommand(value);
-
-				player.sendMessage(AdvancedKits.getConfiguration().getChatPrefix() + " " + ChatColor.GREEN + tl("kitadmin_flag_addcommand_success") + ": ");
-				player.sendMessage("               " + ChatColor.WHITE + "" + ChatColor.BOLD + value);
-				player.sendMessage("               " + ChatColor.WHITE + "" + ChatColor.BOLD + kit.getCommands().toString());
+				player.sendMessage(ChatColor.GREEN + "Flag '" + ChatColor.GOLD + "commands" + ChatColor.GREEN + "' value has been changed to: " + ChatColor.GOLD + kit.getCommands().toString());
 			}
 			else if (strings[0].equalsIgnoreCase("removecommand") || strings[0].equalsIgnoreCase("delcommand"))
 			{
 				if (!kit.getCommands().contains(value))
 				{
-					player.sendMessage(AdvancedKits.getConfiguration().getChatPrefix() + " " + ChatColor.RED + tl("kitadmin_flag_delcommand_wrong") + " " + value);
+					player.sendMessage(ChatColor.RED + LineBuilder.CenterUtil.line);
+					player.sendMessage(LineBuilder.CenterUtil.newline);
+
+					LineBuilder.CenterUtil.sendCenteredMessage(player, ChatColor.GOLD + "" + ChatColor.BOLD + "Attention!");
+					LineBuilder.CenterUtil.sendCenteredMessage(player, tl("kitadmin_flag_delcommand_wrong"));
+					LineBuilder.CenterUtil.sendCenteredMessage(player, ChatColor.AQUA + "" + ChatColor.BOLD + value.toLowerCase());
+
+					player.sendMessage(LineBuilder.CenterUtil.newline);
+					player.sendMessage(ChatColor.RED + LineBuilder.CenterUtil.line);
+
 					kit.setSave(false);
 					return;
 				}
 
 				kit.RemoveCommand(value);
-
-				player.sendMessage(AdvancedKits.getConfiguration().getChatPrefix() + " " + ChatColor.GREEN + tl("kitadmin_flag_delcommand_success") + ": ");
-				player.sendMessage("               " + ChatColor.WHITE + "" + ChatColor.BOLD + value);
-				player.sendMessage("               " + ChatColor.WHITE + "" + ChatColor.BOLD + kit.getCommands().toString());
+				player.sendMessage(ChatColor.GREEN + "Flag '" + ChatColor.GOLD + "commands" + ChatColor.GREEN + "' value has been changed to: " + ChatColor.GOLD + kit.getCommands().toString());
 			}
 			else
 			{
@@ -227,268 +306,5 @@ public class SetFlagCommand extends Subcommand {
 			}
 		}
 		kit.setSave(false);
-
-        /*if (strings.length == 1)
-        {
-            String flag = strings[0];
-            if (Arrays.asList("visible", "permonly", "permissiononly", "icon", "clearinv", "firstjoin").contains(flag))
-            {
-                if (flag.equalsIgnoreCase("visible"))
-                {
-                    boolean visible = kit.isVisible();
-                    kit.setSave(true);
-                    kit.setVisible(!visible);
-                    kit.setSave(false);
-
-                    player.sendMessage(AdvancedKits.getConfiguration().getChatPrefix() + " " + ChatColor.GOLD + tl("kitadmin_flag_set"));
-                    player.sendMessage(ChatColor.WHITE + "    visibility: " + (!visible ? ChatColor.GREEN + "" + ChatColor.BOLD + ChatColor.stripColor(tl("chat_on")) : ChatColor.RED + "" + ChatColor.BOLD + ChatColor.stripColor(tl("chat_off"))));
-                }
-                else if (flag.equalsIgnoreCase("firstjoin"))
-                {
-                    boolean firstjoin = kit.isFirstjoin();
-                    kit.setSave(true);
-                    kit.setFirstjoin(!firstjoin);
-                    kit.setSave(false);
-
-                    player.sendMessage(AdvancedKits.getConfiguration().getChatPrefix() + " " + ChatColor.GOLD + tl("kitadmin_flag_set"));
-                    player.sendMessage(ChatColor.WHITE + "    firstjoin: " + (!firstjoin ? ChatColor.GREEN + "" + ChatColor.BOLD + ChatColor.stripColor(tl("chat_on")) : ChatColor.RED + "" + ChatColor.BOLD + ChatColor.stripColor(tl("chat_off"))));
-                }
-                else if (flag.equalsIgnoreCase("permonly") || flag.equalsIgnoreCase("permissiononly"))
-                {
-                    boolean permonly = kit.isPermonly();
-                    kit.setSave(true);
-                    kit.setPermonly(!permonly);
-                    kit.setSave(false);
-
-                    player.sendMessage(AdvancedKits.getConfiguration().getChatPrefix() + " " + ChatColor.GOLD + tl("kitadmin_flag_set"));
-                    player.sendMessage(ChatColor.WHITE + "    permissionOnly: " + (!permonly ? ChatColor.GREEN + "" + ChatColor.BOLD + ChatColor.stripColor(tl("chat_on")) : ChatColor.RED + "" + ChatColor.BOLD + ChatColor.stripColor(tl("chat_off"))));
-                }
-                else if (flag.equalsIgnoreCase("icon"))
-                {
-                    ItemStack itemStack;
-					if (AdvancedKits.ServerVersion == 9 || AdvancedKits.ServerVersion == 10)
-                    {
-                        itemStack = player.getInventory().getItemInMainHand();
-                    }
-                    else
-                    {
-                        itemStack = player.getItemInHand();
-                    }
-
-                    if (itemStack == null || itemStack.getType() == Material.AIR)
-                    {
-                        player.sendMessage(AdvancedKits.getConfiguration().getChatPrefix() + " " + ChatColor.RED + tl("kitadmin_flag_wrong_icon") + ": ");
-                        player.sendMessage("               " + ChatColor.WHITE + "" + ChatColor.BOLD + "AIR");
-                        return;
-                    }
-
-                    kit.setSave(true);
-                    kit.setIcon(itemStack.getType());
-                    kit.setSave(false);
-
-                    player.sendMessage(AdvancedKits.getConfiguration().getChatPrefix() + " " + ChatColor.GREEN + tl("kitadmin_flag_success_icon") + ":");
-                    player.sendMessage("               " + ChatColor.WHITE + "" + ChatColor.BOLD + itemStack.getType().toString());
-                }
-                else if (flag.equalsIgnoreCase("clearinv"))
-                {
-                    boolean clearinv = kit.isClearinv();
-                    kit.setSave(true);
-                    kit.setClearinv(!clearinv);
-                    kit.setSave(false);
-
-                    player.sendMessage(AdvancedKits.getConfiguration().getChatPrefix() + " " + ChatColor.GOLD + tl("kitadmin_flag_set"));
-                    player.sendMessage(ChatColor.WHITE + "    ClearInv: " + (!clearinv ? ChatColor.GREEN + "" + ChatColor.BOLD + ChatColor.stripColor(tl("chat_on")) : ChatColor.RED + "" + ChatColor.BOLD + ChatColor.stripColor(tl("chat_off"))));
-                }
-            }
-        }
-        else if (strings.length >= 2)
-        {
-            String flag  = strings[0];
-            String value = getArgString(strings, 1);
-
-            if (flag.equalsIgnoreCase("visible"))
-            {
-                if (!value.equalsIgnoreCase("true") || !value.equalsIgnoreCase("false"))
-                {
-                    player.sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "Error! " + tl("kitadmin_flag_boolean"));
-                    return;
-                }
-
-                kit.setSave(true);
-                kit.setVisible(Boolean.valueOf(value));
-                kit.setSave(false);
-
-                player.sendMessage(AdvancedKits.getConfiguration().getChatPrefix() + " " + ChatColor.GOLD + tl("kitadmin_flag_set"));
-                player.sendMessage(ChatColor.WHITE + "    visibility: " + (!kit.isVisible() ? ChatColor.GREEN + "" + ChatColor.BOLD + ChatColor.stripColor(tl("chat_on")) : ChatColor.RED + "" + ChatColor.BOLD + ChatColor.stripColor(tl("chat_off"))));
-                return;
-            }
-            if (flag.equalsIgnoreCase("clearinv"))
-            {
-                if (!value.equalsIgnoreCase("true") || !value.equalsIgnoreCase("false"))
-                {
-                    player.sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "Error! " + tl("kitadmin_flag_boolean"));
-                    return;
-                }
-
-                kit.setSave(true);
-                kit.setClearinv(Boolean.valueOf(value));
-                kit.setSave(false);
-
-                player.sendMessage(AdvancedKits.getConfiguration().getChatPrefix() + " " + ChatColor.GOLD + tl("kitadmin_flag_set"));
-                player.sendMessage(ChatColor.WHITE + "    ClearInv: " + (!kit.isClearinv() ? ChatColor.GREEN + "" + ChatColor.BOLD + ChatColor.stripColor(tl("chat_on")) : ChatColor.RED + "" + ChatColor.BOLD + ChatColor.stripColor(tl("chat_off"))));
-            }
-            else if (flag.equalsIgnoreCase("firstjoin"))
-            {
-                kit.setSave(true);
-                kit.setFirstjoin(!Boolean.valueOf(value));
-                kit.setSave(false);
-
-                player.sendMessage(AdvancedKits.getConfiguration().getChatPrefix() + " " + ChatColor.GOLD + tl("kitadmin_flag_set"));
-                player.sendMessage(ChatColor.WHITE + "    firstjoin: " + (!kit.isFirstjoin() ? ChatColor.GREEN + "" + ChatColor.BOLD + ChatColor.stripColor(tl("chat_on")) : ChatColor.RED + "" + ChatColor.BOLD + ChatColor.stripColor(tl("chat_off"))));//Itt ugyan azt az ĂŠrtĂŠket hasznĂĄlja, mint vĂĄltoztatĂĄs elĹtt DE a fĂĄjlba pedig elmenti helyesen.
-            }
-            else if (flag.equalsIgnoreCase("permonly") || flag.equalsIgnoreCase("permissiononly"))
-            {
-                if (!value.equalsIgnoreCase("true") || !value.equalsIgnoreCase("false"))
-                {
-                    player.sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "Error! " + tl("kitadmin_flag_boolean"));
-                    return;
-                }
-
-                kit.setSave(true);
-                kit.setPermonly(Boolean.valueOf(value));
-                kit.setSave(false);
-
-                player.sendMessage(AdvancedKits.getConfiguration().getChatPrefix() + " " + ChatColor.GOLD + tl("kitadmin_flag_set"));
-                player.sendMessage(ChatColor.WHITE + "    permissionOnly: " + (!kit.isPermonly() ? ChatColor.GREEN + "" + ChatColor.BOLD + ChatColor.stripColor(tl("chat_on")) : ChatColor.RED + "" + ChatColor.BOLD + ChatColor.stripColor(tl("chat_off"))));
-            }
-            else if (flag.equalsIgnoreCase("permission"))
-            {
-                if (!kit.isPermonly())
-                {
-                    player.sendMessage(AdvancedKits.getConfiguration().getChatPrefix() + " " + ChatColor.RED + tl("kitadmin_flag_permission_wrong"));
-                    return;
-                }
-
-                kit.setSave(true);
-                kit.setPermission(value);
-                kit.setSave(false);
-
-                player.sendMessage(AdvancedKits.getConfiguration().getChatPrefix() + " " + ChatColor.GREEN + tl("kitadmin_flag_permission_set") + ": ");
-                player.sendMessage("               " + ChatColor.WHITE + "" + ChatColor.BOLD + value);
-            }
-            else if (flag.equalsIgnoreCase("addworld"))
-            {
-                if (kit.getWorlds().contains(value))
-                {
-                    player.sendMessage(AdvancedKits.getConfiguration().getChatPrefix() + " " + ChatColor.RED + tl("kitadmin_flag_addworld_wrong") + " " + value);
-                    return;
-                }
-
-                kit.setSave(true);
-                kit.AddWorld(value);
-                kit.setSave(false);
-
-                player.sendMessage(AdvancedKits.getConfiguration().getChatPrefix() + " " + ChatColor.GREEN + tl("kitadmin_flag_addworld_success") + ": ");
-                player.sendMessage("               " + ChatColor.WHITE + "" + ChatColor.BOLD + value);
-                player.sendMessage("               " + ChatColor.WHITE + "" + ChatColor.BOLD + kit.getWorlds().toString());
-            }
-            else if (flag.equalsIgnoreCase("removeworld") || flag.equalsIgnoreCase("delworld"))
-            {
-                if (!kit.getWorlds().contains(value))
-                {
-                    player.sendMessage(AdvancedKits.getConfiguration().getChatPrefix() + " " + ChatColor.RED + tl("kitadmin_flag_delworld_wrong") + " " + value);
-                    return;
-                }
-
-                kit.setSave(true);
-                kit.RemoveWorld(value);
-                kit.setSave(false);
-
-                player.sendMessage(AdvancedKits.getConfiguration().getChatPrefix() + " " + ChatColor.GREEN + tl("kitadmin_flag_delworld_success") + ": ");
-                player.sendMessage("               " + ChatColor.WHITE + "" + ChatColor.BOLD + value);
-                player.sendMessage("               " + ChatColor.WHITE + "" + ChatColor.BOLD + kit.getWorlds().toString());
-            }
-            else if (flag.equalsIgnoreCase("addcommand"))
-            {
-                if (kit.getCommands().contains(value))
-                {
-                    player.sendMessage(AdvancedKits.getConfiguration().getChatPrefix() + " " + ChatColor.RED + tl("kitadmin_flag_addcommand_wrong") + " " + value);
-                    return;
-                }
-
-                kit.setSave(true);
-                kit.AddCommand(value);
-                kit.setSave(false);
-
-                player.sendMessage(AdvancedKits.getConfiguration().getChatPrefix() + " " + ChatColor.GREEN + tl("kitadmin_flag_addcommand_success") + ": ");
-                player.sendMessage("               " + ChatColor.WHITE + "" + ChatColor.BOLD + value);
-                player.sendMessage("               " + ChatColor.WHITE + "" + ChatColor.BOLD + kit.getCommands().toString());
-            }
-            else if (flag.equalsIgnoreCase("removecommand") || flag.equalsIgnoreCase("delcommand"))
-            {
-                if (!kit.getCommands().contains(value))
-                {
-                    player.sendMessage(AdvancedKits.getConfiguration().getChatPrefix() + " " + ChatColor.RED + tl("kitadmin_flag_delcommand_wrong") + " " + value);
-                    return;
-                }
-
-                kit.setSave(true);
-                kit.RemoveCommand(value);
-                kit.setSave(false);
-
-                player.sendMessage(AdvancedKits.getConfiguration().getChatPrefix() + " " + ChatColor.GREEN + tl("kitadmin_flag_delcommand_success") + ": ");
-                player.sendMessage("               " + ChatColor.WHITE + "" + ChatColor.BOLD + value);
-                player.sendMessage("               " + ChatColor.WHITE + "" + ChatColor.BOLD + kit.getCommands().toString());
-            }
-            else if (flag.equalsIgnoreCase("cost") || flag.equalsIgnoreCase("money"))
-            {
-                if (!isNumeric(value))
-                {
-                    player.sendMessage(AdvancedKits.getConfiguration().getChatPrefix() + " " + ChatColor.RED + tl("kitadmin_flag_integer"));
-                    return;
-                }
-
-                kit.setSave(true);
-                kit.setCost(Integer.valueOf(value));
-                kit.setSave(false);
-
-                player.sendMessage(AdvancedKits.getConfiguration().getChatPrefix() + " " + ChatColor.GREEN + tl("kitadmin_flag_cost_success") + ": ");
-                player.sendMessage("               " + ChatColor.WHITE + "" + ChatColor.BOLD + value);
-            }
-            else if (flag.equalsIgnoreCase("uses") || flag.equalsIgnoreCase("setuses"))
-            {
-                if (!isNumeric(value))
-                {
-                    player.sendMessage(AdvancedKits.getConfiguration().getChatPrefix() + " " + ChatColor.RED + tl("kitadmin_flag_integer"));
-                    return;
-                }
-
-                kit.setSave(true);
-                kit.setUses(Integer.valueOf(value));
-                kit.setSave(false);
-
-                player.sendMessage(AdvancedKits.getConfiguration().getChatPrefix() + " " + ChatColor.GREEN + tl("kitadmin_flag_uses_success") + ": ");
-                player.sendMessage("               " + ChatColor.WHITE + "" + ChatColor.BOLD + value);
-            }
-            else if (flag.equalsIgnoreCase("wait") || flag.equalsIgnoreCase("delay"))
-            {
-                if (!isDouble(value))
-                {
-                    player.sendMessage(AdvancedKits.getConfiguration().getChatPrefix() + " " + ChatColor.RED + tl("kitadmin_flag_integer"));
-                    return;
-                }
-
-                kit.setSave(true);
-                kit.setDelay(Double.parseDouble(value));
-                kit.setSave(false);
-
-                player.sendMessage(AdvancedKits.getConfiguration().getChatPrefix() + " " + ChatColor.GREEN + tl("kitadmin_flag_delay_success") + ": ");
-                player.sendMessage("               " + ChatColor.WHITE + "" + ChatColor.BOLD + value);
-            }
-            else
-            {
-                sender.sendMessage(ChatColor.GREEN + "Avalaible flags:          " + ChatColor.WHITE + "visible, permonly, addworld, delworld, icon, permission, cost, delay, addcommand, delcommand, uses, clearinv");
-            }
-        }*/
 	}
 }

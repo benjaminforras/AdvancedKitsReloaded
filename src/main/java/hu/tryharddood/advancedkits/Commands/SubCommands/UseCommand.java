@@ -3,7 +3,6 @@ package hu.tryharddood.advancedkits.Commands.SubCommands;
 import hu.tryharddood.advancedkits.AdvancedKits;
 import hu.tryharddood.advancedkits.Commands.Subcommand;
 import hu.tryharddood.advancedkits.Kits.Kit;
-import hu.tryharddood.advancedkits.Listeners.InventoryListener;
 import hu.tryharddood.advancedkits.Utils.Minecraft;
 import hu.tryharddood.advancedkits.Variables;
 import org.bukkit.Bukkit;
@@ -18,6 +17,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import java.util.List;
 
 import static hu.tryharddood.advancedkits.Utils.I18n.tl;
+import static hu.tryharddood.advancedkits.Utils.ItemBuilder.*;
 
 
 /**
@@ -26,8 +26,8 @@ import static hu.tryharddood.advancedkits.Utils.I18n.tl;
  * @author TryHardDood
  */
 public class UseCommand extends Subcommand {
-	public static void GiveItems(Player player, Kit kit) {
-		if (kit.getUses() > 0)
+	public static void GiveItems(Player player, Kit kit, boolean force) {
+		if (!force && kit.getUses() > 0)
 		{
 			AdvancedKits.getKitManager().setUses(kit, player, (AdvancedKits.getKitManager().getUses(kit, player) + 1));
 		}
@@ -99,19 +99,19 @@ public class UseCommand extends Subcommand {
 				item.setItemMeta(itemMeta);
 			}
 
-			if (InventoryListener.isHelmet(item.getType()))
+			if (isHelmet(item.getType()))
 			{
 				player.getInventory().setHelmet(item);
 			}
-			else if (InventoryListener.isChestplate(item.getType()))
+			else if (isChestplate(item.getType()))
 			{
 				player.getInventory().setChestplate(item);
 			}
-			else if (InventoryListener.isLeggings(item.getType()))
+			else if (isLeggings(item.getType()))
 			{
 				player.getInventory().setLeggings(item);
 			}
-			else if (InventoryListener.isBoots(item.getType()))
+			else if (isBoots(item.getType()))
 			{
 				player.getInventory().setBoots(item);
 			}
@@ -179,7 +179,7 @@ public class UseCommand extends Subcommand {
 			return;
 		}
 
-		if (kit.isPermonly() && !player.hasPermission(kit.getPermission()))
+		if (!player.hasPermission(kit.getPermission()) && !player.hasPermission(Variables.KIT_USE_KIT_PERMISSION_ALL))
 		{
 			sendMessage(player, tl("error_no_permission"), ChatColor.RED);
 			closeGUI(player, "Details");
@@ -206,6 +206,6 @@ public class UseCommand extends Subcommand {
 			return;
 		}
 
-		GiveItems(player, kit);
+		GiveItems(player, kit, false);
 	}
 }

@@ -1,6 +1,6 @@
 name: AdvancedKitsReloaded
 main: hu.tryharddood.advancedkits.AdvancedKits
-version: R3.0.25
+version: R3.0.28
 author: TryHardDood
 website: https://tryharddood.esy.es
 softdepend: [Vault]
@@ -9,3 +9,5 @@ commands:
     aliases: [akits, akit, kits]
     description: Main kit command.
     usage: /kit
+  mbchat:
+    aliases: []

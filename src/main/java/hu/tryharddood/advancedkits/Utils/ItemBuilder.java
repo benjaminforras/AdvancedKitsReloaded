@@ -1,4 +1,4 @@
-package hu.tryharddood.advancedkits.InventoryApi;
+package hu.tryharddood.advancedkits.Utils;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -88,6 +88,22 @@ public class ItemBuilder {
 			newString.add((newString.size() > 0 ? ChatColor.getLastColors(newString.get(newString.size() - 1)) : "") + string);
 		}
 		return newString;
+	}
+
+	public static boolean isBoots(Material type) {
+		return type == Material.DIAMOND_BOOTS || type == Material.IRON_BOOTS || type == Material.GOLD_BOOTS || type == Material.CHAINMAIL_BOOTS || type == Material.LEATHER_BOOTS;
+	}
+
+	public static boolean isChestplate(Material type) {
+		return type == Material.DIAMOND_CHESTPLATE || type == Material.IRON_CHESTPLATE || type == Material.GOLD_CHESTPLATE || type == Material.CHAINMAIL_CHESTPLATE || type == Material.LEATHER_CHESTPLATE;
+	}
+
+	public static boolean isHelmet(Material type) {
+		return type == Material.DIAMOND_HELMET || type == Material.SKULL_ITEM || type == Material.PUMPKIN || type == Material.IRON_HELMET || type == Material.GOLD_HELMET || type == Material.CHAINMAIL_HELMET || type == Material.LEATHER_HELMET;
+	}
+
+	public static boolean isLeggings(Material type) {
+		return type == Material.DIAMOND_LEGGINGS || type == Material.IRON_LEGGINGS || type == Material.GOLD_LEGGINGS || type == Material.CHAINMAIL_LEGGINGS || type == Material.LEATHER_LEGGINGS;
 	}
 
 	private ItemBuilder addEnchantment(Enchantment enchant, int level) {
@@ -292,5 +308,4 @@ public class ItemBuilder {
 		setTitle(title);
 		return this;
 	}
-
 }

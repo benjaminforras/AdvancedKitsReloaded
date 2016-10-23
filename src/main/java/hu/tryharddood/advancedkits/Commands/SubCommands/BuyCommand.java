@@ -55,7 +55,7 @@ public class BuyCommand extends Subcommand {
 			return;
 		}
 
-		if (kit.isPermonly() && !player.hasPermission(kit.getPermission()))
+		if (!player.hasPermission(kit.getPermission()) && !player.hasPermission(Variables.KIT_USE_KIT_PERMISSION_ALL))
 		{
 			sendMessage(player, tl("error_no_permission"), ChatColor.RED);
 			closeGUI(player, "Details");

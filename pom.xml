@@ -4,7 +4,7 @@
 
     <groupId>hu.tryharddood</groupId>
     <artifactId>AdvancedKits</artifactId>
-    <version>R3.0.25</version>
+    <version>R3.0.28</version>
     <packaging>jar</packaging>
 
     <name>AdvancedKitsReloaded</name>
@@ -49,6 +49,11 @@
             <artifactId>Vault</artifactId>
             <version>${vault.version}</version>
             <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.spigotmc</groupId>
+            <artifactId>spigot</artifactId>
+            <version>1.10.2-R0.1-SNAPSHOT</version>
         </dependency>
 
     </dependencies>

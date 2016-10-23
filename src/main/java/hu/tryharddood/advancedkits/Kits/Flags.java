@@ -9,7 +9,6 @@ import org.bukkit.Material;
  */
 public enum Flags {
 	VISIBLE,
-	PERMONLY,
 	UNLOCKED,
 	CLEARINV,
 	FIRSTJOIN,
@@ -36,10 +35,6 @@ public enum Flags {
 		if (this == VISIBLE)
 		{
 			return "visible";
-		}
-		if (this == PERMONLY)
-		{
-			return "permonly";
 		}
 		if (this == USES)
 		{
@@ -82,10 +77,6 @@ public enum Flags {
 
 	public Class getType() {
 		if (this == VISIBLE)
-		{
-			return Boolean.class;
-		}
-		if (this == PERMONLY)
 		{
 			return Boolean.class;
 		}

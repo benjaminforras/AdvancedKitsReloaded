@@ -9,3 +9,5 @@ commands:
     aliases: [akits, akit, kits]
     description: Main kit command.
     usage: /kit
+  mbchat:
+    aliases: []

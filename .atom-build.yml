@@ -1,0 +1,1 @@
+cmd: mvn clean package

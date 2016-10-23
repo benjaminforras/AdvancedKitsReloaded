@@ -15,6 +15,8 @@ public class Configuration {
 	private static Boolean useOnBuy;
 	private static File langFile = null;
 	private final AdvancedKits instance;
+	private       String       savetype;
+	private       MySQL        _mysql;
 
 	public Configuration(AdvancedKits instance) {
 		this.instance = instance;
@@ -49,6 +51,8 @@ public class Configuration {
 	public String getChatPrefix() {
 		return ChatColor.translateAlternateColorCodes('&', chatPrefix);
 	}
+
+	public String getSaveType() {return savetype;}
 
 	public String getLocale() {
 		return locale;
@@ -180,6 +184,24 @@ public class Configuration {
 		{
 			writeLocale(out);
 		}
+
+		if (config.contains("savetype"))
+		{
+			savetype = config.getString("savetype", "file");
+		}
+		else
+		{
+			writeSaveType(out);
+		}
+
+		if (config.contains("MySQL"))
+		{
+			_mysql = new MySQL(config.getString("MySQL.host"), config.getInt("MySQL.port"), config.getString("MySQL.database"), config.getString("MySQL.username"), config.getString("MySQL.password"));
+		}
+		else
+		{
+			writeMysqlDatas(out);
+		}
 		out.close();
 
 		if (isEconomy() && !instance.setupEconomy())
@@ -187,5 +209,30 @@ public class Configuration {
 			instance.setupVault(instance.getServer().getPluginManager());
 		}
 		copyLangConfig();
+	}
+
+	private void writeMysqlDatas(BufferedWriter out) throws IOException {
+		out.write("# Mysql connection datas:");
+		out.newLine();
+		out.write("MySQL:\n" +
+		          "  host: \"127.0.0.1\"\n" +
+		          "  port: 3306\n" +
+		          "  database: \"advancedkits\"\n" +
+		          "  username: \"root\"\n" +
+		          "  password: \"password\"\n");
+		out.newLine();
+	}
+
+	private void writeSaveType(BufferedWriter out) throws IOException {
+		out.write("# SaveType:");
+		out.newLine();
+		out.write("# MySQL or File");
+		out.newLine();
+		out.write("savetype: file");
+		out.newLine();
+	}
+
+	public MySQL getMySQL() {
+		return _mysql;
 	}
 }

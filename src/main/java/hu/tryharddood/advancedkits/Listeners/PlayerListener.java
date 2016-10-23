@@ -29,7 +29,7 @@ public class PlayerListener implements Listener {
 					{
 						if (!AdvancedKits.getKitManager().getFirstJoin(player, kit.getValue()))
 						{
-							UseCommand.GiveItems(player, kit.getValue());
+							UseCommand.GiveItems(player, kit.getValue(), false);
 							AdvancedKits.getKitManager().setFirstJoin(player, kit.getValue());
 						}
 					}

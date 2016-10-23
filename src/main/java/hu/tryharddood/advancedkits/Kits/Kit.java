@@ -65,7 +65,7 @@ public class Kit {
 	public void createKit(List<ItemStack> itemStacks, List<ItemStack> armors) {
 		setSave(true);
 		setVisible(true);
-		setPermonly(false);
+		setPermission(Variables.KIT_USE_KIT_PERMISSION.replace("[kitname]", getName()));
 		setClearinv(false);
 		setFirstjoin(false);
 		setCost(0);
@@ -204,19 +204,6 @@ public class Kit {
 		setFlag(Flags.VISIBLE, visible);
 	}
 
-	public Boolean isPermonly() {
-		//return permonly;
-
-		return (Boolean) getFlag(Flags.PERMONLY, false);
-	}
-
-	public void setPermonly(Boolean permonly) {
-		//this.permonly = permonly;
-		//setProperty("Flags.PermissionOnly", permonly);
-
-		setFlag(Flags.PERMONLY, permonly);
-	}
-
 	public Boolean isClearinv() {
 		//return clearinv;
 
@@ -241,7 +228,7 @@ public class Kit {
 	public String getPermission() {
 		//return permission;
 
-		return (String) getFlag(Flags.PERMISSION, Variables.KIT_USE_KIT_PERMISSION.replaceAll("[kitname]", getName()));
+		return (String) getFlag(Flags.PERMISSION, Variables.KIT_USE_KIT_PERMISSION.replace("[kitname]", getName()));
 	}
 
 	public void setPermission(String permission) {

@@ -2,12 +2,12 @@ package hu.tryharddood.advancedkits;
 
 import hu.tryharddood.advancedkits.Commands.CommandHandler;
 import hu.tryharddood.advancedkits.Commands.SubCommands.*;
-import hu.tryharddood.advancedkits.InventoryApi.InventoryApi;
 import hu.tryharddood.advancedkits.Kits.Kit;
 import hu.tryharddood.advancedkits.Kits.KitManager;
-import hu.tryharddood.advancedkits.Listeners.InventoryListener;
 import hu.tryharddood.advancedkits.Listeners.PlayerListener;
 import hu.tryharddood.advancedkits.Listeners.SignListener;
+import hu.tryharddood.advancedkits.MenuBuilder.chat.ChatCommandListener;
+import hu.tryharddood.advancedkits.MenuBuilder.inventory.InventoryListener;
 import hu.tryharddood.advancedkits.Utils.I18n;
 import hu.tryharddood.advancedkits.Utils.Metrics;
 import hu.tryharddood.advancedkits.Utils.Minecraft;
@@ -29,13 +29,15 @@ import java.util.Map;
 public class AdvancedKits extends JavaPlugin {
 	public static Economy econ = null;
 	public static Minecraft.Version ServerVersion;
-
-	private static transient AdvancedKits         instance;
+	public static transient  AdvancedKits         instance;
 	private static transient I18n                 i18n;
 	private static transient KitManager           kitManager;
 	private static transient Configuration        configuration;
+	//private static transient MySQL                mySQL;
 	private static           ConsoleCommandSender console;
 	private static           String               _versionString;
+	public InventoryListener   inventoryListener;
+	public ChatCommandListener chatCommandListener;
 
 	public static AdvancedKits getInstance() {
 		return instance;
@@ -78,6 +80,11 @@ public class AdvancedKits extends JavaPlugin {
 			i18n.onDisable();
 		}
 
+		/*if(mySQL != null)
+		{
+			mySQL.disconnect();
+		}*/
+
 		for (Map.Entry<String, Kit> kit : kitManager.getKits().entrySet())
 		{
 			try
@@ -110,6 +117,9 @@ public class AdvancedKits extends JavaPlugin {
 			return;
 		}
 
+		Bukkit.getPluginManager().registerEvents(inventoryListener = new InventoryListener(this), this);
+		getCommand("mbchat").setExecutor(chatCommandListener = new ChatCommandListener(this));
+
 		this.registerCommands();
 
 		log(ChatColor.GREEN + "Detected Minecraft version: " + ServerVersion.toString());
@@ -124,10 +134,14 @@ public class AdvancedKits extends JavaPlugin {
 		configuration = new Configuration(this);
 		configuration.load();
 
+		/*if(configuration.getSaveType().equalsIgnoreCase("mysql"))
+		{
+			mySQL = configuration.getMySQL();
+			mySQL.connect();
+		}*/
+
 		getServer().getPluginManager().registerEvents(new PlayerListener(), this);
-		getServer().getPluginManager().registerEvents(new InventoryListener(), this);
 		getServer().getPluginManager().registerEvents(new SignListener(), this);
-		getServer().getPluginManager().registerEvents(new InventoryApi(), this);
 
 		log(ChatColor.GREEN + "- Initalizing Metrics");
 		try
@@ -151,6 +165,8 @@ public class AdvancedKits extends JavaPlugin {
 		CommandHandler.addComand(Collections.singletonList("create"), new CreateCommand());
 		CommandHandler.addComand(Collections.singletonList("edit"), new EditCommand());
 		CommandHandler.addComand(Collections.singletonList("delete"), new DeleteCommand());
+
+		CommandHandler.addComand(Collections.singletonList("give"), new GiveCommand());
 
 		CommandHandler.addComand(Arrays.asList("setflag", "flag"), new SetFlagCommand());
 		CommandHandler.addComand(Arrays.asList("edititem", "item", "setitem"), new EditItemCommand());

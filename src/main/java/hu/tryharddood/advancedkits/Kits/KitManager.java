@@ -12,7 +12,6 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -49,7 +48,7 @@ public class KitManager {
 
 		if ((money - cost) >= 0)
 		{
-			if (kit.isPermonly() && player.hasPermission(kit.getPermission()))
+			if (player.hasPermission(kit.getPermission()))
 			{
 				return true;
 			}
@@ -59,7 +58,7 @@ public class KitManager {
 	}
 
 	public boolean canUse(Player player, Kit kit) {
-		if (!kit.isPermonly() || kit.isPermonly() && player.hasPermission(kit.getPermission()))
+		if (player.hasPermission(kit.getPermission()))
 		{
 			if (!AdvancedKits.getConfiguration().isEconomy() || AdvancedKits.getConfiguration().isEconomy() && (kit.getDefaultUnlock() || getUnlocked(kit, player)))
 			{
@@ -163,7 +162,7 @@ public class KitManager {
 			}
 		}
 
-		if (kit.isPermonly() && !player.hasPermission(kit.getPermission()))
+		if (!player.hasPermission(kit.getPermission()))
 		{
 			list.add(ChatColor.GREEN + "");
 			list.add(ChatColor.RED + "" + ChatColor.BOLD + tl("error_no_permission"));
@@ -172,7 +171,7 @@ public class KitManager {
 		if (kit.getDelay() > 0)
 		{
 			list.add(ChatColor.GREEN + "");
-			list.add(ChatColor.GREEN + "" + ChatColor.BOLD + tl("delay") + ": " + ChatColor.WHITE + "" + ChatColor.BOLD + kit.getDelay() + " hour(s)");
+			list.add(ChatColor.GREEN + "" + ChatColor.BOLD + tl("delay") + ": " + ChatColor.WHITE + "" + ChatColor.BOLD + kit.getDelay() + " " + tl("seconds"));
 		}
 
 		if (kit.getWorlds().size() > 0)
@@ -249,24 +248,6 @@ public class KitManager {
 				}
 			}
 		}
-
-        /*kit.setPermonly(configuration.getBoolean("Flags.PermissionOnly", false));
-
-        kit.setPermission(configuration.getString("Flags.Permission", Variables.KIT_USE_KIT_PERMISSION.replaceAll("[kitname]", name)));
-
-        kit.setVisible(configuration.getBoolean("Flags.Visible", true));
-
-        kit.setClearinv(configuration.getBoolean("Flags.ClearInv", false));
-
-        kit.setFirstjoin(configuration.getBoolean("Flags.FirstJoin", false));
-
-        kit.setUses(configuration.getInt("Flags.Uses", 0));
-
-        kit.setIcon(Material.matchMaterial(configuration.getString("Flags.Icon", Material.EMERALD_BLOCK.toString())));
-
-        kit.setDelay(configuration.getDouble("Flags.Delay", 0));
-
-        kit.setCost(configuration.getInt("Flags.Cost", 0));*/
 
 		if (configuration.getConfigurationSection("Flags") != null)
 		{
@@ -361,11 +342,9 @@ public class KitManager {
 	}
 
 	public String getDelay(Player player, Kit kit) {
-		Long             delay       = Double.valueOf(getProperty(player, kit, Properties.LASTUSE, 0.0).toString()).longValue();
-		Date             date        = new Date(delay);
-		SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-
-		return DATE_FORMAT.format(date);
+		Long delay = Double.valueOf(getProperty(player, kit, Properties.LASTUSE, 0.0).toString()).longValue();
+		Date date  = new Date(delay);
+		return printDifference(new Date(System.currentTimeMillis()), date);
 	}
 
 	public boolean getUnlocked(Kit kit, Player player) {
@@ -377,7 +356,7 @@ public class KitManager {
 	}
 
 	public void setDelay(Player player, double delay, Kit kit) {
-		setProperty(player, kit, Properties.LASTUSE, (System.currentTimeMillis() + (delay * 3600000)));
+		setProperty(player, kit, Properties.LASTUSE, (System.currentTimeMillis() + (delay * 1000)));
 	}
 
 	public void setUnlocked(Kit kit, Player player) {
@@ -414,5 +393,48 @@ public class KitManager {
 	private Object getProperty(Player player, Kit kit, Properties property, Object defvalue) {
 		YamlConfiguration yamlConfiguration = kit.getYaml();
 		return yamlConfiguration.get(player.getUniqueId() + "." + property.toString(), defvalue);
+	}
+
+	public String printDifference(Date startDate, Date endDate) {
+
+		long different = endDate.getTime() - startDate.getTime();
+
+		long secondsInMilli = 1000;
+		long minutesInMilli = secondsInMilli * 60;
+		long hoursInMilli   = minutesInMilli * 60;
+		long daysInMilli    = hoursInMilli * 24;
+
+		long elapsedDays = different / daysInMilli;
+		different = different % daysInMilli;
+
+		long elapsedHours = different / hoursInMilli;
+		different = different % hoursInMilli;
+
+		long elapsedMinutes = different / minutesInMilli;
+		different = different % minutesInMilli;
+
+		long elapsedSeconds = different / secondsInMilli;
+
+		StringBuilder sb = new StringBuilder();
+		if (elapsedDays >= 1)
+		{
+			sb.append(elapsedDays + " " + tl("days") + " ");
+		}
+
+		if (elapsedHours >= 1)
+		{
+			sb.append(elapsedHours + " " + tl("hours") + " ");
+		}
+
+		if (elapsedMinutes >= 1)
+		{
+			sb.append(elapsedMinutes + " " + tl("minutes") + " ");
+		}
+
+		if (elapsedSeconds >= 1)
+		{
+			sb.append(elapsedSeconds + " " + tl("seconds") + " ");
+		}
+		return sb.toString();
 	}
 }
