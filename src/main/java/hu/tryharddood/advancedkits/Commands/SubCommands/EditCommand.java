@@ -3,8 +3,8 @@ package hu.tryharddood.advancedkits.Commands.SubCommands;
 import hu.tryharddood.advancedkits.AdvancedKits;
 import hu.tryharddood.advancedkits.Commands.Subcommand;
 import hu.tryharddood.advancedkits.Kits.Kit;
+import hu.tryharddood.advancedkits.MenuBuilder.ItemBuilder;
 import hu.tryharddood.advancedkits.MenuBuilder.inventory.InventoryMenuBuilder;
-import hu.tryharddood.advancedkits.Utils.ItemBuilder;
 import hu.tryharddood.advancedkits.Utils.PageLayout;
 import hu.tryharddood.advancedkits.Utils.Title;
 import hu.tryharddood.advancedkits.Variables;
@@ -22,8 +22,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import static hu.tryharddood.advancedkits.MenuBuilder.ItemBuilder.*;
 import static hu.tryharddood.advancedkits.Utils.I18n.tl;
-import static hu.tryharddood.advancedkits.Utils.ItemBuilder.*;
 
 
 /**
@@ -34,27 +34,27 @@ import static hu.tryharddood.advancedkits.Utils.ItemBuilder.*;
 public class EditCommand extends Subcommand {
 
 	private static List<ItemStack> filling = new ArrayList<>(Arrays.asList(
-			new ItemBuilder(Material.STAINED_GLASS_PANE, DyeColor.LIGHT_BLUE.getData()).setTitle(ChatColor.GREEN + "" + ChatColor.BOLD + "Place Helmet Here").build(),
-			new ItemBuilder(Material.STAINED_GLASS_PANE, DyeColor.LIGHT_BLUE.getData()).setTitle(ChatColor.GREEN + "" + ChatColor.BOLD + "Place Chestplate Here").build(),
-			new ItemBuilder(Material.STAINED_GLASS_PANE, DyeColor.LIGHT_BLUE.getData()).setTitle(ChatColor.GREEN + "" + ChatColor.BOLD + "Place Leggings Here").build(),
-			new ItemBuilder(Material.STAINED_GLASS_PANE, DyeColor.LIGHT_BLUE.getData()).setTitle(ChatColor.GREEN + "" + ChatColor.BOLD + "Place Boots Here").build(),
-			new ItemBuilder(Material.STAINED_GLASS_PANE, DyeColor.BLACK.getData()).setTitle(ChatColor.GREEN + "" + ChatColor.BOLD + "§8").build(),
-			new ItemBuilder(Material.STAINED_GLASS_PANE, DyeColor.BLACK.getData()).setTitle(ChatColor.GREEN + "" + ChatColor.BOLD + "§8").build(),
-			new ItemBuilder(Material.STAINED_GLASS_PANE, DyeColor.BLACK.getData()).setTitle(ChatColor.GREEN + "" + ChatColor.BOLD + "§8").build(),
-			new ItemBuilder(Material.STAINED_GLASS_PANE, DyeColor.BLACK.getData()).setTitle(ChatColor.GREEN + "" + ChatColor.BOLD + "§8").build(),
-			new ItemBuilder(Material.STAINED_GLASS_PANE, DyeColor.BLACK.getData()).setTitle(ChatColor.GREEN + "" + ChatColor.BOLD + "§8").build(),
-			new ItemBuilder(Material.STAINED_GLASS_PANE, DyeColor.BLACK.getData()).setTitle(ChatColor.GREEN + "" + ChatColor.BOLD + "§8").build(),
-			new ItemBuilder(Material.STAINED_GLASS_PANE, DyeColor.BLACK.getData()).setTitle(ChatColor.GREEN + "" + ChatColor.BOLD + "§8").build(),
-			new ItemBuilder(Material.STAINED_GLASS_PANE, DyeColor.BLACK.getData()).setTitle(ChatColor.GREEN + "" + ChatColor.BOLD + "§8").build(),
-			new ItemBuilder(Material.STAINED_GLASS_PANE, DyeColor.BLACK.getData()).setTitle(ChatColor.GREEN + "" + ChatColor.BOLD + "§8").build(),
-			new ItemBuilder(Material.STAINED_GLASS_PANE, DyeColor.BLACK.getData()).setTitle(ChatColor.GREEN + "" + ChatColor.BOLD + "§8").build(),
-			new ItemBuilder(Material.STAINED_GLASS_PANE, DyeColor.BLACK.getData()).setTitle(ChatColor.GREEN + "" + ChatColor.BOLD + "§8").build(),
-			new ItemBuilder(Material.STAINED_GLASS_PANE, DyeColor.BLACK.getData()).setTitle(ChatColor.GREEN + "" + ChatColor.BOLD + "§8").build(),
-			new ItemBuilder(Material.STAINED_GLASS_PANE, DyeColor.BLACK.getData()).setTitle(ChatColor.GREEN + "" + ChatColor.BOLD + "§8").build(),
-			new ItemBuilder(Material.STAINED_GLASS_PANE, DyeColor.BLACK.getData()).setTitle(ChatColor.GREEN + "" + ChatColor.BOLD + "§8").build(),
-			new ItemBuilder(Material.STAINED_GLASS_PANE, DyeColor.BLACK.getData()).setTitle(ChatColor.GREEN + "" + ChatColor.BOLD + "§8").build(),
-			new ItemBuilder(Material.STAINED_GLASS_PANE, DyeColor.BLACK.getData()).setTitle(ChatColor.GREEN + "" + ChatColor.BOLD + "§8").build(),
-			new ItemBuilder(Material.STAINED_GLASS_PANE, DyeColor.BLACK.getData()).setTitle(ChatColor.GREEN + "" + ChatColor.BOLD + "§8").build()));
+			new ItemBuilder(Material.STAINED_GLASS_PANE, (short) 3).setTitle(ChatColor.GREEN + "" + ChatColor.BOLD + "Place Helmet Here").build(),
+			new ItemBuilder(Material.STAINED_GLASS_PANE, (short) 3).setTitle(ChatColor.GREEN + "" + ChatColor.BOLD + "Place Chestplate Here").build(),
+			new ItemBuilder(Material.STAINED_GLASS_PANE, (short) 3).setTitle(ChatColor.GREEN + "" + ChatColor.BOLD + "Place Leggings Here").build(),
+			new ItemBuilder(Material.STAINED_GLASS_PANE, (short) 3).setTitle(ChatColor.GREEN + "" + ChatColor.BOLD + "Place Boots Here").build(),
+			new ItemBuilder(Material.STAINED_GLASS_PANE, (short) 8).setTitle(ChatColor.GREEN + "" + ChatColor.BOLD + "§8").build(),
+			new ItemBuilder(Material.STAINED_GLASS_PANE, (short) 8).setTitle(ChatColor.GREEN + "" + ChatColor.BOLD + "§8").build(),
+			new ItemBuilder(Material.STAINED_GLASS_PANE, (short) 8).setTitle(ChatColor.GREEN + "" + ChatColor.BOLD + "§8").build(),
+			new ItemBuilder(Material.STAINED_GLASS_PANE, (short) 8).setTitle(ChatColor.GREEN + "" + ChatColor.BOLD + "§8").build(),
+			new ItemBuilder(Material.STAINED_GLASS_PANE, (short) 8).setTitle(ChatColor.GREEN + "" + ChatColor.BOLD + "§8").build(),
+			new ItemBuilder(Material.STAINED_GLASS_PANE, (short) 8).setTitle(ChatColor.GREEN + "" + ChatColor.BOLD + "§8").build(),
+			new ItemBuilder(Material.STAINED_GLASS_PANE, (short) 8).setTitle(ChatColor.GREEN + "" + ChatColor.BOLD + "§8").build(),
+			new ItemBuilder(Material.STAINED_GLASS_PANE, (short) 8).setTitle(ChatColor.GREEN + "" + ChatColor.BOLD + "§8").build(),
+			new ItemBuilder(Material.STAINED_GLASS_PANE, (short) 8).setTitle(ChatColor.GREEN + "" + ChatColor.BOLD + "§8").build(),
+			new ItemBuilder(Material.STAINED_GLASS_PANE, (short) 8).setTitle(ChatColor.GREEN + "" + ChatColor.BOLD + "§8").build(),
+			new ItemBuilder(Material.STAINED_GLASS_PANE, (short) 8).setTitle(ChatColor.GREEN + "" + ChatColor.BOLD + "§8").build(),
+			new ItemBuilder(Material.STAINED_GLASS_PANE, (short) 8).setTitle(ChatColor.GREEN + "" + ChatColor.BOLD + "§8").build(),
+			new ItemBuilder(Material.STAINED_GLASS_PANE, (short) 8).setTitle(ChatColor.GREEN + "" + ChatColor.BOLD + "§8").build(),
+			new ItemBuilder(Material.STAINED_GLASS_PANE, (short) 8).setTitle(ChatColor.GREEN + "" + ChatColor.BOLD + "§8").build(),
+			new ItemBuilder(Material.STAINED_GLASS_PANE, (short) 8).setTitle(ChatColor.GREEN + "" + ChatColor.BOLD + "§8").build(),
+			new ItemBuilder(Material.STAINED_GLASS_PANE, (short) 8).setTitle(ChatColor.GREEN + "" + ChatColor.BOLD + "§8").build(),
+			new ItemBuilder(Material.STAINED_GLASS_PANE, (short) 8).setTitle(ChatColor.GREEN + "" + ChatColor.BOLD + "§8").build()));
 
 	@Override
 	public String getPermission() {
@@ -137,9 +137,10 @@ public class EditCommand extends Subcommand {
 
 		imb.show(player);
 
-		imb.onInteract((player1, action, slot) ->
+		imb.onInteract((player1, action, event) ->
 		{
-			ItemStack clickedItem = imb.getInventory().getItem(slot);
+			ItemStack clickedItem = event.getCurrentItem();
+			int       slot        = event.getSlot();
 
 			if (clickedItem != null && clickedItem.getType().equals(Material.STAINED_GLASS_PANE) && clickedItem.getDurability() == (short) 13 && clickedItem.hasItemMeta() && clickedItem.getItemMeta().getDisplayName().contains(tl("gui_button_edit", true)))
 			{
@@ -188,7 +189,7 @@ public class EditCommand extends Subcommand {
 				Title.sendTitle(player, 2, 20, 2, "", ChatColor.GREEN + tl("kit_edit"));
 			}
 
-			if (clickedItem != null && clickedItem.getType().equals(Material.STAINED_GLASS_PANE) && (clickedItem.getDurability() == (short) 15 || clickedItem.getDurability() == (short) 14 || clickedItem.getDurability() == (short) 13))
+			if (clickedItem != null && clickedItem.getType().equals(Material.STAINED_GLASS_PANE) && (clickedItem.getDurability() == (short) 8 || clickedItem.getDurability() == (short) 14 || clickedItem.getDurability() == (short) 13))
 				return;
 
 			if (slot == 27 || slot == 28 || slot == 29 || slot == 30)
@@ -197,13 +198,13 @@ public class EditCommand extends Subcommand {
 				if (item == null || item.getType() == Material.AIR)
 				{
 					if (slot == 27)
-						imb.getInventory().setItem(slot, new ItemBuilder(Material.STAINED_GLASS_PANE, DyeColor.LIGHT_BLUE.getData()).setTitle(ChatColor.GREEN + "" + ChatColor.BOLD + "Place Helmet Here").build());
+						imb.getInventory().setItem(slot, new ItemBuilder(Material.STAINED_GLASS_PANE, (short) 3).setTitle(ChatColor.GREEN + "" + ChatColor.BOLD + "Place Helmet Here").build());
 					if (slot == 28)
-						imb.getInventory().setItem(slot, new ItemBuilder(Material.STAINED_GLASS_PANE, DyeColor.LIGHT_BLUE.getData()).setTitle(ChatColor.GREEN + "" + ChatColor.BOLD + "Place Chestplate Here").build());
+						imb.getInventory().setItem(slot, new ItemBuilder(Material.STAINED_GLASS_PANE, (short) 3).setTitle(ChatColor.GREEN + "" + ChatColor.BOLD + "Place Chestplate Here").build());
 					if (slot == 29)
-						imb.getInventory().setItem(slot, new ItemBuilder(Material.STAINED_GLASS_PANE, DyeColor.LIGHT_BLUE.getData()).setTitle(ChatColor.GREEN + "" + ChatColor.BOLD + "Place Leggings Here").build());
+						imb.getInventory().setItem(slot, new ItemBuilder(Material.STAINED_GLASS_PANE, (short) 3).setTitle(ChatColor.GREEN + "" + ChatColor.BOLD + "Place Leggings Here").build());
 					if (slot == 30)
-						imb.getInventory().setItem(slot, new ItemBuilder(Material.STAINED_GLASS_PANE, DyeColor.LIGHT_BLUE.getData()).setTitle(ChatColor.GREEN + "" + ChatColor.BOLD + "Place Boots Here").build());
+						imb.getInventory().setItem(slot, new ItemBuilder(Material.STAINED_GLASS_PANE, (short) 3).setTitle(ChatColor.GREEN + "" + ChatColor.BOLD + "Place Boots Here").build());
 
 					if (clickedItem != null && clickedItem.getType() != Material.STAINED_GLASS_PANE)
 						player.setItemOnCursor(clickedItem);

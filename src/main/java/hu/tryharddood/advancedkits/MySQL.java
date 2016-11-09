@@ -4,6 +4,7 @@ package hu.tryharddood.advancedkits;
  *              Created by TryHardDood on 2016. 10. 14..
  ****************************************************/
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 
 import java.sql.Connection;
@@ -31,15 +32,19 @@ public class MySQL {
 	public void connect() {
 		if (!isConnected())
 		{
-			try
+			Bukkit.getScheduler().runTaskAsynchronously(AdvancedKits.getInstance(), () ->
 			{
-				con = DriverManager.getConnection("jdbc:mysql://" + host + ":" + port + "/" + database, username, password);
-				AdvancedKits.log(ChatColor.GREEN + "MySQL - Successfully connected to the database!");
-				performFirstConnectionCommands();
-			} catch (SQLException e)
-			{
-				e.printStackTrace();
-			}
+				try
+				{
+					AdvancedKits.log(ChatColor.GREEN + "Starting to connect to MYSQL. This could take some time.");
+					con = DriverManager.getConnection("jdbc:mysql://" + host + ":" + port + "/" + database, username, password);
+					AdvancedKits.log(ChatColor.GREEN + "MySQL - Successfully connected to the database!");
+					performFirstConnectionCommands();
+				} catch (SQLException e)
+				{
+					e.printStackTrace();
+				}
+			});
 		}
 	}
 
@@ -58,7 +63,7 @@ public class MySQL {
 	}
 
 	public void performFirstConnectionCommands() throws SQLException {
-		PreparedStatement ps = getConnection().prepareStatement("CREATE TABLE IF NOT EXISTS PlayerKits (UUID VARCHAR(100), UNLOCKED TEXT, PRIMARY KEY (UUID))");
+		PreparedStatement ps = getConnection().prepareStatement("CREATE TABLE IF NOT EXISTS AdvancedKitsReloaded (UUID CHAR(36), UNLOCKED TEXT, PRIMARY KEY (UUID)) ENGINE = InnoDB;");
 		ps.executeUpdate();
 	}
 

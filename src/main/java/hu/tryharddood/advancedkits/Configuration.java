@@ -9,14 +9,13 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class Configuration {
-	private static String  chatPrefix;
-	private static String  locale;
-	private static Boolean economy;
-	private static Boolean useOnBuy;
-	private static File langFile = null;
-	private final AdvancedKits instance;
-	private       String       savetype;
-	private       MySQL        _mysql;
+	private static String       chatPrefix;
+	private static String       locale;
+	private static Boolean      economy;
+	private static Boolean      useOnBuy;
+	private final  AdvancedKits instance;
+	private        String       savetype;
+	private        MySQL        _mysql;
 
 	public Configuration(AdvancedKits instance) {
 		this.instance = instance;
@@ -24,6 +23,7 @@ public class Configuration {
 
 	public static void copyLangConfig() {
 		String localeFileName = "messages_" + locale + ".properties";
+		File   langFile;
 		try
 		{
 			langFile = new File(AdvancedKits.getInstance().getDataFolder(), localeFileName);
@@ -212,6 +212,7 @@ public class Configuration {
 	}
 
 	private void writeMysqlDatas(BufferedWriter out) throws IOException {
+		out.newLine();
 		out.write("# Mysql connection datas:");
 		out.newLine();
 		out.write("MySQL:\n" +
@@ -224,6 +225,7 @@ public class Configuration {
 	}
 
 	private void writeSaveType(BufferedWriter out) throws IOException {
+		out.newLine();
 		out.write("# SaveType:");
 		out.newLine();
 		out.write("# MySQL or File");
@@ -232,7 +234,7 @@ public class Configuration {
 		out.newLine();
 	}
 
-	public MySQL getMySQL() {
+	MySQL getMySQL() {
 		return _mysql;
 	}
 }

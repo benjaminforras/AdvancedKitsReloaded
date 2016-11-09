@@ -1,6 +1,6 @@
 name: AdvancedKitsReloaded
 main: hu.tryharddood.advancedkits.AdvancedKits
-version: R3.0.28
+version: 3.0.28-SNAPSHOT
 author: TryHardDood
 website: https://tryharddood.esy.es
 softdepend: [Vault]

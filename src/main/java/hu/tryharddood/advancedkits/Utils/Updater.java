@@ -1,7 +1,9 @@
 package hu.tryharddood.advancedkits.Utils;
 
 import hu.tryharddood.advancedkits.AdvancedKits;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.plugin.Plugin;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -17,7 +19,8 @@ public class Updater extends Thread {
 	private final Plugin  plugin;
 	private final int     id;
 	private final boolean log;
-	private       URL     url;
+	private final ConsoleCommandSender console = Bukkit.getConsoleSender();
+	private URL url;
 
 	public Updater(Plugin plugin, int resourceID) throws IOException {
 		this(plugin, resourceID, true);
@@ -61,7 +64,7 @@ public class Updater extends Thread {
 			BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
 
 			String content = "";
-			String line    = null;
+			String line;
 			while ((line = in.readLine()) != null)
 			{
 				content = content + line;
@@ -95,13 +98,18 @@ public class Updater extends Thread {
 			}
 			if (isUpdated(currentVersion, plugin.getDescription().getVersion()))
 			{
-				plugin.getLogger().info("Found new version: " + currentVersion + "! (Your version is " + plugin.getDescription().getVersion() + ")");
-				plugin.getLogger().info("Download here: http://www.spigotmc.org/resources/" + id);
-				plugin.getLogger().info("Or run this command: /kit update");
+				console.sendMessage(LineUtils.line);
+				console.sendMessage(LineUtils.newline);
+				console.sendMessage(LineUtils.getCenteredMessage(LineUtils.Aligns.CENTER, ChatColor.GOLD + "" + ChatColor.BOLD + "New version found!"));
+				console.sendMessage(LineUtils.getCenteredMessage(LineUtils.Aligns.CENTER, ChatColor.GRAY + "New version: " + ChatColor.GREEN + currentVersion + ChatColor.GRAY + " | Your version: " + ChatColor.RED + plugin.getDescription().getVersion()));
+				console.sendMessage(LineUtils.getCenteredMessage(LineUtils.Aligns.CENTER, ChatColor.GRAY + "Get the latest version from here: "));
+				console.sendMessage(LineUtils.getCenteredMessage(LineUtils.Aligns.CENTER, ChatColor.GRAY + "http://www.spigotmc.org/resources/" + id));
+				console.sendMessage(LineUtils.newline);
+				console.sendMessage(LineUtils.line);
 			}
 			else if (log)
 			{
-				plugin.getLogger().info("" + plugin.getDescription().getName() + " is up-to-date.");
+				console.sendMessage(LineUtils.getCenteredMessage(LineUtils.Aligns.CENTER, ChatColor.GREEN + plugin.getDescription().getName() + " is up-to-date."));
 			}
 		} catch (IOException e)
 		{

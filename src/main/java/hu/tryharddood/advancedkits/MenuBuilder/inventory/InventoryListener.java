@@ -47,7 +47,7 @@ public class InventoryListener implements Listener {
 
 	private final Map<Inventory, Map<ClickType, List<InventoryMenuListener>>> listenerMap     = new HashMap<>();
 	private final Map<Inventory, List<InventoryEventHandler>>                 eventHandlerMap = new HashMap<>();
-	JavaPlugin plugin;
+	private JavaPlugin plugin;
 
 	public InventoryListener(JavaPlugin plugin) {
 		this.plugin = plugin;
@@ -112,7 +112,7 @@ public class InventoryListener implements Listener {
 				{
 					try
 					{
-						listener.interact(player, type, event.getSlot());
+						listener.interact(player, type, event);
 					} catch (Throwable throwable)
 					{
 						throwable.printStackTrace();

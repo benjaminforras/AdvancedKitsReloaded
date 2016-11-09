@@ -55,26 +55,24 @@ public class BuyCommand extends Subcommand {
 			return;
 		}
 
-		if (!player.hasPermission(kit.getPermission()) && !player.hasPermission(Variables.KIT_USE_KIT_PERMISSION_ALL))
+		if (!player.hasPermission(Variables.KIT_USE_KIT_PERMISSION_ALL))
 		{
-			sendMessage(player, tl("error_no_permission"), ChatColor.RED);
-			closeGUI(player, "Details");
-
-			return;
+			if (!player.hasPermission(kit.getPermission()))
+			{
+				sendMessage(player, tl("error_no_permission"), ChatColor.RED);
+				return;
+			}
 		}
 
 		if (AdvancedKits.getKitManager().getUnlocked(kit, player))
 		{
 			sendMessage(player, tl("error_kitbuy_bought_already"), ChatColor.RED);
-			closeGUI(player, "Details");
-
 			return;
 		}
 
 		if (!AdvancedKits.getConfiguration().isEconomy())
 		{
 			sendMessage(player, "Economy support disabled..", ChatColor.RED);
-			closeGUI(player, "Details");
 			return;
 		}
 		OfflinePlayer oPlayer = Bukkit.getOfflinePlayer(player.getUniqueId());
@@ -90,12 +88,10 @@ public class BuyCommand extends Subcommand {
 			}
 
 			sendMessage(player, tl("kitbuy_success_message", kit.getName()), ChatColor.GREEN);
-			closeGUI(player, "Details");
 		}
 		else
 		{
 			sendMessage(player, tl("error_kitbuy_not_enough_money"), ChatColor.RED);
-			closeGUI(player, "Details");
 		}
 	}
 }

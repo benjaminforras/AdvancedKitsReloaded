@@ -17,7 +17,8 @@ public enum Flags {
 	ICON,
 	COST,
 	USES,
-	DELAY;
+	DELAY,
+	REPLACEARMOR;
 
 	static
 	{
@@ -72,6 +73,10 @@ public enum Flags {
 		{
 			return "delay";
 		}
+		if (this == REPLACEARMOR)
+		{
+			return "replacearmor";
+		}
 		return "Unknown";
 	}
 
@@ -93,6 +98,10 @@ public enum Flags {
 			return Boolean.class;
 		}
 		if (this == UNLOCKED)
+		{
+			return Boolean.class;
+		}
+		if (this == REPLACEARMOR)
 		{
 			return Boolean.class;
 		}

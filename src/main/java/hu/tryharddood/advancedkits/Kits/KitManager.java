@@ -1,6 +1,7 @@
 package hu.tryharddood.advancedkits.Kits;
 
 import hu.tryharddood.advancedkits.AdvancedKits;
+import hu.tryharddood.advancedkits.MySQL;
 import hu.tryharddood.advancedkits.Variables;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -12,6 +13,10 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
 import java.io.IOException;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.*;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -20,61 +25,12 @@ import static hu.tryharddood.advancedkits.Utils.I18n.tl;
 
 
 public class KitManager {
-	private final HashMap<String, Kit> Kits = new HashMap<>();
+	private final HashMap<String, Kit>        Kits              = new HashMap<>();
+	private       HashMap<UUID, List<String>> unlockedKitsCache = new HashMap<>();
 	private JavaPlugin plugin;
 
 	public KitManager(final JavaPlugin plugin) {
 		this.plugin = plugin;
-	}
-
-	public boolean canBuy(Player player, Kit kit) {
-		if (!AdvancedKits.getConfiguration().isEconomy())
-		{
-			return false;
-		}
-
-		if (kit.getDefaultUnlock())
-		{
-			return false;
-		}
-
-		if (getUnlocked(kit, player))
-		{
-			return false;
-		}
-
-		double money = AdvancedKits.econ.getBalance(Bukkit.getOfflinePlayer(player.getUniqueId()));
-		int    cost  = kit.getCost();
-
-		if ((money - cost) >= 0)
-		{
-			if (player.hasPermission(kit.getPermission()))
-			{
-				return true;
-			}
-			return true;
-		}
-		return false;
-	}
-
-	public boolean canUse(Player player, Kit kit) {
-		if (player.hasPermission(kit.getPermission()))
-		{
-			if (!AdvancedKits.getConfiguration().isEconomy() || AdvancedKits.getConfiguration().isEconomy() && (kit.getDefaultUnlock() || getUnlocked(kit, player)))
-			{
-				if (!kit.getWorlds().contains(player.getWorld().getName()))
-				{
-					if (kit.getUses() == 0 || (kit.getUses() > 0 && (kit.getUses() - getUses(kit, player)) < 0) && player.isOp() || kit.getUses() > 0 && ((kit.getUses() - getUses(kit, player)) > 0))
-					{
-						if (CheckCooldown(player, kit) || !CheckCooldown(player, kit) && player.hasPermission(Variables.KITDELAY_BYPASS))
-						{
-							return true;
-						}
-					}
-				}
-			}
-		}
-		return false;
 	}
 
 	public void deleteKit(Kit kit) {
@@ -289,7 +245,7 @@ public class KitManager {
 
 		File[] listOfFiles = folder.listFiles();
 
-		if (listOfFiles.length == 0)
+		if (listOfFiles == null || listOfFiles.length == 0)
 		{
 			AdvancedKits.log(ChatColor.RED + "- Can't find any kit.");
 			return;
@@ -344,7 +300,7 @@ public class KitManager {
 	public String getDelay(Player player, Kit kit) {
 		Long delay = Double.valueOf(getProperty(player, kit, Properties.LASTUSE, 0.0).toString()).longValue();
 		Date date  = new Date(delay);
-		return printDifference(new Date(System.currentTimeMillis()), date);
+		return getDifferenceText(new Date(System.currentTimeMillis()), date);
 	}
 
 	public boolean getUnlocked(Kit kit, Player player) {
@@ -376,6 +332,44 @@ public class KitManager {
 	}
 
 	private void setProperty(Player player, Kit kit, Properties property, Object value) {
+		if (property == Properties.UNLOCKED)
+		{
+			if (AdvancedKits.getConfiguration().getSaveType().equalsIgnoreCase("mysql"))
+			{
+				List<String> kits = new ArrayList<>();
+				if (unlockedKitsCache.containsKey(player.getUniqueId()))
+				{
+					kits = unlockedKitsCache.get(player.getUniqueId());
+				}
+				kits.add(kit.getName());
+				unlockedKitsCache.put(player.getUniqueId(), kits);
+
+				StringBuilder sb = new StringBuilder();
+				for (String saveKit : kits)
+				{
+					sb.append(saveKit).append(", ");
+				}
+				String unlockedKits = sb.toString();
+				if (unlockedKits.endsWith(", "))
+				{
+					unlockedKits = unlockedKits.substring(0, unlockedKits.length() - 2);
+				}
+
+				MySQL mySQL = AdvancedKits.getMySQL();
+				try
+				{
+					PreparedStatement ps = mySQL.getConnection().prepareStatement("INSERT INTO AdvancedKitsReloaded (UUID, UNLOCKED) VALUES('" + player.getUniqueId().toString() + "', '" + unlockedKits + "') ON DUPLICATE KEY UPDATE UNLOCKED='" + unlockedKits + "'");
+					System.out.println("MYSQL: Executing the following::");
+					System.out.println(ps.toString());
+					ps.executeUpdate();
+				} catch (SQLException e)
+				{
+					e.printStackTrace();
+				}
+				return;
+			}
+		}
+
 		try
 		{
 			YamlConfiguration yamlConfiguration = kit.getYaml();
@@ -391,11 +385,48 @@ public class KitManager {
 	}
 
 	private Object getProperty(Player player, Kit kit, Properties property, Object defvalue) {
+		if (property == Properties.UNLOCKED)
+		{
+			if (AdvancedKits.getConfiguration().getSaveType().equalsIgnoreCase("mysql"))
+			{
+				if (!unlockedKitsCache.containsKey(player.getUniqueId()))
+				{
+					player.sendMessage(AdvancedKits.getConfiguration().getChatPrefix() + " " + ChatColor.GREEN + "Please wait while we load your data.");
+					MySQL mySQL = AdvancedKits.getMySQL();
+					try
+					{
+						List<String> kits       = new ArrayList<>();
+						String       kitsString = "";
+						Statement    stm        = mySQL.getConnection().createStatement();
+						ResultSet    rs         = stm.executeQuery("SELECT UNLOCKED FROM AdvancedKitsReloaded WHERE UUID = '" + player.getUniqueId().toString() + "'");
+						while (rs.next())
+						{
+							kitsString = rs.getString(1);
+						}
+						System.out.println("MYSQL Received:" + kitsString);
+
+						String[] myData = kitsString.split(", ");
+						for (String s : myData)
+						{
+							System.out.println(s);
+							if (AdvancedKits.getKitManager().getKit(s) != null)
+								kits.add(s);
+						}
+						unlockedKitsCache.put(player.getUniqueId(), kits);
+					} catch (SQLException e)
+					{
+						e.printStackTrace();
+					}
+				}
+				return unlockedKitsCache.get(player.getUniqueId()).contains(kit.getName());
+			}
+		}
+
 		YamlConfiguration yamlConfiguration = kit.getYaml();
 		return yamlConfiguration.get(player.getUniqueId() + "." + property.toString(), defvalue);
 	}
 
-	public String printDifference(Date startDate, Date endDate) {
+	public String getDifferenceText(Date startDate, Date endDate) {
 
 		long different = endDate.getTime() - startDate.getTime();
 
@@ -418,22 +449,22 @@ public class KitManager {
 		StringBuilder sb = new StringBuilder();
 		if (elapsedDays >= 1)
 		{
-			sb.append(elapsedDays + " " + tl("days") + " ");
+			sb.append(elapsedDays).append(" ").append(tl("days")).append(" ");
 		}
 
 		if (elapsedHours >= 1)
 		{
-			sb.append(elapsedHours + " " + tl("hours") + " ");
+			sb.append(elapsedHours).append(" ").append(tl("hours")).append(" ");
 		}
 
 		if (elapsedMinutes >= 1)
 		{
-			sb.append(elapsedMinutes + " " + tl("minutes") + " ");
+			sb.append(elapsedMinutes).append(" ").append(tl("minutes")).append(" ");
 		}
 
 		if (elapsedSeconds >= 1)
 		{
-			sb.append(elapsedSeconds + " " + tl("seconds") + " ");
+			sb.append(elapsedSeconds).append(" ").append(tl("seconds")).append(" ");
 		}
 		return sb.toString();
 	}

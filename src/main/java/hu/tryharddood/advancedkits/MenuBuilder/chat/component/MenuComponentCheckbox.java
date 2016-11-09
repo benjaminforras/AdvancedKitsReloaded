@@ -36,6 +36,7 @@ import org.bukkit.entity.Player;
 
 import javax.annotation.Nonnull;
 
+
 /**
  * Checkbox MenuComponent
  * States are either <code>true</code> or <code>false</code> (checked/unchecked) returned by {@link #isChecked()}

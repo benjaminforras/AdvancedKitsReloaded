@@ -34,6 +34,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
+import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -194,7 +195,7 @@ public class InventoryMenuBuilder extends MenuBuilder<Inventory> {
 			AdvancedKits.instance.inventoryListener.registerEventHandler(this, eventHandler);
 		} catch (IllegalArgumentException e)
 		{
-			throw e;
+			e.printStackTrace();
 		}
 		return this;
 	}
@@ -216,7 +217,7 @@ public class InventoryMenuBuilder extends MenuBuilder<Inventory> {
 			AdvancedKits.instance.inventoryListener.registerListener(this, listener, actions);
 		} catch (IllegalArgumentException e)
 		{
-			throw e;
+			e.printStackTrace();
 		}
 		return this;
 	}
@@ -247,8 +248,8 @@ public class InventoryMenuBuilder extends MenuBuilder<Inventory> {
 		withItem(slot, item);
 		onInteract(new InventoryMenuListener() {
 			@Override
-			public void interact(Player player, ClickType action, int slot_) {
-				if (slot_ == slot) { listener.onInteract(player, action, item); }
+			public void interact(Player player, ClickType action, InventoryClickEvent event) {
+				if (event.getSlot() == slot) { listener.onInteract(player, action, item); }
 			}
 		}, actions);
 		return this;
@@ -318,7 +319,7 @@ public class InventoryMenuBuilder extends MenuBuilder<Inventory> {
 			AdvancedKits.instance.inventoryListener.registerListener(this, listener, ALL_CLICK_TYPES);
 		} catch (IllegalArgumentException e)
 		{
-			throw e;
+			e.printStackTrace();
 		}
 	}
 

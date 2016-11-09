@@ -30,6 +30,7 @@ package hu.tryharddood.advancedkits.MenuBuilder.inventory;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
+import org.bukkit.event.inventory.InventoryClickEvent;
 
 /**
  * Listener for Inventory menu interactions
@@ -41,8 +42,8 @@ public interface InventoryMenuListener {
 	 *
 	 * @param player {@link Player} who clicked
 	 * @param action the {@link ClickType} performed
-	 * @param slot   the clicked slot
+	 * @param event  the actual event
 	 */
-	void interact(Player player, ClickType action, int slot);
+	void interact(Player player, ClickType action, InventoryClickEvent event);
 
 }

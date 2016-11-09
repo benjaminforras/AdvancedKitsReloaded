@@ -36,9 +36,8 @@ import java.lang.reflect.Method;
 public class Reflection {
 
 	public static String getVersion() {
-		String name    = Bukkit.getServer().getClass().getPackage().getName();
-		String version = name.substring(name.lastIndexOf('.') + 1) + ".";
-		return version;
+		String name = Bukkit.getServer().getClass().getPackage().getName();
+		return name.substring(name.lastIndexOf('.') + 1) + ".";
 	}
 
 	public static Class<?> getNMSClass(String className) {
@@ -83,7 +82,7 @@ public class Reflection {
 	public static Object getHandle(Object obj) {
 		try
 		{
-			return getMethod(obj.getClass(), "getHandle", new Class[0]).invoke(obj, new Object[0]);
+			return getMethod(obj.getClass(), "getHandle", new Class[0]).invoke(obj/*, new Object[0]*/);
 		} catch (Exception e)
 		{
 			e.printStackTrace();

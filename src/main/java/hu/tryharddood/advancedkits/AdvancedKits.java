@@ -28,16 +28,16 @@ import java.util.Map;
 
 public class AdvancedKits extends JavaPlugin {
 	public static Economy econ = null;
-	public static Minecraft.Version ServerVersion;
+	public static            Minecraft.Version    ServerVersion;
 	public static transient  AdvancedKits         instance;
 	private static transient I18n                 i18n;
 	private static transient KitManager           kitManager;
 	private static transient Configuration        configuration;
-	//private static transient MySQL                mySQL;
+	private static transient MySQL                mySQL;
 	private static           ConsoleCommandSender console;
 	private static           String               _versionString;
-	public InventoryListener   inventoryListener;
-	public ChatCommandListener chatCommandListener;
+	public                   InventoryListener    inventoryListener;
+	public                   ChatCommandListener  chatCommandListener;
 
 	public static AdvancedKits getInstance() {
 		return instance;
@@ -58,6 +58,11 @@ public class AdvancedKits extends JavaPlugin {
 	public static void log(String message) {
 		console.sendMessage("[" + AdvancedKits.getInstance().getDescription().getName() + "] " + message);
 	}
+
+	public static MySQL getMySQL() {
+		return mySQL;
+	}
+
 
 	public synchronized static String getVersion() {
 		if (_versionString == null)
@@ -80,10 +85,10 @@ public class AdvancedKits extends JavaPlugin {
 			i18n.onDisable();
 		}
 
-		/*if(mySQL != null)
+		if (mySQL != null)
 		{
 			mySQL.disconnect();
-		}*/
+		}
 
 		for (Map.Entry<String, Kit> kit : kitManager.getKits().entrySet())
 		{
@@ -134,11 +139,11 @@ public class AdvancedKits extends JavaPlugin {
 		configuration = new Configuration(this);
 		configuration.load();
 
-		/*if(configuration.getSaveType().equalsIgnoreCase("mysql"))
+		if (configuration.getSaveType() != null && configuration.getSaveType().equalsIgnoreCase("mysql"))
 		{
 			mySQL = configuration.getMySQL();
 			mySQL.connect();
-		}*/
+		}
 
 		getServer().getPluginManager().registerEvents(new PlayerListener(), this);
 		getServer().getPluginManager().registerEvents(new SignListener(), this);

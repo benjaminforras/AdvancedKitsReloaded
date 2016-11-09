@@ -7,6 +7,7 @@ import hu.tryharddood.advancedkits.Utils.Minecraft;
 import hu.tryharddood.advancedkits.Variables;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -16,8 +17,8 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.List;
 
+import static hu.tryharddood.advancedkits.MenuBuilder.ItemBuilder.*;
 import static hu.tryharddood.advancedkits.Utils.I18n.tl;
-import static hu.tryharddood.advancedkits.Utils.ItemBuilder.*;
 
 
 /**
@@ -33,100 +34,136 @@ public class UseCommand extends Subcommand {
 		}
 
 		PlayerInventory inv = player.getInventory();
+
+		int freespace = 0;
+		int spaceneed = kit.getItemStacks().size();
+		int kitarmor  = kit.getArmor().size();
+
+		ItemStack[] giveArmorAsItem = new ItemStack[]{null, null, null, null};
+
+		for (int c = 0; c < inv.getSize() - 1; c++)
+		{
+			if (inv.getItem(c) == null || inv.getItem(c).getType() == Material.AIR)
+			{
+				freespace++;
+			}
+		}
+
+		if (!kit.getReplaceArmor())
+		{
+			if (kitarmor >= 1 && inv.getHelmet() != null)
+			{
+				giveArmorAsItem[0] = inv.getHelmet();
+				spaceneed++;
+			}
+
+			if (kitarmor >= 2 && inv.getChestplate() != null)
+			{
+				giveArmorAsItem[1] = inv.getChestplate();
+				spaceneed++;
+			}
+
+			if (kitarmor >= 3 && inv.getLeggings() != null)
+			{
+				giveArmorAsItem[2] = inv.getLeggings();
+				spaceneed++;
+			}
+
+			if (kitarmor >= 4 && inv.getBoots() != null)
+			{
+				giveArmorAsItem[3] = inv.getBoots();
+				spaceneed++;
+			}
+		}
+
+		if (freespace < spaceneed)
+		{
+			player.sendMessage("You don't have enough space for the items. (" + spaceneed + ")");
+			return;
+		}
+
 		if (kit.isClearinv())
 		{
 			if (AdvancedKits.ServerVersion.newerThan(Minecraft.Version.v1_9_R1))
 			{
-				player.getInventory().setArmorContents(null);
-				player.getInventory().setExtraContents(null);
-				player.getInventory().setItemInMainHand(null);
-				player.getInventory().setItemInOffHand(null);
-				player.getInventory().clear();
+				inv.setArmorContents(null);
+				inv.setExtraContents(null);
+				inv.setItemInMainHand(null);
+				inv.setItemInOffHand(null);
+				inv.clear();
 			}
 			else
 			{
-				player.getInventory().setArmorContents(null);
-				player.getInventory().clear();
+				inv.setArmorContents(null);
+				inv.clear();
 			}
-		}
-
-		ItemMeta itemMeta;
-		for (ItemStack item : kit.getItemStacks())
-		{
-			if (item.hasItemMeta())
-			{
-				itemMeta = item.getItemMeta();
-				if (itemMeta.hasDisplayName() && itemMeta.getDisplayName().contains("%player%"))
-				{
-					itemMeta.setDisplayName(itemMeta.getDisplayName().replaceAll("%player%", player.getName()));
-				}
-
-				if (itemMeta.getLore() != null)
-				{
-					List<String> lore = itemMeta.getLore();
-					for (int i = 0; i < lore.size(); i++)
-					{
-						lore.set(i, lore.get(i).replaceAll("%player%", player.getName()));
-					}
-					itemMeta.setLore(lore);
-				}
-
-				item.setItemMeta(itemMeta);
-			}
-			inv.addItem(item);
 		}
 
 		for (ItemStack item : kit.getArmor())
 		{
-			if (item.hasItemMeta())
-			{
-				itemMeta = item.getItemMeta();
-				if (itemMeta.hasDisplayName() && itemMeta.getDisplayName().contains("%player%"))
-				{
-					itemMeta.setDisplayName(itemMeta.getDisplayName().replaceAll("%player%", player.getName()));
-				}
-
-				if (itemMeta.getLore() != null)
-				{
-					List<String> lore = itemMeta.getLore();
-					for (int i = 0; i < lore.size(); i++)
-					{
-						lore.set(i, lore.get(i).replaceAll("%player%", player.getName()));
-					}
-					itemMeta.setLore(lore);
-				}
-
-				item.setItemMeta(itemMeta);
-			}
+			item = replaceWildcards(player, item);
 
 			if (isHelmet(item.getType()))
 			{
-				player.getInventory().setHelmet(item);
+				inv.setHelmet(item);
 			}
 			else if (isChestplate(item.getType()))
 			{
-				player.getInventory().setChestplate(item);
+				inv.setChestplate(item);
 			}
 			else if (isLeggings(item.getType()))
 			{
-				player.getInventory().setLeggings(item);
+				inv.setLeggings(item);
 			}
 			else if (isBoots(item.getType()))
 			{
-				player.getInventory().setBoots(item);
+				inv.setBoots(item);
 			}
+		}
+
+		for (ItemStack prevArmor : giveArmorAsItem)
+		{
+			if (prevArmor != null) inv.addItem(prevArmor);
+		}
+
+		for (ItemStack item : kit.getItemStacks())
+		{
+			inv.addItem(replaceWildcards(player, item));
 		}
 
 		player.updateInventory();
 
 		AdvancedKits.getKitManager().setDelay(player, kit.getDelay(), kit);
-		closeGUI(player, "Details");
 		sendMessage(player, tl("kituse_success"), ChatColor.GREEN);
 
 		for (String command : kit.getCommands())
 		{
 			Bukkit.dispatchCommand(AdvancedKits.getInstance().getServer().getConsoleSender(), command.replaceAll("%player%", player.getName()));
 		}
+	}
+
+	private static ItemStack replaceWildcards(Player player, ItemStack item) {
+		if (item.hasItemMeta())
+		{
+			ItemMeta itemMeta = item.getItemMeta();
+			if (itemMeta.hasDisplayName() && itemMeta.getDisplayName().contains("%player%"))
+			{
+				itemMeta.setDisplayName(itemMeta.getDisplayName().replaceAll("%player%", player.getName()));
+			}
+
+			if (itemMeta.getLore() != null)
+			{
+				List<String> lore = itemMeta.getLore();
+				for (int i = 0; i < lore.size(); i++)
+				{
+					lore.set(i, lore.get(i).replaceAll("%player%", player.getName()));
+				}
+				itemMeta.setLore(lore);
+			}
+
+			item.setItemMeta(itemMeta);
+		}
+		return item;
 	}
 
 	@Override
@@ -166,25 +203,22 @@ public class UseCommand extends Subcommand {
 		if (kit.getUses() > 0 && (kit.getUses() - AdvancedKits.getKitManager().getUses(kit, player)) <= 0 && !player.hasPermission(Variables.KITADMIN_PERMISSION))
 		{
 			sendMessage(player, tl("cant_use_anymore"), ChatColor.RED);
-			closeGUI(player, "Details");
-
 			return;
 		}
 
 		if (AdvancedKits.getConfiguration().isEconomy() && (!kit.getDefaultUnlock() && !AdvancedKits.getKitManager().getUnlocked(kit, player)))
 		{
 			sendMessage(player, tl("kituse_error_notunlocked"), ChatColor.RED);
-			closeGUI(player, "Details");
-
 			return;
 		}
 
-		if (!player.hasPermission(kit.getPermission()) && !player.hasPermission(Variables.KIT_USE_KIT_PERMISSION_ALL))
+		if (!player.hasPermission(Variables.KIT_USE_KIT_PERMISSION_ALL))
 		{
-			sendMessage(player, tl("error_no_permission"), ChatColor.RED);
-			closeGUI(player, "Details");
-
-			return;
+			if (!player.hasPermission(kit.getPermission()))
+			{
+				sendMessage(player, tl("error_no_permission"), ChatColor.RED);
+				return;
+			}
 		}
 
 		if (kit.getDelay() > 0)
@@ -193,7 +227,6 @@ public class UseCommand extends Subcommand {
 			{
 				if (!AdvancedKits.getKitManager().CheckCooldown(player, kit))
 				{
-					closeGUI(player, "Details");
 					sendMessage(player, tl("kituse_wait", AdvancedKits.getKitManager().getDelay(player, kit)), ChatColor.RED);
 					return;
 				}

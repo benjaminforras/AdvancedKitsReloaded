@@ -7,6 +7,7 @@ import hu.tryharddood.advancedkits.Kits.Kit;
 import hu.tryharddood.advancedkits.MenuBuilder.chat.ChatMenuBuilder;
 import hu.tryharddood.advancedkits.MenuBuilder.chat.LineBuilder;
 import hu.tryharddood.advancedkits.MenuBuilder.chat.component.MenuComponentCheckbox;
+import hu.tryharddood.advancedkits.Utils.LineUtils;
 import hu.tryharddood.advancedkits.Utils.Minecraft;
 import hu.tryharddood.advancedkits.Variables;
 import net.md_5.bungee.api.chat.TextComponent;
@@ -98,15 +99,15 @@ public class SetFlagCommand extends Subcommand {
 						ItemStack itemStack = AdvancedKits.ServerVersion.newerThan(Minecraft.Version.v1_9_R1) ? player.getInventory().getItemInMainHand() : player.getItemInHand();
 						if (itemStack == null || itemStack.getType() == Material.AIR)
 						{
-							player.sendMessage(ChatColor.RED + LineBuilder.CenterUtil.line);
-							player.sendMessage(LineBuilder.CenterUtil.newline);
+							player.sendMessage(ChatColor.RED + LineUtils.line);
+							player.sendMessage(LineUtils.newline);
 
-							LineBuilder.CenterUtil.sendCenteredMessage(player, ChatColor.GOLD + "" + ChatColor.BOLD + "Attention!");
-							LineBuilder.CenterUtil.sendCenteredMessage(player, "You can't set the kit's icon to: ");
-							LineBuilder.CenterUtil.sendCenteredMessage(player, ChatColor.AQUA + "" + ChatColor.BOLD + Material.AIR.toString().toLowerCase());
+							player.sendMessage(LineUtils.getCenteredMessage(LineUtils.Aligns.CENTER, ChatColor.GOLD + "" + ChatColor.BOLD + "Attention!"));
+							player.sendMessage(LineUtils.getCenteredMessage(LineUtils.Aligns.CENTER, "You can't set the kit's icon to: "));
+							player.sendMessage(LineUtils.getCenteredMessage(LineUtils.Aligns.CENTER, ChatColor.AQUA + "" + ChatColor.BOLD + Material.AIR.toString().toLowerCase()));
 
-							player.sendMessage(LineBuilder.CenterUtil.newline);
-							player.sendMessage(ChatColor.RED + LineBuilder.CenterUtil.line);
+							player.sendMessage(LineUtils.newline);
+							player.sendMessage(ChatColor.RED + LineUtils.line);
 
 							kit.setSave(false);
 							return;
@@ -114,22 +115,22 @@ public class SetFlagCommand extends Subcommand {
 
 						ItemMeta itemMeta = itemStack.getItemMeta();
 
-						player.sendMessage(ChatColor.GREEN + LineBuilder.CenterUtil.line);
-						player.sendMessage(LineBuilder.CenterUtil.newline);
+						player.sendMessage(ChatColor.GREEN + LineUtils.line);
+						player.sendMessage(LineUtils.newline);
 
-						LineBuilder.CenterUtil.sendCenteredMessage(player, "Are you sure you want to set the kit's icon to: ");
-						LineBuilder.CenterUtil.sendCenteredMessage(player, itemMeta.hasDisplayName() ? itemMeta.getDisplayName() : ChatColor.AQUA + "" + ChatColor.BOLD + itemStack.getType().toString().toLowerCase());
+						player.sendMessage(LineUtils.getCenteredMessage(LineUtils.Aligns.CENTER, "Are you sure you want to set the kit's icon to: "));
+						player.sendMessage(LineUtils.getCenteredMessage(LineUtils.Aligns.CENTER, itemMeta.hasDisplayName() ? itemMeta.getDisplayName() : ChatColor.AQUA + "" + ChatColor.BOLD + itemStack.getType().toString().toLowerCase()));
 						new ChatMenuBuilder().withLine(new LineBuilder().append(player12 ->
 								{
 									kit.setFlag(flag, itemStack.getType().toString());
 									player.sendMessage(ChatColor.GREEN + "Flag '" + ChatColor.GOLD + flag.getName() + ChatColor.GREEN + "' value has been changed to: " + ChatColor.GOLD + itemStack.getType().toString());
 								},
-								new TextComponent(LineBuilder.CenterUtil.sendCenteredMessage2(ChatColor.GREEN + "" + ChatColor.BOLD + "Yes!")))
-								.append(LineBuilder.CenterUtil.sendCenteredMessage3(ChatColor.RED + "" + ChatColor.BOLD + "No!")))
+								new TextComponent(LineUtils.getCenteredMessage(LineUtils.Aligns.LEFT, ChatColor.GREEN + "" + ChatColor.BOLD + "Yes!")))
+								.append(LineUtils.getCenteredMessage(LineUtils.Aligns.RIGHT, ChatColor.RED + "" + ChatColor.BOLD + "No!")))
 								.show(player);
 
-						player.sendMessage(LineBuilder.CenterUtil.newline);
-						player.sendMessage(ChatColor.GREEN + LineBuilder.CenterUtil.line);
+						player.sendMessage(LineUtils.newline);
+						player.sendMessage(ChatColor.GREEN + LineUtils.line);
 					}
 				}
 				else if (strings.length > 1)
@@ -180,36 +181,36 @@ public class SetFlagCommand extends Subcommand {
 						Material material = Material.matchMaterial(value);
 						if (material == null || material == Material.AIR)
 						{
-							player.sendMessage(ChatColor.RED + LineBuilder.CenterUtil.line);
-							player.sendMessage(LineBuilder.CenterUtil.newline);
+							player.sendMessage(ChatColor.RED + LineUtils.line);
+							player.sendMessage(LineUtils.newline);
 
-							LineBuilder.CenterUtil.sendCenteredMessage(player, ChatColor.GOLD + "" + ChatColor.BOLD + "Attention!");
-							LineBuilder.CenterUtil.sendCenteredMessage(player, "You can't set the kit's icon to: ");
-							LineBuilder.CenterUtil.sendCenteredMessage(player, ChatColor.AQUA + "" + ChatColor.BOLD + value.toLowerCase());
+							player.sendMessage(LineUtils.getCenteredMessage(LineUtils.Aligns.CENTER, ChatColor.GOLD + "" + ChatColor.BOLD + "Attention!"));
+							player.sendMessage(LineUtils.getCenteredMessage(LineUtils.Aligns.CENTER, "You can't set the kit's icon to: "));
+							player.sendMessage(LineUtils.getCenteredMessage(LineUtils.Aligns.CENTER, ChatColor.AQUA + "" + ChatColor.BOLD + value.toLowerCase()));
 
-							player.sendMessage(LineBuilder.CenterUtil.newline);
-							player.sendMessage(ChatColor.RED + LineBuilder.CenterUtil.line);
+							player.sendMessage(LineUtils.newline);
+							player.sendMessage(ChatColor.RED + LineUtils.line);
 
 							kit.setSave(false);
 							return;
 						}
 
-						player.sendMessage(ChatColor.GREEN + LineBuilder.CenterUtil.line);
-						player.sendMessage(LineBuilder.CenterUtil.newline);
+						player.sendMessage(ChatColor.GREEN + LineUtils.line);
+						player.sendMessage(LineUtils.newline);
 
-						LineBuilder.CenterUtil.sendCenteredMessage(player, "Are you sure you want to set the kit's icon to: ");
-						LineBuilder.CenterUtil.sendCenteredMessage(player, ChatColor.AQUA + "" + ChatColor.BOLD + material.toString().toLowerCase());
+						player.sendMessage(LineUtils.getCenteredMessage(LineUtils.Aligns.CENTER, "Are you sure you want to set the kit's icon to: "));
+						player.sendMessage(LineUtils.getCenteredMessage(LineUtils.Aligns.CENTER, ChatColor.AQUA + "" + ChatColor.BOLD + material.toString().toLowerCase()));
 						new ChatMenuBuilder().withLine(new LineBuilder().append(player12 ->
 								{
 									kit.setFlag(flag, material.toString());
 									player.sendMessage(ChatColor.GREEN + "Flag '" + ChatColor.GOLD + flag.getName() + ChatColor.GREEN + "' value has been changed to: " + ChatColor.GOLD + material.toString());
 								},
-								new TextComponent(LineBuilder.CenterUtil.sendCenteredMessage2(ChatColor.GREEN + "" + ChatColor.BOLD + "Yes!")))
-								.append(LineBuilder.CenterUtil.sendCenteredMessage3(ChatColor.RED + "" + ChatColor.BOLD + "No!")))
+								new TextComponent(LineUtils.getCenteredMessage(LineUtils.Aligns.LEFT, ChatColor.GREEN + "" + ChatColor.BOLD + "Yes!")))
+								.append(LineUtils.getCenteredMessage(LineUtils.Aligns.RIGHT, ChatColor.RED + "" + ChatColor.BOLD + "No!")))
 								.show(player);
 
-						player.sendMessage(LineBuilder.CenterUtil.newline);
-						player.sendMessage(ChatColor.GREEN + LineBuilder.CenterUtil.line);
+						player.sendMessage(LineUtils.newline);
+						player.sendMessage(ChatColor.GREEN + LineUtils.line);
 					}
 				}
 			}
@@ -220,15 +221,15 @@ public class SetFlagCommand extends Subcommand {
 			{
 				if (kit.getWorlds().contains(value))
 				{
-					player.sendMessage(ChatColor.RED + LineBuilder.CenterUtil.line);
-					player.sendMessage(LineBuilder.CenterUtil.newline);
+					player.sendMessage(ChatColor.RED + LineUtils.line);
+					player.sendMessage(LineUtils.newline);
 
-					LineBuilder.CenterUtil.sendCenteredMessage(player, ChatColor.GOLD + "" + ChatColor.BOLD + "Attention!");
-					LineBuilder.CenterUtil.sendCenteredMessage(player, tl("kitadmin_flag_addworld_wrong"));
-					LineBuilder.CenterUtil.sendCenteredMessage(player, ChatColor.AQUA + "" + ChatColor.BOLD + value.toLowerCase());
+					player.sendMessage(LineUtils.getCenteredMessage(LineUtils.Aligns.CENTER, ChatColor.GOLD + "" + ChatColor.BOLD + "Attention!"));
+					player.sendMessage(LineUtils.getCenteredMessage(LineUtils.Aligns.CENTER, tl("kitadmin_flag_addworld_wrong")));
+					player.sendMessage(LineUtils.getCenteredMessage(LineUtils.Aligns.CENTER, ChatColor.AQUA + "" + ChatColor.BOLD + value.toLowerCase()));
 
-					player.sendMessage(LineBuilder.CenterUtil.newline);
-					player.sendMessage(ChatColor.RED + LineBuilder.CenterUtil.line);
+					player.sendMessage(LineUtils.newline);
+					player.sendMessage(ChatColor.RED + LineUtils.line);
 
 					kit.setSave(false);
 					return;
@@ -241,15 +242,15 @@ public class SetFlagCommand extends Subcommand {
 			{
 				if (!kit.getWorlds().contains(value))
 				{
-					player.sendMessage(ChatColor.RED + LineBuilder.CenterUtil.line);
-					player.sendMessage(LineBuilder.CenterUtil.newline);
+					player.sendMessage(ChatColor.RED + LineUtils.line);
+					player.sendMessage(LineUtils.newline);
 
-					LineBuilder.CenterUtil.sendCenteredMessage(player, ChatColor.GOLD + "" + ChatColor.BOLD + "Attention!");
-					LineBuilder.CenterUtil.sendCenteredMessage(player, tl("kitadmin_flag_delworld_wrong"));
-					LineBuilder.CenterUtil.sendCenteredMessage(player, ChatColor.AQUA + "" + ChatColor.BOLD + value.toLowerCase());
+					player.sendMessage(LineUtils.getCenteredMessage(LineUtils.Aligns.CENTER, ChatColor.GOLD + "" + ChatColor.BOLD + "Attention!"));
+					player.sendMessage(LineUtils.getCenteredMessage(LineUtils.Aligns.CENTER, tl("kitadmin_flag_delworld_wrong")));
+					player.sendMessage(LineUtils.getCenteredMessage(LineUtils.Aligns.CENTER, ChatColor.AQUA + "" + ChatColor.BOLD + value.toLowerCase()));
 
-					player.sendMessage(LineBuilder.CenterUtil.newline);
-					player.sendMessage(ChatColor.RED + LineBuilder.CenterUtil.line);
+					player.sendMessage(LineUtils.newline);
+					player.sendMessage(ChatColor.RED + LineUtils.line);
 
 					kit.setSave(false);
 					return;
@@ -262,15 +263,15 @@ public class SetFlagCommand extends Subcommand {
 			{
 				if (kit.getCommands().contains(value))
 				{
-					player.sendMessage(ChatColor.RED + LineBuilder.CenterUtil.line);
-					player.sendMessage(LineBuilder.CenterUtil.newline);
+					player.sendMessage(ChatColor.RED + LineUtils.line);
+					player.sendMessage(LineUtils.newline);
 
-					LineBuilder.CenterUtil.sendCenteredMessage(player, ChatColor.GOLD + "" + ChatColor.BOLD + "Attention!");
-					LineBuilder.CenterUtil.sendCenteredMessage(player, tl("kitadmin_flag_addcommand_wrong"));
-					LineBuilder.CenterUtil.sendCenteredMessage(player, ChatColor.AQUA + "" + ChatColor.BOLD + value.toLowerCase());
+					player.sendMessage(LineUtils.getCenteredMessage(LineUtils.Aligns.CENTER, ChatColor.GOLD + "" + ChatColor.BOLD + "Attention!"));
+					player.sendMessage(LineUtils.getCenteredMessage(LineUtils.Aligns.CENTER, tl("kitadmin_flag_addcommand_wrong")));
+					player.sendMessage(LineUtils.getCenteredMessage(LineUtils.Aligns.CENTER, ChatColor.AQUA + "" + ChatColor.BOLD + value.toLowerCase()));
 
-					player.sendMessage(LineBuilder.CenterUtil.newline);
-					player.sendMessage(ChatColor.RED + LineBuilder.CenterUtil.line);
+					player.sendMessage(LineUtils.newline);
+					player.sendMessage(ChatColor.RED + LineUtils.line);
 
 					kit.setSave(false);
 					return;
@@ -283,15 +284,15 @@ public class SetFlagCommand extends Subcommand {
 			{
 				if (!kit.getCommands().contains(value))
 				{
-					player.sendMessage(ChatColor.RED + LineBuilder.CenterUtil.line);
-					player.sendMessage(LineBuilder.CenterUtil.newline);
+					player.sendMessage(ChatColor.RED + LineUtils.line);
+					player.sendMessage(LineUtils.newline);
 
-					LineBuilder.CenterUtil.sendCenteredMessage(player, ChatColor.GOLD + "" + ChatColor.BOLD + "Attention!");
-					LineBuilder.CenterUtil.sendCenteredMessage(player, tl("kitadmin_flag_delcommand_wrong"));
-					LineBuilder.CenterUtil.sendCenteredMessage(player, ChatColor.AQUA + "" + ChatColor.BOLD + value.toLowerCase());
+					player.sendMessage(LineUtils.getCenteredMessage(LineUtils.Aligns.CENTER, ChatColor.GOLD + "" + ChatColor.BOLD + "Attention!"));
+					player.sendMessage(LineUtils.getCenteredMessage(LineUtils.Aligns.CENTER, tl("kitadmin_flag_delcommand_wrong")));
+					player.sendMessage(LineUtils.getCenteredMessage(LineUtils.Aligns.CENTER, ChatColor.AQUA + "" + ChatColor.BOLD + value.toLowerCase()));
 
-					player.sendMessage(LineBuilder.CenterUtil.newline);
-					player.sendMessage(ChatColor.RED + LineBuilder.CenterUtil.line);
+					player.sendMessage(LineUtils.newline);
+					player.sendMessage(ChatColor.RED + LineUtils.line);
 
 					kit.setSave(false);
 					return;

@@ -23,20 +23,7 @@ public class Kit {
 	private ArrayList<ItemStack> itemStacks = new ArrayList<>();
 	private ArrayList<ItemStack> armor      = new ArrayList<>();
 
-	//private Boolean visible;
-	//private Boolean permonly;
-	//private Boolean clearinv;
-	//private Boolean firstjoin;
-	private Boolean save = false;
-
-	//private String permission;
-
-	//private Material icon;
-
-	//private Integer cost;
-	//private Integer uses;
-
-	//private Double delay;
+	private boolean save = false;
 
 	private ArrayList<String> worlds   = new ArrayList<>();
 	private ArrayList<String> commands = new ArrayList<>();
@@ -54,7 +41,7 @@ public class Kit {
 		return this.itemStacks;
 	}
 
-	public Boolean AddItem(ItemStack a) {
+	public boolean AddItem(ItemStack a) {
 		itemStacks.add(a);
 
 		List<Map<String, Object>> list = itemStacks.stream().map(ItemStack::serialize).collect(Collectors.toList());
@@ -64,15 +51,19 @@ public class Kit {
 
 	public void createKit(List<ItemStack> itemStacks, List<ItemStack> armors) {
 		setSave(true);
-		setVisible(true);
-		setPermission(Variables.KIT_USE_KIT_PERMISSION.replace("[kitname]", getName()));
-		setClearinv(false);
-		setFirstjoin(false);
-		setCost(0);
-		setDelay(0.0);
-		setIcon(Material.EMERALD_BLOCK);
+
+		setFlag(Flags.VISIBLE, true);
+		setFlag(Flags.PERMISSION, Variables.KIT_USE_KIT_PERMISSION.replace("[kitname]", getName()));
+		setFlag(Flags.CLEARINV, false);
+		setFlag(Flags.FIRSTJOIN, false);
+		setFlag(Flags.REPLACEARMOR, false);
+		setFlag(Flags.COST, 0);
+		setFlag(Flags.DELAY, 0.0);
+		setFlag(Flags.ICON, Material.EMERALD_BLOCK.toString());
+
 		itemStacks.forEach(this::AddItem);
 		armors.forEach(this::AddArmor);
+
 		setSave(false);
 		AdvancedKits.getKitManager().load();
 	}
@@ -88,7 +79,7 @@ public class Kit {
 		setProperty("Armor", list);
 	}
 
-	public Boolean AddArmor(ItemStack a) {
+	public boolean AddArmor(ItemStack a) {
 		this.armor.add(a);
 
 		List<Map<String, Object>> list = this.armor.stream().map(ItemStack::serialize).collect(Collectors.toList());
@@ -183,59 +174,28 @@ public class Kit {
 		setProperty("Flags.Commands", commands);
 	}
 
-	private Boolean isSave() {
+	private boolean isSave() {
 		return save;
 	}
 
-	public void setSave(Boolean save) {
+	public void setSave(boolean save) {
 		this.save = save;
 	}
 
-	public Boolean isVisible() {
-		//return visible;
-
-		return (Boolean) getFlag(Flags.VISIBLE, true);
+	public boolean isVisible() {
+		return (boolean) getFlag(Flags.VISIBLE, true);
 	}
 
-	public void setVisible(Boolean visible) {
-		//this.visible = visible;
-		//setProperty("Flags.Visible", visible);
-
-		setFlag(Flags.VISIBLE, visible);
+	public boolean isClearinv() {
+		return (boolean) getFlag(Flags.CLEARINV, false);
 	}
 
-	public Boolean isClearinv() {
-		//return clearinv;
-
-		return (Boolean) getFlag(Flags.CLEARINV, false);
-	}
-
-	public void setClearinv(Boolean clearinv) {
-		//this.clearinv = clearinv;
-		//setProperty("Flags.ClearInv", clearinv);
-
-		setFlag(Flags.CLEARINV, clearinv);
-	}
-
-	public Boolean getDefaultUnlock() {
-		return (Boolean) getFlag(Flags.UNLOCKED, false);
-	}
-
-	public void setDefaultUnlock(Boolean defaultUnlock) {
-		setFlag(Flags.UNLOCKED, defaultUnlock);
+	public boolean getDefaultUnlock() {
+		return (boolean) getFlag(Flags.UNLOCKED, false);
 	}
 
 	public String getPermission() {
-		//return permission;
-
 		return (String) getFlag(Flags.PERMISSION, Variables.KIT_USE_KIT_PERMISSION.replace("[kitname]", getName()));
-	}
-
-	public void setPermission(String permission) {
-		//this.permission = permission;
-		//setProperty("Flags.Permission", permission);
-
-		setFlag(Flags.PERMISSION, permission);
 	}
 
 	public String getDisplayName() {
@@ -243,72 +203,31 @@ public class Kit {
 		return (String) getFlag(Flags.DISPLAYNAME, getName());
 	}
 
-	public void setDisplayName(String arg1) {
-		setFlag(Flags.DISPLAYNAME, arg1);
-	}
-
 	public Material getIcon() {
-		//return icon;
-
 		return Material.matchMaterial(getFlag(Flags.ICON, Material.EMERALD_BLOCK.toString()).toString());
 	}
 
-	public void setIcon(Material icon) {
-		//this.icon = icon;
-		//setProperty("Flags.Icon", icon.toString());
-
-		setFlag(Flags.ICON, icon.toString());
+	public int getCost() {
+		return (int) getFlag(Flags.COST, 0);
 	}
 
-	public Integer getCost() {
-		//return cost;
-
-		return (Integer) getFlag(Flags.COST, 0);
+	public int getUses() {
+		return (int) getFlag(Flags.USES, 0);
 	}
 
-	public void setCost(Integer cost) {
-		//this.cost = cost;
-		//setProperty("Flags.Cost", cost);
-
-		setFlag(Flags.COST, cost);
+	public double getDelay() {
+		return (double) getFlag(Flags.DELAY, 0.0);
 	}
 
-	public Integer getUses() {
-		//return uses;
-
-		return (Integer) getFlag(Flags.USES, 0);
-	}
-
-	public void setUses(Integer uses) {
-		//this.uses = uses;
-		//setProperty("Flags.Uses", uses);
-
-		setFlag(Flags.USES, uses);
-	}
-
-	public Double getDelay() {
-		//return delay;
-
-		return (Double) getFlag(Flags.DELAY, 0.0);
-	}
-
-	public void setDelay(Double delay) {
-		//this.delay = delay;
-		//setProperty("Flags.Delay", delay);
-
+	public void setDelay(double delay) {
 		setFlag(Flags.DELAY, delay);
 	}
 
-	public Boolean isFirstjoin() {
-		return (Boolean) getFlag(Flags.FIRSTJOIN, false);
+	public boolean isFirstjoin() {
+		return (boolean) getFlag(Flags.FIRSTJOIN, false);
 	}
 
-	public void setFirstjoin(Boolean firstjoin) {
-		//this.firstjoin = firstjoin;
-		//setProperty("Flags.FirstJoin", firstjoin);
-
-		setFlag(Flags.FIRSTJOIN, firstjoin);
-	}
+	public boolean getReplaceArmor() {return (boolean) getFlag(Flags.REPLACEARMOR, false);}
 
 	public void setFlag(Flags flag, Object value) {
 		this.flags[flag.getId()] = value;

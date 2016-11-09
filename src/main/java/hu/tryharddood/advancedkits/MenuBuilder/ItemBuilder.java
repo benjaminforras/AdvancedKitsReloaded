@@ -1,4 +1,4 @@
-package hu.tryharddood.advancedkits.Utils;
+package hu.tryharddood.advancedkits.MenuBuilder;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
