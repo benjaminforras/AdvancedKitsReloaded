@@ -53,10 +53,10 @@ public class UpdateCommand extends Subcommand {
 			@Override
 			public void run() {
 
-				AdvancedKits.log(ChatColor.GOLD + "Trying to download from: " + "http://tryharddood.esy.es/downloads/advancedkitsreloaded/AdvancedKitsReloaded.jar");
+				AdvancedKits.log(ChatColor.GOLD + "Trying to download from: " + "https://github.com/TryHardDood/AdvancedKitsReloaded/raw/master/target/AdvancedKitsReloaded.jar");
 				try
 				{
-					URL download = new URL("https://github.com/TryHardDood/AdvancedKitsReloaded/raw/master/target/Transceiver-1.0-SNAPSHOT.jar");
+					URL download = new URL("https://github.com/TryHardDood/AdvancedKitsReloaded/raw/master/target/AdvancedKitsReloaded.jar");
 
 					BufferedInputStream bufferedInputStream = null;
 					FileOutputStream    fileOutputStream    = null;
