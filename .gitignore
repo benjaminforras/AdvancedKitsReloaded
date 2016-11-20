@@ -4,3 +4,8 @@ target/classes/
 target/maven-status/
 target/maven-archiver/
 target/surefire/
+.atom-build.yml
+.classpath
+.project
+dependency-reduced-pom.xml
+src.zip
