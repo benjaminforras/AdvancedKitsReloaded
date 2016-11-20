@@ -9,7 +9,6 @@ import hu.tryharddood.advancedkits.Utils.PageLayout;
 import hu.tryharddood.advancedkits.Utils.Title;
 import hu.tryharddood.advancedkits.Variables;
 import org.bukkit.ChatColor;
-import org.bukkit.DyeColor;
 import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -101,7 +100,7 @@ public class CreateCommand extends Subcommand {
 				"OOOOOOOOO");
 
 		if (filling.size() == 21)
-			filling.add(new ItemBuilder(Material.STAINED_GLASS_PANE, DyeColor.GREEN.getData()).setTitle(ChatColor.GREEN + "" + ChatColor.BOLD + tl("gui_button_create")).build());
+			filling.add(new ItemBuilder(Material.STAINED_GLASS_PANE, (short) 13).setTitle(ChatColor.GREEN + "" + ChatColor.BOLD + tl("gui_button_create")).build());
 
 		ItemStack[] items = pl.generate(filling.toArray(new ItemStack[filling.size()]));
 		imb.withItems(items);

@@ -1,5 +1,8 @@
 package hu.tryharddood.advancedkits;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
 import hu.tryharddood.advancedkits.Commands.CommandHandler;
 import hu.tryharddood.advancedkits.Commands.SubCommands.*;
 import hu.tryharddood.advancedkits.Kits.Kit;
@@ -22,6 +25,10 @@ import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Map;
@@ -117,7 +124,7 @@ public class AdvancedKits extends JavaPlugin {
 		if (ServerVersion.olderThan(Minecraft.Version.v1_8_R1))
 		{
 			log(ChatColor.RED + "Error loading AdvancedKits Reloaded v" + getDescription().getVersion());
-			log(ChatColor.RED + "- Supported Minecraft versions are: 1.8, 1.9 and 1.10");
+			log(ChatColor.RED + "- Supported Minecraft versions are: 1.8, 1.9, 1.11 and 1.11");
 			getServer().getPluginManager().disablePlugin(this);
 			return;
 		}

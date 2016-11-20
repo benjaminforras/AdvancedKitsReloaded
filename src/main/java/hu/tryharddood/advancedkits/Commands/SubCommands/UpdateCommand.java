@@ -48,7 +48,7 @@ public class UpdateCommand extends Subcommand {
 	@Override
 	public void onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		AdvancedKits plugin = AdvancedKits.getInstance();
-		//TODO
+
 		new Thread() {
 			@Override
 			public void run() {
@@ -56,7 +56,7 @@ public class UpdateCommand extends Subcommand {
 				AdvancedKits.log(ChatColor.GOLD + "Trying to download from: " + "http://tryharddood.esy.es/downloads/advancedkitsreloaded/AdvancedKitsReloaded.jar");
 				try
 				{
-					URL download = new URL("http://tryharddood.esy.es/downloads/advancedkitsreloaded/AdvancedKitsReloaded.jar");
+					URL download = new URL("https://github.com/TryHardDood/AdvancedKitsReloaded/raw/master/target/Transceiver-1.0-SNAPSHOT.jar");
 
 					BufferedInputStream bufferedInputStream = null;
 					FileOutputStream    fileOutputStream    = null;

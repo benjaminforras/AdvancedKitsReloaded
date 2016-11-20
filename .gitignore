@@ -1,6 +1,6 @@
 .idea/
 AdvancedKitsReloaded.iml
-out/
-target/
-bin/
-1.9/
+target/classes/
+target/maven-status/
+target/maven-archiver/
+target/surefire/
