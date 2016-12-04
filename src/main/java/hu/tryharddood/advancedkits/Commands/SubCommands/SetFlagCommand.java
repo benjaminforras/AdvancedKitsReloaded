@@ -78,7 +78,6 @@ public class SetFlagCommand extends Subcommand {
 
 		Boolean found = false;
 
-		kit.setSave(true);
 		for (Flags flag : Flags.values())
 		{
 			if (flag.getName().equalsIgnoreCase(strings[0]))
@@ -109,7 +108,7 @@ public class SetFlagCommand extends Subcommand {
 							player.sendMessage(LineUtils.newline);
 							player.sendMessage(ChatColor.RED + LineUtils.line);
 
-							kit.setSave(false);
+
 							return;
 						}
 
@@ -145,7 +144,7 @@ public class SetFlagCommand extends Subcommand {
 						if (!isNumeric(value))
 						{
 							player.sendMessage(AdvancedKits.getConfiguration().getChatPrefix() + " " + ChatColor.RED + tl("kitadmin_flag_integer"));
-							kit.setSave(false);
+
 							return;
 						}
 
@@ -157,7 +156,7 @@ public class SetFlagCommand extends Subcommand {
 						if (!isDouble(value))
 						{
 							player.sendMessage(AdvancedKits.getConfiguration().getChatPrefix() + " " + ChatColor.RED + tl("kitadmin_flag_integer"));
-							kit.setSave(false);
+
 							return;
 						}
 
@@ -169,7 +168,7 @@ public class SetFlagCommand extends Subcommand {
 						if (!value.contains("true") && !value.contains("false"))
 						{
 							player.sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "Error! " + tl("kitadmin_flag_boolean"));
-							kit.setSave(false);
+
 							return;
 						}
 
@@ -191,7 +190,7 @@ public class SetFlagCommand extends Subcommand {
 							player.sendMessage(LineUtils.newline);
 							player.sendMessage(ChatColor.RED + LineUtils.line);
 
-							kit.setSave(false);
+
 							return;
 						}
 
@@ -231,7 +230,7 @@ public class SetFlagCommand extends Subcommand {
 					player.sendMessage(LineUtils.newline);
 					player.sendMessage(ChatColor.RED + LineUtils.line);
 
-					kit.setSave(false);
+
 					return;
 				}
 
@@ -252,7 +251,7 @@ public class SetFlagCommand extends Subcommand {
 					player.sendMessage(LineUtils.newline);
 					player.sendMessage(ChatColor.RED + LineUtils.line);
 
-					kit.setSave(false);
+
 					return;
 				}
 
@@ -273,7 +272,7 @@ public class SetFlagCommand extends Subcommand {
 					player.sendMessage(LineUtils.newline);
 					player.sendMessage(ChatColor.RED + LineUtils.line);
 
-					kit.setSave(false);
+
 					return;
 				}
 
@@ -294,7 +293,7 @@ public class SetFlagCommand extends Subcommand {
 					player.sendMessage(LineUtils.newline);
 					player.sendMessage(ChatColor.RED + LineUtils.line);
 
-					kit.setSave(false);
+
 					return;
 				}
 
@@ -306,6 +305,6 @@ public class SetFlagCommand extends Subcommand {
 				player.sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "Error! " + ChatColor.GRAY + "This flag doesn't exists.");
 			}
 		}
-		kit.setSave(false);
+
 	}
 }

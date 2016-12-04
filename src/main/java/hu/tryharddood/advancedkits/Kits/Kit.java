@@ -50,8 +50,6 @@ public class Kit {
 	}
 
 	public void createKit(List<ItemStack> itemStacks, List<ItemStack> armors) {
-		setSave(true);
-
 		setFlag(Flags.VISIBLE, true);
 		setFlag(Flags.PERMISSION, Variables.KIT_USE_KIT_PERMISSION.replace("[kitname]", getName()));
 		setFlag(Flags.CLEARINV, false);
@@ -64,7 +62,6 @@ public class Kit {
 		itemStacks.forEach(this::AddItem);
 		armors.forEach(this::AddArmor);
 
-		setSave(false);
 		AdvancedKits.getKitManager().load();
 	}
 
@@ -110,11 +107,6 @@ public class Kit {
 	}
 
 	private void setProperty(String key, Object value) {
-		if (!isSave())
-		{
-			return;
-		}
-
 		try
 		{
 			saveFile.load(getSaveFile());
@@ -172,14 +164,6 @@ public class Kit {
 		}
 
 		setProperty("Flags.Commands", commands);
-	}
-
-	private boolean isSave() {
-		return save;
-	}
-
-	public void setSave(boolean save) {
-		this.save = save;
 	}
 
 	public boolean isVisible() {

@@ -144,7 +144,6 @@ public class EditCommand extends Subcommand {
 			if (clickedItem != null && clickedItem.getType().equals(Material.STAINED_GLASS_PANE) && clickedItem.getDurability() == (short) 13 && clickedItem.hasItemMeta() && clickedItem.getItemMeta().getDisplayName().contains(tl("gui_button_edit", true)))
 			{
 				Inventory inventory = imb.getInventory();
-				kit.setSave(true);
 				kit.getItemStacks().clear();
 				for (int i = 0; i < 36; i++)
 				{
@@ -181,7 +180,6 @@ public class EditCommand extends Subcommand {
 					}
 				}
 				kit.setArmor(armors);
-				kit.setSave(false);
 				AdvancedKits.getKitManager().load();
 
 				player.closeInventory();

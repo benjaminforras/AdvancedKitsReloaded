@@ -159,6 +159,10 @@ public final class PageInventory extends InventoryMenuBuilder {
 		return pages;
 	}
 
+	public void setPages(ArrayList<ItemStack> allItems) {
+		setPages(allItems.toArray(new ItemStack[allItems.size()]));
+	}
+
 	public void setPages(ItemStack... allItems) {
 		pages.clear();
 		int         invPage     = 0;
@@ -208,10 +212,6 @@ public final class PageInventory extends InventoryMenuBuilder {
 			pages.put(0, items);
 		}
 		setPage(getCurrentPage());
-	}
-
-	public void setPages(ArrayList<ItemStack> allItems) {
-		setPages(allItems.toArray(new ItemStack[allItems.size()]));
 	}
 
 	public void setPage(int newPage) {
