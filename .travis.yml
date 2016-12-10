@@ -1,0 +1,20 @@
+sudo: false
+
+language: java
+jdk: oraclejdk8
+
+after_success:
+- sh push_release.sh
+
+deploy:
+  provider: releases
+  overwrite: true
+  skip_cleanup: true
+  api_key:
+    secure: 694V/ZK+WUMFj3gfIytdFJvn9R0exKiiGnahz/Q3qzE431gs0dGYLgb6bqS5jLcrRSAammZH3dQ7yuTv2NR/7QGQMSLV2yOZDBm1iHrnb1wzLHmhd7uY8haahpLi8wItaBHVh0N1gOT9SKTa4RJctvrqtF1u1rvNQmOn9OUns7wmwgrVYOSYCIX6IhtZAitofroClx+Gwaoto8Dkb/OPANY13j02mMEpQ7xVnJac6lOGGuwMTYSi386MOThaJ29ePfcjbnkgxQg8YJaSo+3Mf9JKQ0fFCMRqMbabKqoONRLQJC/nBwmSfA89YV3sk9TDiRCB4jAWBM6nGkzP1r7oJEy3tVfzPssCoD5hLh3qKDXR4iKGil2HvCVaD8kpOXwP8gpPFBv6U7aSXJBeeMF89uHM+PjqV7Z5O4PhXxo2hq+QBoj58koHAJoc8nfvQm5ZSkfVM9xhXnX94p6krNo6ZX+LxjMtamNT7vEt3JxNOCE+5+vQ5GuPHTqvXG6P4M1MNOBE1sJdcFNN3piJYQXiQ2R1BFyyjMS8jAX92WMsKU0C+ss9TwzufKEDWbhlkRZybCDUCulLewOejFLQpq88SccOBMiYXgu0qngMah/HKsgyEhn3LvJLUis9VY8pVFmuO4WrGnH8wfwL6BnR4ABfMdB/L9/vR2FtX7QfGsEfjas=
+  file: target/AdvancedKitsReloaded.jar
+  on:
+    branch: master
+    repo: TryHardDood/AdvancedKitsReloaded
+
+script: mvn -Dmaven.wagon.http.ssl.insecure=true -Dmaven.wagon.http.ssl.allowall=true clean package

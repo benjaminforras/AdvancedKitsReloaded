@@ -3,14 +3,13 @@
 
 	<groupId>hu.tryharddood</groupId>
 	<artifactId>AdvancedKits</artifactId>
-	<version>3.0.29-STABLE</version>
+	<version>v3.0.29-${TRAVIS_BUILD_NUMBER}</version>
 	<packaging>jar</packaging>
 
 	<name>AdvancedKitsReloaded</name>
-	<description>AdvancedKitsReloaded is a Kit managing plugin for Minecraft servers which runs Spigot or CraftBukkit
-		1.8, 1.9, 1.10 and 1.11.
+	<description>AdvancedKitsReloaded is a Kit managing plugin for Minecraft servers which runs Spigot or CraftBukkit 1.8, 1.9, 1.10 and 1.11.
 	</description>
-	<url>https://tryharddood.github.com/web</url>
+	<url>https://tryharddood.github.com</url>
 
 	<properties>
 		<server.version>1.11-R0.1-SNAPSHOT</server.version>
@@ -49,6 +48,7 @@
 			<version>${vault.version}</version>
 			<scope>provided</scope>
 		</dependency>
+
 		<dependency>
 			<groupId>com.google.code.findbugs</groupId>
 			<artifactId>jsr305</artifactId>

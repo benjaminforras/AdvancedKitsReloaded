@@ -9,7 +9,6 @@ import hu.tryharddood.advancedkits.Listeners.SignListener;
 import hu.tryharddood.advancedkits.MenuBuilder.chat.ChatCommandListener;
 import hu.tryharddood.advancedkits.MenuBuilder.inventory.InventoryListener;
 import hu.tryharddood.advancedkits.Utils.I18n;
-import hu.tryharddood.advancedkits.Utils.Metrics;
 import hu.tryharddood.advancedkits.Utils.Minecraft;
 import hu.tryharddood.advancedkits.Utils.Updater;
 import net.milkbowl.vault.economy.Economy;
@@ -148,16 +147,21 @@ public class AdvancedKits extends JavaPlugin {
 		getServer().getPluginManager().registerEvents(new PlayerListener(), this);
 		getServer().getPluginManager().registerEvents(new SignListener(), this);
 
-		log(ChatColor.GREEN + "- Initalizing Metrics");
-		try
+		Updater updater = new Updater(this, 91129, this.getFile(), Updater.UpdateType.DEFAULT, false);
+		Updater.UpdateResult result = updater.getResult();
+		switch(result)
 		{
-			Metrics metrics = new Metrics(this);
-			metrics.start();
-
-			new Updater(this, 11193);
-		} catch (IOException e)
-		{
-			log(ChatColor.RED + "- Failed to initalize Metrics");
+			case SUCCESS:
+				log(ChatColor.GREEN + "Downloaded the latest version. Please restart the server.");
+				break;
+			case NO_UPDATE:
+				log(ChatColor.GREEN + "You are using the latest version of " + this.getDescription().getName());
+				break;
+			case FAIL_DOWNLOAD:
+				log(ChatColor.GREEN + "New version found but couldn't download it.");
+				break;
+			case UPDATE_AVAILABLE:
+				log(ChatColor.GREEN + "There's a new version available.");
 		}
 	}
 
@@ -179,7 +183,6 @@ public class AdvancedKits extends JavaPlugin {
 		CommandHandler.addComand(Collections.singletonList("reload"), new ReloadCommand());
 		CommandHandler.addComand(Collections.singletonList("version"), new VersionCommand());
 		CommandHandler.addComand(Collections.singletonList("help"), new HelpCommand());
-		CommandHandler.addComand(Collections.singletonList("update"), new UpdateCommand());
 	}
 
 	public boolean setupEconomy() {
