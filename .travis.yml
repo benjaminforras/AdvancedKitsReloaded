@@ -14,4 +14,4 @@ deploy:
   on:
     repo: TryHardDood/AdvancedKitsReloaded
 
-script: mvn -Dmaven.wagon.http.ssl.insecure=true -Dmaven.wagon.http.ssl.allowall=true clean package
+script: mvn clean package

@@ -9,7 +9,7 @@
 	<name>AdvancedKitsReloaded</name>
 	<description>AdvancedKitsReloaded is a Kit managing plugin for Minecraft servers which runs Spigot or CraftBukkit 1.8, 1.9, 1.10 and 1.11.
 	</description>
-	<url>https://tryharddood.github.com</url>
+	<url>https://tryharddood.github.io</url>
 
 	<properties>
 		<server.version>1.11-R0.1-SNAPSHOT</server.version>
