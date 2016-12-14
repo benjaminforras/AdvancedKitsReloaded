@@ -196,13 +196,13 @@ public class MainCommand extends Subcommand {
 			if (!AdvancedKits.getKitManager().CheckCooldown(player, kitItem))
 			{
 				lore.add("§8");
-				lore.add(ChatColor.RED + "" + ChatColor.BOLD + tl("kituse_wait").replaceAll("\\{(\\d*?)\\}", "") + ":");
+				lore.add(ChatColor.RED + "" + ChatColor.BOLD + tl("next_use") + ":");
 				lore.add(ChatColor.WHITE + "" + ChatColor.BOLD + "- " + AdvancedKits.getKitManager().getDelay(player, kitItem));
 				lore.add("§8");
 			}
 			items.add(new ItemBuilder(kitItem.getIcon()).setTitle(ChatColor.translateAlternateColorCodes('&', kitItem.getDisplayName())).addLores(lore).addLores(AdvancedKits.getKitManager().getLores(player, kitItem)).build());
 		}
-		PageInventory pageInventory = new PageInventory("AdvancedKitsReloaded - v" + AdvancedKits.getInstance().getDescription().getVersion(), items);
+		PageInventory pageInventory = new PageInventory(tl("gui_title"), items);
 		pageInventory.show(player);
 
 		pageInventory.onInteract(new InventoryMenuListener() {

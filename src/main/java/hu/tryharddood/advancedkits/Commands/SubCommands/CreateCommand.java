@@ -90,7 +90,7 @@ public class CreateCommand extends Subcommand {
 			return;
 		}
 
-		InventoryMenuBuilder imb = new InventoryMenuBuilder().withSize(54).withTitle("Craete Kit - " + args[1]);
+		InventoryMenuBuilder imb = new InventoryMenuBuilder().withSize(54).withTitle("Create Kit - " + args[1]);
 
 		PageLayout pl = new PageLayout("XXXXXXXXX",
 				"XXXXXXXXX",
