@@ -3,7 +3,7 @@
 
 	<groupId>hu.tryharddood</groupId>
 	<artifactId>AdvancedKits</artifactId>
-	<version>v3.0.29-b${TRAVIS_BUILD_NUMBER}</version>
+	<version>3.0.29-${TRAVIS_BUILD_NUMBER}</version>
 	<packaging>jar</packaging>
 
 	<name>AdvancedKitsReloaded</name>
