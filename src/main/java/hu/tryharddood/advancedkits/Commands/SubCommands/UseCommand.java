@@ -28,6 +28,11 @@ import static hu.tryharddood.advancedkits.Utils.I18n.tl;
  */
 public class UseCommand extends Subcommand {
 	public static void GiveItems(Player player, Kit kit, boolean force) {
+		if(!player.isOnline() || player == null)
+		{
+			return;
+		}
+		
 		if (!force && kit.getUses() > 0)
 		{
 			AdvancedKits.getKitManager().setUses(kit, player, (AdvancedKits.getKitManager().getUses(kit, player) + 1));
