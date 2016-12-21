@@ -41,7 +41,9 @@ public class Minecraft {
 		v1_9_R2(10902),
 
 		v1_10_R1(101001),
-		v1_11_R1(101101);
+		v1_11_R1(101101),
+		v1_11_R2(101102),
+		v1_11_R3(101103);
 
 		private int version;
 

@@ -12,7 +12,7 @@
 	<url>https://tryharddood.github.io</url>
 
 	<properties>
-		<server.version>1.11-R0.1-SNAPSHOT</server.version>
+		<server.version>1.11.2-R0.1-SNAPSHOT</server.version>
 		<vault.version>LATEST</vault.version>
 	</properties>
 
@@ -21,14 +21,6 @@
 		<dependency>
 			<groupId>org.spigotmc</groupId>
 			<artifactId>spigot-api</artifactId>
-			<version>${server.version}</version>
-			<scope>provided</scope>
-		</dependency>
-
-		<!--Bukkit API-->
-		<dependency>
-			<groupId>org.bukkit</groupId>
-			<artifactId>bukkit</artifactId>
 			<version>${server.version}</version>
 			<scope>provided</scope>
 		</dependency>
