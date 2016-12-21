@@ -13,7 +13,6 @@ deploy:
   file: target/AdvancedKitsReloaded.jar
   skip_cleanup: true
   on:
-    tags: true
     repo: TryHardDood/AdvancedKitsReloaded
 
 script: mvn clean package
