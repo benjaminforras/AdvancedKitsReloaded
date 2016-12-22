@@ -7,7 +7,7 @@ import org.bukkit.command.CommandSender;
 import java.util.HashMap;
 import java.util.List;
 
-import static hu.tryharddood.advancedkits.Utils.I18n.tl;
+import static hu.tryharddood.advancedkits.Utils.Localization.I18n.tl;
 
 
 /**

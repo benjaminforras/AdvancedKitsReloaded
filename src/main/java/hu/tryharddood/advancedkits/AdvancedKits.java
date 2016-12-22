@@ -8,7 +8,7 @@ import hu.tryharddood.advancedkits.Listeners.PlayerListener;
 import hu.tryharddood.advancedkits.Listeners.SignListener;
 import hu.tryharddood.advancedkits.MenuBuilder.chat.ChatCommandListener;
 import hu.tryharddood.advancedkits.MenuBuilder.inventory.InventoryListener;
-import hu.tryharddood.advancedkits.Utils.I18n;
+import hu.tryharddood.advancedkits.Utils.Localization.I18n;
 import hu.tryharddood.advancedkits.Utils.Minecraft;
 import hu.tryharddood.advancedkits.Utils.Updater;
 import net.milkbowl.vault.economy.Economy;

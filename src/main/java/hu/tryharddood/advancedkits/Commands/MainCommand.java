@@ -25,7 +25,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import static hu.tryharddood.advancedkits.MenuBuilder.ItemBuilder.*;
-import static hu.tryharddood.advancedkits.Utils.I18n.tl;
+import static hu.tryharddood.advancedkits.Utils.Localization.I18n.tl;
 
 
 /**

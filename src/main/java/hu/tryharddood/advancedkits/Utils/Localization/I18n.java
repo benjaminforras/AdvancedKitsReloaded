@@ -1,4 +1,4 @@
-package hu.tryharddood.advancedkits.Utils;
+package hu.tryharddood.advancedkits.Utils.Localization;
 
 import hu.tryharddood.advancedkits.AdvancedKits;
 import org.bukkit.ChatColor;
@@ -39,7 +39,8 @@ public class I18n {
 
 	public I18n(final JavaPlugin plugin) {
 		this.plugin = plugin;
-		defaultBundle = ResourceBundle.getBundle(MESSAGES, Locale.ENGLISH);
+
+		defaultBundle = ResourceBundle.getBundle(MESSAGES, Locale.ENGLISH, new UTF8Control());
 		localeBundle = defaultBundle;
 		customBundle = NULL_BUNDLE;
 	}
@@ -142,7 +143,7 @@ public class I18n {
 
 		try
 		{
-			localeBundle = ResourceBundle.getBundle(MESSAGES, currentLocale);
+			localeBundle = ResourceBundle.getBundle(MESSAGES, currentLocale, new UTF8Control());
 		} catch (MissingResourceException ex)
 		{
 			localeBundle = NULL_BUNDLE;
@@ -150,7 +151,7 @@ public class I18n {
 
 		try
 		{
-			customBundle = ResourceBundle.getBundle(MESSAGES, currentLocale, new FileResClassLoader(I18n.class.getClassLoader(), plugin));
+			customBundle = ResourceBundle.getBundle(MESSAGES, currentLocale, new FileResClassLoader(I18n.class.getClassLoader(), plugin), new UTF8Control());
 		} catch (MissingResourceException ex)
 		{
 			customBundle = NULL_BUNDLE;

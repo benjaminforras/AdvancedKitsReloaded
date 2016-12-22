@@ -10,7 +10,7 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 
-import static hu.tryharddood.advancedkits.Utils.I18n.tl;
+import static hu.tryharddood.advancedkits.Utils.Localization.I18n.tl;
 
 /*****************************************************
  *              Created by TryHardDood on 2016. 08. 07..

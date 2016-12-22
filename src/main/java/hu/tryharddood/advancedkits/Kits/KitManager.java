@@ -21,7 +21,7 @@ import java.util.*;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-import static hu.tryharddood.advancedkits.Utils.I18n.tl;
+import static hu.tryharddood.advancedkits.Utils.Localization.I18n.tl;
 
 
 public class KitManager {
