@@ -34,7 +34,7 @@ import static hu.tryharddood.advancedkits.Utils.Localization.I18n.tl;
  * @author TryHardDood
  */
 public class MainCommand extends Subcommand {
-	private static List<ItemStack> filling = new ArrayList<>(Arrays.asList(
+	private static List<ItemStack> deFfilling = new ArrayList<>(Arrays.asList(
 			new ItemBuilder(Material.STAINED_GLASS_PANE, (short) 3).setTitle(ChatColor.GREEN + "" + ChatColor.BOLD + "Place Helmet Here").build(),
 			new ItemBuilder(Material.STAINED_GLASS_PANE, (short) 3).setTitle(ChatColor.GREEN + "" + ChatColor.BOLD + "Place Chestplate Here").build(),
 			new ItemBuilder(Material.STAINED_GLASS_PANE, (short) 3).setTitle(ChatColor.GREEN + "" + ChatColor.BOLD + "Place Leggings Here").build(),
@@ -95,12 +95,18 @@ public class MainCommand extends Subcommand {
 	};
 
 	public static void openViewInventory(Player player, Kit kit) {
+		List<ItemStack> filling = deFfilling.stream().collect(Collectors.toList());
 		if (!player.hasPermission(Variables.KITADMIN_PERMISSION))
 		{
 			filling.set(13, new ItemBuilder(Material.STAINED_GLASS_PANE, (short) 8).setTitle(ChatColor.GREEN + "" + ChatColor.BOLD + "§8").build());
 			filling.set(17, new ItemBuilder(Material.STAINED_GLASS_PANE, (short) 8).setTitle(ChatColor.GREEN + "" + ChatColor.BOLD + "§8").build());
 		}
 		MainCommand.kit = kit;
+
+		if(kit.getDefaultUnlock() || !AdvancedKits.getConfiguration().isEconomy() || AdvancedKits.getKitManager().getUnlocked(kit, player))
+		{
+			filling.set(14, new ItemStack(Material.AIR));
+		}
 
 		InventoryMenuBuilder imb = new InventoryMenuBuilder().withSize(54).withTitle("Kit View - " + kit.getDisplayName());
 
@@ -196,7 +202,7 @@ public class MainCommand extends Subcommand {
 			if (!AdvancedKits.getKitManager().CheckCooldown(player, kitItem))
 			{
 				lore.add("§8");
-				lore.add(ChatColor.RED + "" + ChatColor.BOLD + tl("next_use") + ":");
+				lore.add(ChatColor.RED + "" + ChatColor.BOLD + tl("next_use"));
 				lore.add(ChatColor.WHITE + "" + ChatColor.BOLD + "- " + AdvancedKits.getKitManager().getDelay(player, kitItem));
 				lore.add("§8");
 			}

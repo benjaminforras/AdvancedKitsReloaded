@@ -9,3 +9,5 @@ target/surefire/
 .project
 dependency-reduced-pom.xml
 src.zip
+target/AdvancedKitsReloaded.jar
+target/AdvancedKitsReloaded.jar

@@ -127,7 +127,7 @@ public class KitManager {
 		if (kit.getDelay() > 0)
 		{
 			list.add(ChatColor.GREEN + "");
-			list.add(ChatColor.GREEN + "" + ChatColor.BOLD + tl("delay") + ": " + ChatColor.WHITE + "" + ChatColor.BOLD + kit.getDelay() + " " + tl("seconds"));
+			list.add(ChatColor.GREEN + "" + ChatColor.BOLD + tl("delay") + ": " + ChatColor.WHITE + "" + ChatColor.BOLD + getDelayInString((int) kit.getDelay()));
 		}
 
 		if (kit.getWorlds().size() > 0)
@@ -467,5 +467,40 @@ public class KitManager {
 			sb.append(elapsedSeconds).append(" ").append(tl("seconds")).append(" ");
 		}
 		return sb.toString();
+	}
+
+	public static String getDelayInString(int delay) {
+		int numberOfDays;
+		int numberOfHours;
+		int numberOfMinutes;
+		int numberOfSeconds;
+
+		numberOfDays = delay / 86400;
+		numberOfHours = (delay % 86400) / 3600;
+		numberOfMinutes = ((delay % 86400) % 3600) / 60;
+		numberOfSeconds = ((delay % 86400) % 3600) % 60;
+
+		StringBuilder sb = new StringBuilder();
+		if (numberOfDays >= 1)
+		{
+			sb.append(numberOfDays).append(" ").append(tl("days")).append(" ");
+		}
+
+		if (numberOfHours >= 1)
+		{
+			sb.append(numberOfHours).append(" ").append(tl("hours")).append(" ");
+		}
+
+		if (numberOfMinutes >= 1)
+		{
+			sb.append(numberOfMinutes).append(" ").append(tl("minutes")).append(" ");
+		}
+
+		if (numberOfSeconds >= 1)
+		{
+			sb.append(numberOfSeconds).append(" ").append(tl("seconds")).append(" ");
+		}
+		return sb.toString();
+
 	}
 }
