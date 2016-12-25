@@ -9,7 +9,7 @@ import java.util.regex.Pattern;
 /*****************************************************
  *
  * Created by inventivetalent modified by TryHardDood
- * https://bitbucket.org/inventivetalent/reflectionhelper/src/ae0347f404aae69e9881e6f448b0759008f1c0a1/src/main/java/org/inventivetalent/reflection/minecraft/Minecraft.java
+ * https://github.com/InventivetalentDev/ReflectionHelper/blob/master/src/main/java/org/inventivetalent/reflection/minecraft/Minecraft.java
  *
  ****************************************************/
 
@@ -41,6 +41,7 @@ public class Minecraft {
 		v1_9_R2(10902),
 
 		v1_10_R1(101001),
+		
 		v1_11_R1(101101),
 		v1_11_R2(101102),
 		v1_11_R3(101103);
