@@ -64,7 +64,7 @@ public final class PageInventory extends InventoryMenuBuilder {
 	}
 
 	private static int getInventorySize(int size) {
-		return size > 54 ? 54 : (int) Math.min(54, Math.ceil((double) size / 9) * 9);
+		return size == 0 ? 9 : size > 54 ? 54 : (int) Math.min(54, Math.ceil((double) size / 9) * 9);
 	}
 
 	public ItemStack getBackPage() {

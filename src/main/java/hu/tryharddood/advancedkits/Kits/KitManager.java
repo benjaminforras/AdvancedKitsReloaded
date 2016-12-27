@@ -77,12 +77,20 @@ public class KitManager {
 	}
 
 	public List<String> getLores(Player player, Kit kit) {
-		List<String> list = new ArrayList<>();
 
-		if (kit.getUses() > 0 && (kit.getUses() - getUses(kit, player) > 0))
+		List<String> list = new ArrayList<>();
+		if(kit.getUses() > 0)
 		{
-			list.add(ChatColor.RED + "");
-			list.add(ChatColor.RED + "" + ChatColor.BOLD + tl("kit_time_use", (kit.getUses() - getUses(kit, player))));
+			if(AdvancedKits.getKitManager().getUses(kit, player) >= kit.getUses())
+			{
+				list.add(ChatColor.RED + "");
+				list.add(ChatColor.RED + "" + ChatColor.BOLD + tl("cant_use_anymore", true));
+			}
+			else
+			{
+				list.add(ChatColor.RED + "");
+				list.add(ChatColor.RED + "" + ChatColor.BOLD + tl("kit_time_use", (kit.getUses() - getUses(kit, player))));
+			}
 		}
 
 		if (AdvancedKits.getConfiguration().isEconomy())
@@ -146,7 +154,6 @@ public class KitManager {
 				list.addAll(kit.getCommands().stream().map(s -> ChatColor.WHITE + "" + ChatColor.BOLD + " - " + s).collect(Collectors.toList()));
 			}
 		}
-
 		list.add(ChatColor.GREEN + "");
 
 		return list;
