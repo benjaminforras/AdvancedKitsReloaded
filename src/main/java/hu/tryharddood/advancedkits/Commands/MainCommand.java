@@ -185,24 +185,24 @@ public class MainCommand extends Subcommand {
 		ArrayList<ItemStack> items = new ArrayList<>();
 		for (Kit kitItem : kits)
 		{
-			System.out.println("Visible?: " + kitItem.isVisible());
+			//System.out.println("Visible?: " + kitItem.isVisible());
 			if(!kitItem.isVisible())
 			{
-				System.out.println("Visible | Break point #1");
+				//System.out.println("Visible | Break point #1");
 				if(!player.hasPermission(Variables.KITADMIN_PERMISSION))
 				{
-					System.out.println("Visible | Break point #2");
+					//System.out.println("Visible | Break point #2");
 					continue;
 				}
 			}
 
-			System.out.println("Permission: " + kitItem.getPermission() + " | Player has permission?: " + player.hasPermission(kitItem.getPermission()));
+			//System.out.println("Permission: " + kitItem.getPermission() + " | Player has permission?: " + player.hasPermission(kitItem.getPermission()));
 			if(!player.hasPermission(kitItem.getPermission()))
 			{
-				System.out.println("PermissionCheck | Break point #1");
+				//System.out.println("PermissionCheck | Break point #1");
 				if(!player.hasPermission(Variables.KIT_USE_KIT_PERMISSION_ALL) && !player.hasPermission(Variables.KITADMIN_PERMISSION))
 				{
-					System.out.println("PermissionCheck | Break point #2");
+					//System.out.println("PermissionCheck | Break point #2");
 					continue;
 				}
 			}
