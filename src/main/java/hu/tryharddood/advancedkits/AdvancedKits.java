@@ -9,7 +9,8 @@ import hu.tryharddood.advancedkits.Listeners.SignListener;
 import hu.tryharddood.advancedkits.MenuBuilder.chat.ChatCommandListener;
 import hu.tryharddood.advancedkits.MenuBuilder.inventory.InventoryListener;
 import hu.tryharddood.advancedkits.Utils.Localization.I18n;
-import hu.tryharddood.advancedkits.Utils.Minecraft;
+import hu.tryharddood.advancedkits.Utils.MessagesAPI;
+import hu.tryharddood.advancedkits.Utils.ReflectionHelper.minecraft.Minecraft;
 import hu.tryharddood.advancedkits.Utils.Updater;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
@@ -137,6 +138,9 @@ public class AdvancedKits extends JavaPlugin {
 
 		configuration = new Configuration(this);
 		configuration.load();
+
+		MessagesAPI _messagesAPI = new MessagesAPI();
+		_messagesAPI.onEnable();
 
 		if (configuration.getSaveType() != null && configuration.getSaveType().equalsIgnoreCase("mysql"))
 		{

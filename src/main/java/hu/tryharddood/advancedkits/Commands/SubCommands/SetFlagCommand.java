@@ -8,7 +8,7 @@ import hu.tryharddood.advancedkits.MenuBuilder.chat.ChatMenuBuilder;
 import hu.tryharddood.advancedkits.MenuBuilder.chat.LineBuilder;
 import hu.tryharddood.advancedkits.MenuBuilder.chat.component.MenuComponentCheckbox;
 import hu.tryharddood.advancedkits.Utils.LineUtils;
-import hu.tryharddood.advancedkits.Utils.Minecraft;
+import hu.tryharddood.advancedkits.Utils.ReflectionHelper.minecraft.Minecraft;
 import hu.tryharddood.advancedkits.Variables;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.ChatColor;

@@ -2,7 +2,7 @@ package hu.tryharddood.advancedkits.Commands.SubCommands;
 
 import hu.tryharddood.advancedkits.AdvancedKits;
 import hu.tryharddood.advancedkits.Commands.Subcommand;
-import hu.tryharddood.advancedkits.Utils.Minecraft;
+import hu.tryharddood.advancedkits.Utils.ReflectionHelper.minecraft.Minecraft;
 import hu.tryharddood.advancedkits.Variables;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
