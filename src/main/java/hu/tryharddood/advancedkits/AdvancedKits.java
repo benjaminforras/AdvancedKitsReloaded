@@ -132,11 +132,11 @@ public class AdvancedKits extends JavaPlugin {
 		i18n = new I18n(this);
 		i18n.onEnable();
 
-		kitManager = new KitManager(this);
-		kitManager.load();
-
 		configuration = new Configuration(this);
 		configuration.load();
+		
+		kitManager = new KitManager(this);
+		kitManager.load();
 
 		if (configuration.getSaveType() != null && configuration.getSaveType().equalsIgnoreCase("mysql"))
 		{
