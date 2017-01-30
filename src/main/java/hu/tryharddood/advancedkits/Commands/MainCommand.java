@@ -68,28 +68,28 @@ public class MainCommand extends Subcommand {
 				if (clicked.getDurability() == (short) 14) //BUY
 				{
 					player.closeInventory();
-					Bukkit.dispatchCommand(player, "kit buy " + kit.getName());
+					Bukkit.dispatchCommand(player, "akit buy " + kit.getName());
 				}
 				else if (clicked.getDurability() == (short) 0) // INFO
 				{
 					player.closeInventory();
-					Bukkit.dispatchCommand(player, "kit");
+					Bukkit.dispatchCommand(player, "akit");
 				}
 				else if (clicked.getDurability() == (short) 13) // USE
 				{
 					player.closeInventory();
-					Bukkit.dispatchCommand(player, "kit use " + kit.getName());
+					Bukkit.dispatchCommand(player, "akit use " + kit.getName());
 				}
 			}
 			else if (clicked.getType() == Material.BOOK_AND_QUILL)
 			{
 				player.closeInventory();
-				Bukkit.dispatchCommand(player, "kit edit " + kit.getName());
+				Bukkit.dispatchCommand(player, "akit edit " + kit.getName());
 			}
 			else if (clicked.getType() == Material.BARRIER)
 			{
 				player.closeInventory();
-				Bukkit.dispatchCommand(player, "kit delete " + kit.getName());
+				Bukkit.dispatchCommand(player, "akit delete " + kit.getName());
 			}
 		}
 	};
