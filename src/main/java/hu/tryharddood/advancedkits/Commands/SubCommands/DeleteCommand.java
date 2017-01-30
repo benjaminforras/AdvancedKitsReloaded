@@ -79,7 +79,7 @@ public class DeleteCommand extends Subcommand {
 			Player               player      = (Player) sender;
 			InventoryMenuBuilder mbInventory = new InventoryMenuBuilder(9, "Are you sure?");
 
-			PageLayout pl = new PageLayout("OOOOOOOOOO");
+			PageLayout pl = new PageLayout("OOOOOOOOO");
 
 			ItemStack[] items = pl.generate(filling.toArray(new ItemStack[filling.size()]));
 			mbInventory.withItems(items);
