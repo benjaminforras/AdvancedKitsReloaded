@@ -1,0 +1,94 @@
+apply plugin: 'java'
+apply plugin: "com.github.johnrengelman.shadow"
+
+group = pluginGroup
+version = pluginVersion
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+buildscript {
+    repositories {
+        jcenter()
+        maven {
+            url "https://plugins.gradle.org/m2/"
+        }
+    }
+
+    dependencies {
+        classpath "com.github.jengelman.gradle.plugins:shadow:1.2.4"
+    }
+}
+
+repositories {
+    mavenCentral()
+    maven {
+        name = 'spigotmc-repo'
+        url = 'https://hub.spigotmc.org/nexus/content/groups/public/'
+    }
+    maven {
+        name = 'placeholderapi'
+        url = 'http://repo.extendedclip.com/content/repositories/placeholderapi/'
+    }
+    maven {
+        name = 'vault-repo'
+        url = 'http://nexus.hc.to/content/repositories/pub_releases/'
+    }
+    maven {
+        name = 'jitpack.io'
+        url = 'https://jitpack.io/'
+    }
+}
+
+
+dependencies {
+    testCompile group: 'junit', name: 'junit', version: '4.11'
+
+    compile 'com.google.code.findbugs:jsr305:2.0.1'
+    compile 'org.bukkit:bukkit:1.11-R0.1-SNAPSHOT'
+
+    compile 'me.clip:placeholderapi:2.7.1'
+    compile 'net.milkbowl.vault:VaultAPI:1.6'
+
+    compile 'com.github.InventivetalentDev:PluginAnnotations:master-SNAPSHOT'
+    compile 'com.github.InventivetalentDev:ReflectionHelper:395cfea950'
+    compile 'com.github.InventivetalentDev:ParticleAPI:65b701708a'
+}
+
+
+shadowJar {
+    archiveName = "${baseName}.${extension}"
+
+    dependencies {
+        include(dependency('com.github.InventivetalentDev:PluginAnnotations'))
+        include(dependency('com.github.InventivetalentDev:ReflectionHelper'))
+        include(dependency('com.github.InventivetalentDev:ParticleAPI'))
+    }
+
+    relocate 'org.inventivetalent.reflection', 'hu.tryharddevs.advancedkits.utils.reflection'
+    relocate 'org.inventivetalent.particle', 'hu.tryharddevs.advancedkits.utils.particle'
+    relocate 'org.inventivetalent.pluginannotations', 'hu.tryharddevs.advancedkits.utils.pluginannotations'
+}
+
+task copyFile(type: Copy) {
+    from('build/libs')
+    into('target')
+    include('AdvancedKitsReborn.jar')
+}
+
+task copyFile2(type: Copy) {
+    from('build/libs')
+    into('C:\\Users\\rsnco\\Desktop\\Servers\\Servers\\plugins')
+    include('AdvancedKitsReborn.jar')
+}
+
+import org.apache.tools.ant.filters.ReplaceTokens
+
+processResources {
+    from(sourceSets.main.resources.srcDirs) {
+        filter ReplaceTokens, tokens: [version: version]
+    }
+}
+assemble.dependsOn(shadowJar)
+assemble.finalizedBy(copyFile)
+assemble.finalizedBy(copyFile2)

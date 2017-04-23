@@ -1,13 +1,9 @@
-name: ${project.name}
-main: hu.tryharddood.advancedkits.AdvancedKits
-version: ${project.version}
-author: TryHardDood
-website: ${project.url}
-softdepend: [Vault]
-commands:
-  kit:
-    aliases: [akits, akit, kits]
-    description: Main kit command.
-    usage: /kit
-  mbchat:
-    aliases: []
+name: AdvancedKitsReloaded
+version: @version@
+main: hu.tryharddevs.advancedkits.AdvancedKitsMain
+prefix: AdvancedKits
+authors: [TryHardDood]
+description: AdvancedKitsReloaded is a Kit managing plugin for Minecraft servers which runs Spigot, Bukkit,CraftBukkit and Paper servers (Above 1.8).  With this plugin you can easily create/edit/delete your kits and you can customize it as much as you'd like. 
+website: https://tryharddood.github.io/
+depends: [Vault]
+softdepend: [PlaceholderAPI]
