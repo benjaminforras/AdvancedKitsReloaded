@@ -5,11 +5,10 @@ import hu.tryharddevs.advancedkits.CommandManager;
 import hu.tryharddevs.advancedkits.kits.Kit;
 import hu.tryharddevs.advancedkits.kits.KitManager;
 import hu.tryharddevs.advancedkits.kits.User;
-import hu.tryharddevs.advancedkits.utils.VaultUtil;
 import hu.tryharddevs.advancedkits.utils.menuapi.components.ActionListener;
+import hu.tryharddevs.advancedkits.utils.menuapi.components.Coordinates;
 import hu.tryharddevs.advancedkits.utils.menuapi.components.Menu;
 import hu.tryharddevs.advancedkits.utils.menuapi.components.MenuObject;
-import net.milkbowl.vault.economy.EconomyResponse;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -21,15 +20,14 @@ import org.bukkit.inventory.ItemStack;
 
 import java.util.Objects;
 
-import static hu.tryharddevs.advancedkits.kits.flags.DefaultFlags.*;
+import static hu.tryharddevs.advancedkits.kits.flags.DefaultFlags.VISIBLE;
 import static hu.tryharddevs.advancedkits.utils.localization.I18n.getMessage;
 
-@SuppressWarnings("ConstantConditions")
-public class BuyCommand implements ActionListener
+public class ViewCommand implements ActionListener
 {
-	private static BuyCommand buyInventoryListener = new BuyCommand();
+	private static ViewCommand viewInventoryListener = new ViewCommand();
 
-	@CommandManager.Cmd(cmd = "buy", help = "Buy kit", longhelp = "This command opens up a gui where you can buy kits.", permission = "buy", args = "[kitname]", only = CommandManager.CommandOnly.PLAYER)
+	@CommandManager.Cmd(cmd = "view", help = "View kits", longhelp = "This command opens up a gui where you can view kits.", permission = "view", args = "[kitname]", only = CommandManager.CommandOnly.PLAYER)
 	public static CommandManager.CommandFinished buyCommand(CommandSender sender, Object[] args)
 	{
 		Player player = (Player) sender;
@@ -37,16 +35,15 @@ public class BuyCommand implements ActionListener
 		String world  = player.getWorld().getName();
 
 		if (args.length == 0) {
-			Inventory inventory = Bukkit.createInventory(player, ((int) (Math.ceil((double) KitManager.getKits().size() / 9)) * 9), "AdvancedKitsReborn - Buy kit");
+			Inventory inventory = Bukkit.createInventory(player, ((int) (Math.ceil((double) KitManager.getKits().size() / 9)) * 9), "AdvancedKitsReborn - View kit");
 			Menu      menu      = new Menu(inventory);
 
 			MenuObject menuObject;
 			for (Kit kit : KitManager.getKits()) {
 				if (!kit.getFlag(VISIBLE, world)) continue;
-				if (kit.getFlag(FREE, world) || user.isUnlocked(kit)) continue;
 
-				menuObject = new MenuObject(Material.SULPHUR, (byte) 0, ChatColor.RED + kit.getDisplayName(player.getWorld().getName()), KitManager.getKitDescription(player, kit, world));
-				menuObject.setActionListener(buyInventoryListener);
+				menuObject = new MenuObject(Material.SULPHUR, (byte) 0, ChatColor.WHITE + kit.getDisplayName(player.getWorld().getName()), KitManager.getKitDescription(player, kit, world));
+				menuObject.setActionListener(viewInventoryListener);
 
 				menu.addMenuObject(menuObject);
 			}
@@ -61,26 +58,26 @@ public class BuyCommand implements ActionListener
 			return CommandManager.CommandFinished.DONE;
 		}
 
-		if(!player.hasPermission(kit.getPermission()))
-		{
-			player.sendMessage(AdvancedKitsMain.advancedKits.chatPrefix + " " + getMessage("noKitPermission"));
-			return CommandManager.CommandFinished.DONE;
+		Inventory inventory = Bukkit.createInventory(player, 54, "AdvancedKitsReborn - View kit");
+		Menu      menu      = new Menu(inventory);
+
+		MenuObject menuObject;
+		for (ItemStack itemStack : kit.getItems()) {
+			menuObject = new MenuObject(itemStack);
+			menu.addMenuObject(menuObject);
 		}
 
-
-		EconomyResponse r = VaultUtil.getEconomy().withdrawPlayer(player, kit.getFlag(COST, world));
-		if (r.transactionSuccess()) {
-			player.sendMessage(AdvancedKitsMain.advancedKits.chatPrefix + " " + getMessage("successfullyBought", kit.getDisplayName(world)));
-
-			user.addToUnlocked(kit);
-			user.save();
-
-			if (kit.getFlag(USEONBUY, world)) Bukkit.dispatchCommand(player, "kit use " + kit.getName());
+		int x = 1;
+		for (ItemStack itemStack : kit.getArmors()) {
+			menuObject = new MenuObject(itemStack);
+			menu.setMenuObjectAt(new Coordinates(menu, x, 5), menuObject);
+			x++;
 		}
-		else {
-			player.sendMessage(AdvancedKitsMain.advancedKits.chatPrefix + " " + getMessage("notEnoughMoney", r.amount));
-		}
+		menuObject = new MenuObject(Material.PAPER, (byte) 0, getMessage("informations"), KitManager.getKitDescription(player, kit, world));
+		menu.setMenuObjectAt(new Coordinates(menu, 5, 6), menuObject);
 
+		menu.openForPlayer(player);
+		player.sendMessage(AdvancedKitsMain.advancedKits.chatPrefix + " " + getMessage("kitView", kit.getDisplayName(world)));
 
 		return CommandManager.CommandFinished.DONE;
 	}
@@ -97,7 +94,7 @@ public class BuyCommand implements ActionListener
 			return;
 		}
 
-		Bukkit.dispatchCommand(whoClicked, "kit buy " + ChatColor.stripColor(clickedItem.getItemMeta().getDisplayName()));
 		menuObject.getMenu().close(whoClicked);
+		Bukkit.dispatchCommand(whoClicked, "kit view " + ChatColor.stripColor(clickedItem.getItemMeta().getDisplayName()));
 	}
 }

@@ -157,13 +157,18 @@ public class KitManager
 		}
 
 		if (kit.getFlag(DELAY, world) > 0) {
-			if (!user.checkDelay(kit, world)) {
+			if (!user.checkDelay(kit, world) && !player.hasPermission(kit.getDelayPermission())) {
 				descriptions.add(" ");
 				descriptions.add(getMessage("cantUseDelay", user.getDelay(kit, world)));
 				descriptions.add(" ");
 			}
+			else if (player.hasPermission(kit.getDelayPermission())) {
+				descriptions.add(" ");
+				descriptions.add(getMessage("delayImmunity"));
+				descriptions.add(" ");
+			}
 
-			descriptions.add(getMessage("flagDelay", kit.getFlag(DELAY, world)));
+			descriptions.add(getMessage("flagDelay", getDelayInString((int) (double) kit.getFlag(DELAY, world))));
 		}
 
 		if (kit.getFlag(COST, world) > 0) {
@@ -193,9 +198,8 @@ public class KitManager
 		return descriptions;
 	}
 
-	public static String getDifferenceText(Date startDate, Date endDate)
+	static String getDifferenceText(Date startDate, Date endDate)
 	{
-
 		long different = endDate.getTime() - startDate.getTime();
 
 		long secondsInMilli = 1000;
@@ -231,5 +235,37 @@ public class KitManager
 			sb.append(elapsedSeconds).append(" ").append(getMessage("timeUnitSeconds")).append(" ");
 		}
 		return sb.toString();
+	}
+
+	private static String getDelayInString(int delay)
+	{
+		int numberOfDays;
+		int numberOfHours;
+		int numberOfMinutes;
+		int numberOfSeconds;
+
+		numberOfDays = delay / 86400;
+		numberOfHours = (delay % 86400) / 3600;
+		numberOfMinutes = ((delay % 86400) % 3600) / 60;
+		numberOfSeconds = ((delay % 86400) % 3600) % 60;
+
+		StringBuilder sb = new StringBuilder();
+		if (numberOfDays >= 1) {
+			sb.append(numberOfDays).append(" ").append(getMessage("timeUnitDays")).append(" ");
+		}
+
+		if (numberOfHours >= 1) {
+			sb.append(numberOfHours).append(" ").append(getMessage("timeUnitHours")).append(" ");
+		}
+
+		if (numberOfMinutes >= 1) {
+			sb.append(numberOfMinutes).append(" ").append(getMessage("timeUnitMinutes")).append(" ");
+		}
+
+		if (numberOfSeconds >= 1) {
+			sb.append(numberOfSeconds).append(" ").append(getMessage("timeUnitSeconds")).append(" ");
+		}
+		return sb.toString();
+
 	}
 }

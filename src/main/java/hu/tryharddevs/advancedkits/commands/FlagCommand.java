@@ -62,7 +62,7 @@ public class FlagCommand
 			}
 		}
 
-		player.sendMessage(AdvancedKitsMain.advancedKits.chatPrefix + " " + getMessage("flagSet", flag.getName(), value, kit.getName(), world));
+		player.sendMessage(AdvancedKitsMain.advancedKits.chatPrefix + " " + getMessage("flagSet", flag.getName(), value, kit.getDisplayName(world), world));
 		return CommandManager.CommandFinished.DONE;
 	}
 }

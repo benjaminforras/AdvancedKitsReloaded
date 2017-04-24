@@ -7,3 +7,20 @@ description: AdvancedKitsReloaded is a Kit managing plugin for Minecraft servers
 website: https://tryharddood.github.io/
 depends: [Vault]
 softdepend: [PlaceholderAPI]
+permissions:
+ advancedkits.*:
+   description: Gives access to all advancedkits commands
+   children:
+     advancedkits.use: true
+     advancedkits.buy: true
+     advancedkits.view: true
+     advancedkits.create: true
+     advancedkits.edit: true
+     advancedkits.flag: true
+     advancedkits.skipdelay.*: true
+ advancedkits.player:
+   description: Gives access to all basic advancedkits commands
+   children:
+     advancedkits.use: true
+     advancedkits.buy: true
+     advancedkits.view: true

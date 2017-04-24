@@ -57,6 +57,16 @@ public class Kit
 		return ChatColor.translateAlternateColorCodes('&', getFlag(DISPLAYNAME, world));
 	}
 
+	public String getPermission()
+	{
+		return "advancedkits.use." + name;
+	}
+
+	public String getDelayPermission()
+	{
+		return "advancedkits.skipdelay." + name;
+	}
+
 	public void save()
 	{
 		// Serialize items in the ArrayLists. This way we don't lose any custom data, including books.

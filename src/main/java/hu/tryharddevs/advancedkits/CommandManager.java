@@ -24,6 +24,8 @@ import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static hu.tryharddevs.advancedkits.utils.localization.I18n.getMessage;
+
 /**
  * Register a command with the command system!
  * <br><br>
@@ -444,7 +446,7 @@ public class CommandManager implements TabCompleter, CommandExecutor
 	EXISTPLAYER(true, "That player does not exist."), /**
 	 * Incorrect permissions
 	 */
-	PERMISSION(true, "Insufficient permissions."),
+	PERMISSION(true, getMessage("noPermission")),
 
 		HOLDBLOCK(true, "You must be holding a block."), HOLDITEM(true, "You must be holding an item."),
 

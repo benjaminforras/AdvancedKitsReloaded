@@ -101,7 +101,7 @@ public class EditCommand implements ActionListener
 			playerInventory.setContents(inEdit.get(player.getUniqueId()));
 			inEdit.remove(player.getUniqueId());
 
-			player.sendMessage(AdvancedKitsMain.advancedKits.chatPrefix + " " + getMessage("successfullyEdited", currentKit.getName()));
+			player.sendMessage(AdvancedKitsMain.advancedKits.chatPrefix + " " + getMessage("successfullyEdited", currentKit.getDisplayName(world)));
 			player.sendMessage(AdvancedKitsMain.advancedKits.chatPrefix + " " + getMessage("inventoryRestored"));
 			player.sendMessage(AdvancedKitsMain.advancedKits.chatPrefix + " " + getMessage("exitedEditMode"));
 		}

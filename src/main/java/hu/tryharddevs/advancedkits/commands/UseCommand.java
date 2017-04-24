@@ -6,6 +6,7 @@ import hu.tryharddevs.advancedkits.kits.Kit;
 import hu.tryharddevs.advancedkits.kits.KitManager;
 import hu.tryharddevs.advancedkits.kits.User;
 import hu.tryharddevs.advancedkits.utils.ItemStackUtil;
+import hu.tryharddevs.advancedkits.utils.MessagesApi;
 import hu.tryharddevs.advancedkits.utils.VaultUtil;
 import hu.tryharddevs.advancedkits.utils.menuapi.components.ActionListener;
 import hu.tryharddevs.advancedkits.utils.menuapi.components.Menu;
@@ -72,6 +73,11 @@ public class UseCommand implements ActionListener
 			return CommandManager.CommandFinished.DONE;
 		}
 
+		if (!player.hasPermission(kit.getPermission())) {
+			player.sendMessage(AdvancedKitsMain.advancedKits.chatPrefix + " " + getMessage("noKitPermission"));
+			return CommandManager.CommandFinished.DONE;
+		}
+
 		if (kit.getFlag(DISABLEDWORLDS, world).contains(player.getWorld().getName())) {
 			player.sendMessage(AdvancedKitsMain.advancedKits.chatPrefix + " " + getMessage("cantUseWorld"));
 			return CommandManager.CommandFinished.DONE;
@@ -84,7 +90,7 @@ public class UseCommand implements ActionListener
 			}
 		}
 
-		if (kit.getFlag(DELAY, world) > 0) {
+		if (kit.getFlag(DELAY, world) > 0 && !player.hasPermission(kit.getDelayPermission())) {
 			if (!user.checkDelay(kit, world)) {
 				player.sendMessage(AdvancedKitsMain.advancedKits.chatPrefix + " " + getMessage("cantUseDelay", user.getDelay(kit, world)));
 				return CommandManager.CommandFinished.DONE;
@@ -175,12 +181,27 @@ public class UseCommand implements ActionListener
 			}
 		}
 
+		String temp;
 		for (String command : kit.getFlag(COMMANDS, world)) {
-			Bukkit.dispatchCommand(Bukkit.getConsoleSender(), (AdvancedKitsMain.usePlaceholderAPI ? PlaceholderAPI.setPlaceholders(player, command) : command.replace("%player_name%", player.getName())));
+			temp = (AdvancedKitsMain.usePlaceholderAPI ? PlaceholderAPI.setPlaceholders(player, command) : command.replace("%player_name%", player.getName()));
+			Bukkit.dispatchCommand(Bukkit.getConsoleSender(), temp);
 		}
 
 		for (String message : kit.getFlag(MESSAGES, world)) {
-			player.sendMessage(ChatColor.translateAlternateColorCodes('&', message));
+			temp = (AdvancedKitsMain.usePlaceholderAPI ? PlaceholderAPI.setPlaceholders(player, message) : message.replace("%player_name%", player.getName()));
+
+			if (temp.contains("subtitle:")) {
+				MessagesApi.sendTitle(player, "", temp.replace("subtitle:", ""));
+			}
+			else if (temp.contains("title:")) {
+				MessagesApi.sendTitle(player, temp.replace("title:", ""), "");
+			}
+			else if (temp.contains("actionbar:")) {
+				MessagesApi.sendActionBar(player, ChatColor.translateAlternateColorCodes('&', temp.replace("actionbar:", "")));
+			}
+			else {
+				player.sendMessage(ChatColor.translateAlternateColorCodes('&', temp));
+			}
 		}
 
 		for (PotionEffect potionEffect : kit.getFlag(POTIONEFFECTS, world)) {
@@ -202,7 +223,9 @@ public class UseCommand implements ActionListener
 			if (data != null) fireworkEntity.setFireworkMeta(data);
 		}
 
-		if (kit.getFlag(DELAY, world) > 0) user.setDelay(kit, world, kit.getFlag(DELAY, world));
+		if (kit.getFlag(DELAY, world) > 0 && !player.hasPermission(kit.getDelayPermission())) {
+			user.setDelay(kit, world, kit.getFlag(DELAY, world));
+		}
 
 		if (kit.getFlag(MAXUSES, world) > 0) user.addUse(kit, world);
 

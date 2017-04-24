@@ -122,6 +122,7 @@ public final class AdvancedKitsMain extends JavaPlugin
 		CommandManager cm = new CommandManager(this, "AdvancedKits", "advancedkits", "kit", "akit", "advancedkits", "kit", "kits", "akits");
 		cm.loadCommandClass(UseCommand.class);
 		cm.loadCommandClass(BuyCommand.class);
+		cm.loadCommandClass(ViewCommand.class);
 		cm.loadCommandClass(CreateCommand.class);
 		cm.loadCommandClass(EditCommand.class);
 		cm.loadCommandClass(FlagCommand.class);

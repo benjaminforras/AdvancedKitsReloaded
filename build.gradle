@@ -73,13 +73,13 @@ shadowJar {
 task copyFile(type: Copy) {
     from('build/libs')
     into('target')
-    include('AdvancedKitsReborn.jar')
+    include('AdvancedKitsReloaded.jar')
 }
 
 task copyFile2(type: Copy) {
     from('build/libs')
     into('C:\\Users\\rsnco\\Desktop\\Servers\\Servers\\plugins')
-    include('AdvancedKitsReborn.jar')
+    include('AdvancedKitsReloaded.jar')
 }
 
 import org.apache.tools.ant.filters.ReplaceTokens
