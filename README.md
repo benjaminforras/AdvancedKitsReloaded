@@ -5,7 +5,7 @@ AdvancedKitsReloaded - v1.0
 
 ***TODO:***
 
- - Permissions (for kits)
- - /kit view command.
+ - ~~Permissions (for kits)~~
+ - ~~/kit view command.~~
  - More testing
  - Better wiki
