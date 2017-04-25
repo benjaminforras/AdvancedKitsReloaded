@@ -41,7 +41,7 @@ public class CreateCommand
 		kit.save();
 		KitManager.getKits().add(kit);
 
-		player.sendMessage( getMessage("successfullyCreated", kit.getName()));
+		player.sendMessage(AdvancedKitsMain.advancedKits.chatPrefix + " " + getMessage("successfullyCreated", kit.getName()));
 		return CommandManager.CommandFinished.DONE;
 	}
 }

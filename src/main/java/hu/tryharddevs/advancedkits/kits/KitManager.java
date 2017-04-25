@@ -174,6 +174,10 @@ public class KitManager
 		if (kit.getFlag(COST, world) > 0) {
 			descriptions.add(getMessage("flagCost", kit.getFlag(COST, world)));
 		}
+		else
+		{
+			descriptions.add(getMessage("flagFree"));
+		}
 
 		if (kit.getFlag(MAXUSES, world) != 0) {
 			if (user.getTimesUsed(kit, world) >= kit.getFlag(MAXUSES, world)) {

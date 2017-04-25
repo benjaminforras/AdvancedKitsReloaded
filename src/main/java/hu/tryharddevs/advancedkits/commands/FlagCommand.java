@@ -30,8 +30,10 @@ public class FlagCommand
 			return CommandManager.CommandFinished.DONE;
 		}
 		Flag flag = DefaultFlags.fuzzyMatchFlag(String.valueOf(args[1]));
-		if (Objects.isNull(flag)) {
-			player.sendMessage(AdvancedKitsMain.advancedKits.chatPrefix + " " + getMessage("flagNotFound"));
+		if (String.valueOf(args[1]).equalsIgnoreCase("help")) {
+			if (Objects.isNull(flag)) {
+				player.sendMessage(AdvancedKitsMain.advancedKits.chatPrefix + " " + getMessage("flagNotFound"));
+			}
 			player.sendMessage(AdvancedKitsMain.advancedKits.chatPrefix + " " + getMessage("availableFlags", Arrays.stream(DefaultFlags.getFlags()).map(Flag::getName).collect(Collectors.joining(","))));
 			return CommandManager.CommandFinished.DONE;
 		}
