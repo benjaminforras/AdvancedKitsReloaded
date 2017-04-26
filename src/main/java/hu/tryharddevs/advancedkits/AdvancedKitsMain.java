@@ -103,6 +103,12 @@ public final class AdvancedKitsMain extends JavaPlugin
 		}
 		log("Finished loading commands.");
 
+		log("Checking for updates.");
+		new Updater(this, 91129, this.getFile(), Updater.UpdateType.DEFAULT, true);
+
+		log("Loading metrics.");
+		new MetricsLite(this);
+
 		log(ChatColor.GREEN + "Finished loading " + descriptionFile.getName() + " " + descriptionFile.getVersion() + " by " + descriptionFile.getAuthors().stream().collect(Collectors.joining(",")));
 	}
 
