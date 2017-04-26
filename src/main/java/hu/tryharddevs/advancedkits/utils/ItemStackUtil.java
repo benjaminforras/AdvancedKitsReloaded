@@ -3,6 +3,7 @@ package hu.tryharddevs.advancedkits.utils;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.google.gson.stream.JsonReader;
 import hu.tryharddevs.advancedkits.AdvancedKitsMain;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -94,13 +95,15 @@ public class ItemStackUtil
 
 	public static ItemStack itemFromString(String itemStackString)
 	{
-		return (ItemStack) deserializeItem(jsonFromString(itemStackString));
+		return (ItemStack) deserializeItem(jsonFromString(itemStackString.replaceAll("[\t\n\r]", "")));
 	}
 
 	private static JsonObject jsonFromString(String jsonObjectStr)
 	{
+		JsonReader reader = new JsonReader(new StringReader(jsonObjectStr.replaceAll("[\t\n\r]", "")));
+		reader.setLenient(true);
 
-		JsonElement jsonElement = new JsonParser().parse(new StringReader(jsonObjectStr));
+		JsonElement jsonElement = new JsonParser().parse(reader);
 		return jsonElement.getAsJsonObject();
 	}
 

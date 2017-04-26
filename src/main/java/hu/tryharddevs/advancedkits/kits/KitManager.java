@@ -2,6 +2,7 @@ package hu.tryharddevs.advancedkits.kits;
 
 import com.google.common.collect.Maps;
 import com.google.common.io.Files;
+import com.google.gson.JsonSyntaxException;
 import hu.tryharddevs.advancedkits.AdvancedKitsMain;
 import hu.tryharddevs.advancedkits.kits.flags.DefaultFlags;
 import hu.tryharddevs.advancedkits.kits.flags.Flag;
@@ -69,7 +70,7 @@ public class KitManager
 						try {
 							kit.setItems(itemsList.stream().map(item -> ItemStackUtil.itemFromString(String.valueOf(item))).collect(Collectors.toCollection(ArrayList::new)));
 						}
-						catch (NullPointerException e)
+						catch (NullPointerException | JsonSyntaxException e)
 						{
 							instance.log(ChatColor.RED + "Failed to parse items.");
 							instance.log(ChatColor.RED + "Trying to load items using the old methods.");
@@ -105,7 +106,7 @@ public class KitManager
 						{
 							kit.setFlags(world, unmarshalFlags(kitConfig.getConfigurationSection("Flags." + world).getValues(false)));
 						}
-						catch (NullPointerException e)
+						catch (NullPointerException | JsonSyntaxException e)
 						{
 							instance.log(ChatColor.GOLD + "Failed to parse flags.");
 							instance.log(ChatColor.GOLD + "Trying to load flags using the old methods.");
