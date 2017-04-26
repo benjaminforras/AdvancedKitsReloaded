@@ -1,4 +1,4 @@
-AdvancedKitsReloaded - v1.0
+![](https://tryharddood.github.io/custom/projects/advancedkits/img/advancedkits.png)
 ===================
 
 - **Status:** ![Progress](http://progressed.io/bar/95)
