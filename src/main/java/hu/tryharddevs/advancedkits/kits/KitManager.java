@@ -10,6 +10,7 @@ import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -65,7 +66,15 @@ public class KitManager
 					List<?> itemsList = kitConfig.getList("Items");
 
 					if (!itemsList.isEmpty()) {
-						kit.setItems(itemsList.stream().map(item -> ItemStackUtil.itemFromString(String.valueOf(item))).collect(Collectors.toCollection(ArrayList::new)));
+						try {
+							kit.setItems(itemsList.stream().map(item -> ItemStackUtil.itemFromString(String.valueOf(item))).collect(Collectors.toCollection(ArrayList::new)));
+						}
+						catch (NullPointerException e)
+						{
+							instance.log(ChatColor.RED + "Failed to parse items.");
+							instance.log(ChatColor.RED + "Trying to load items using the old methods.");
+							kit.setItems(itemsList.stream().map(object -> ItemStack.deserialize((Map<String, Object>)object)).collect(Collectors.toCollection(ArrayList::new)));
+						}
 					}
 				}
 
@@ -76,11 +85,36 @@ public class KitManager
 						kit.setArmors(armorsList.stream().map(armor -> ItemStackUtil.itemFromString(String.valueOf(armor))).collect(Collectors.toCollection(ArrayList::new)));
 					}
 				}
+				else if (kitConfig.contains("Armor")) {
+					List<?> armorsList = kitConfig.getList("Armor");
+
+					if (!armorsList.isEmpty()) {
+						instance.log(ChatColor.GOLD + "Failed to parse armors.");
+						instance.log(ChatColor.GOLD + "Trying to load items using the old methods.");
+						kit.setArmors(armorsList.stream().map(object -> ItemStack.deserialize((Map<String, Object>)object)).collect(Collectors.toCollection(ArrayList::new)));
+					}
+
+					kitConfig.set("Armor", null);
+					kit.save();
+				}
 
 				if (kitConfig.contains("Flags")) {
 
 					for (String world : kitConfig.getConfigurationSection("Flags").getKeys(false)) {
-						kit.setFlags(world, unmarshalFlags(kitConfig.getConfigurationSection("Flags." + world).getValues(false)));
+						try
+						{
+							kit.setFlags(world, unmarshalFlags(kitConfig.getConfigurationSection("Flags." + world).getValues(false)));
+						}
+						catch (NullPointerException e)
+						{
+							instance.log(ChatColor.GOLD + "Failed to parse flags.");
+							instance.log(ChatColor.GOLD + "Trying to load flags using the old methods.");
+							instance.log(ChatColor.GOLD + "You may need to reset some flags.");
+
+							kitConfig.set("Flags.global", kitConfig.getConfigurationSection("Flags").getValues(false));
+							kit.save();
+							kit.setFlags("global", unmarshalFlags(kitConfig.getConfigurationSection("Flags").getValues(false)));
+						}
 					}
 				}
 				kitArrayList.add(kit);
