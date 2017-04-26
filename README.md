@@ -59,7 +59,8 @@ Feel free to fork the project and share your code.*
 - [InventivetalentDev](https://github.com/InventivetalentDev/): For her ParticleAPI, PluginAnnotations and ReflectionHelper.
 
 ## Metrics
-This plugin utilizes bStats plugin metrics system, which means that the following information is collected and sent to mcstats.org:
+This plugin utilizes bStats plugin metrics system, which means that the following information is collected and sent to bstats.org:
+
 - A unique identifier
 - The server’s version of Java
 - Whether the server is in offline or online mode
@@ -68,4 +69,5 @@ This plugin utilizes bStats plugin metrics system, which means that the followin
 - The OS version/name and architecture
 - The core count for the CPU
 - The number of players online
+
 The Metrics versionOpting out of this service can be done by editing plugins/PluginMetrics/config.yml and changing opt-out to true.
