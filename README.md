@@ -2,7 +2,7 @@
 ===================
 
 - **Status:** ![Progress](http://progressed.io/bar/100)
-- **Latest version:** [1.0.1](https://github.com/TryHardDood/AdvancedKitsReloaded/releases/tag/v1.0.1)
+- **Latest version:** [1.0.2](https://github.com/TryHardDood/AdvancedKitsReloaded/releases/tag/v1.0.2)
 
 ## Links
 - [SpigotMC](https://www.spigotmc.org/resources/advancedkits-reloaded.11193/) 
@@ -28,8 +28,9 @@
 Feel free to fork the project and share your code.*
 
 
-[comment]: <> (## Contributors:)
-[comment]: <> (- Name)
+## Contributors:
+- [SlimeDog](https://github.com/SlimeDog) - thanks for testing
+- [xH3LLRAIZ3Rx](https://www.spigotmc.org/members/xh3llraiz3rx.4744/) - thanks for testing
 
 ## Images:
 <details> 
