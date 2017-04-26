@@ -1,8 +1,8 @@
 ![](https://tryharddood.github.io/custom/projects/advancedkits/img/advancedkits.png)
 ===================
 
-- **Status:** ![Progress](http://progressed.io/bar/95)
-- **Latest version:** [1.0.0-pre](https://github.com/TryHardDood/AdvancedKitsReloaded/releases/tag/v1.0.0)
+- **Status:** ![Progress](http://progressed.io/bar/100)
+- **Latest version:** [1.0.0](https://github.com/TryHardDood/AdvancedKitsReloaded/releases/tag/v1.0.0)
 
 ## Links
 - [SpigotMC](https://www.spigotmc.org/resources/advancedkits-reloaded.11193/) 
@@ -57,3 +57,17 @@ Feel free to fork the project and share your code.*
 - [Stumblinbear](https://github.com/Stumblinbear/): For annotation-based command manager.
 - [ColonelHedgehog](https://github.com/ColonelHedgehog/): For his MenuAPI.
 - [InventivetalentDev](https://github.com/InventivetalentDev/): For her ParticleAPI, PluginAnnotations and ReflectionHelper.
+
+## Metrics
+This plugin utilizes bStats plugin metrics system, which means that the following information is collected and sent to bstats.org:
+
+- A unique identifier
+- The server’s version of Java
+- Whether the server is in offline or online mode
+- The plugin’s version
+- The server’s version
+- The OS version/name and architecture
+- The core count for the CPU
+- The number of players online
+
+The Metrics versionOpting out of this service can be done by editing plugins/PluginMetrics/config.yml and changing opt-out to true.
