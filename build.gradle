@@ -50,7 +50,6 @@ dependencies {
     compile 'me.clip:placeholderapi:2.7.1'
     compile 'net.milkbowl.vault:VaultAPI:1.6'
 
-    compile 'com.github.InventivetalentDev:PluginAnnotations:master-SNAPSHOT'
     compile 'com.github.InventivetalentDev:ReflectionHelper:395cfea950'
     compile 'com.github.InventivetalentDev:ParticleAPI:65b701708a'
 }
@@ -60,14 +59,12 @@ shadowJar {
     archiveName = "${baseName}.${extension}"
 
     dependencies {
-        include(dependency('com.github.InventivetalentDev:PluginAnnotations'))
         include(dependency('com.github.InventivetalentDev:ReflectionHelper'))
         include(dependency('com.github.InventivetalentDev:ParticleAPI'))
     }
 
     relocate 'org.inventivetalent.reflection', 'hu.tryharddevs.advancedkits.utils.reflection'
     relocate 'org.inventivetalent.particle', 'hu.tryharddevs.advancedkits.utils.particle'
-    relocate 'org.inventivetalent.pluginannotations', 'hu.tryharddevs.advancedkits.utils.pluginannotations'
 }
 
 task copyFile(type: Copy) {

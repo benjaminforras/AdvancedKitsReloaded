@@ -9,27 +9,27 @@ import hu.tryharddevs.advancedkits.utils.localization.I18n;
 import hu.tryharddevs.advancedkits.utils.menuapi.core.MenuAPI;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.inventivetalent.pluginannotations.PluginAnnotations;
-import org.inventivetalent.pluginannotations.config.ConfigValue;
 
 import java.io.File;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 public final class AdvancedKitsMain extends JavaPlugin
 {
 	public static AdvancedKitsMain advancedKits;
-	public static I18n             i18n;
+	public        I18n             i18n;
 
 	public static Boolean usePlaceholderAPI = false;
 
-	@ConfigValue(path = "Chat.Prefix", colorChar = '&')
-	public  String                chatPrefix      = ChatColor.translateAlternateColorCodes('&', "&7[&6AdvancedKits&7]");
-	@ConfigValue(path = "Log.ColoredLog")
-	public  Boolean               coloredLog      = true;
-	@ConfigValue(path = "Locale")
-	public  String                locale          = "en";
+	private YamlConfiguration configuration;
+
+	public String  chatPrefix = ChatColor.translateAlternateColorCodes('&', "&7[&6AdvancedKits&7]");
+	public Boolean coloredLog = true;
+	public String  locale     = "en";
+
 	private PluginDescriptionFile descriptionFile = getDescription();
 
 	@Override
@@ -50,26 +50,7 @@ public final class AdvancedKitsMain extends JavaPlugin
 		}
 
 		log("Loading configuration.");
-		{
-			saveDefaultConfig();
-			PluginAnnotations.CONFIG.loadValues(this, this);
-
-			String localeFile = "messages_" + locale + ".properties";
-			if (getResource(localeFile) == null) {
-				log(ChatColor.RED + "Locale not found, revert back to the default. (en)");
-
-				locale = "en";
-				localeFile = "messages_" + locale + ".properties";
-			}
-
-			if (!new File(getDataFolder() + File.separator + localeFile).exists()) {
-				saveResource(localeFile, false);
-			}
-
-			i18n = new I18n(this);
-			i18n.onEnable();
-			i18n.updateLocale(locale);
-		}
+		loadConfiguration();
 		log("Done loading the configuration.");
 
 		log("Loading Vault.");
@@ -112,6 +93,32 @@ public final class AdvancedKitsMain extends JavaPlugin
 		log(ChatColor.GREEN + "Finished loading " + descriptionFile.getName() + " " + descriptionFile.getVersion() + " by " + descriptionFile.getAuthors().stream().collect(Collectors.joining(",")));
 	}
 
+	public void loadConfiguration()
+	{
+		saveDefaultConfig();
+		YamlConfiguration configuration = YamlConfiguration.loadConfiguration(new File(getDataFolder() + File.separator + "config.yml"));
+
+		locale = configuration.getString("Locale");
+		coloredLog = configuration.getBoolean("Log.ColoredLog");
+		chatPrefix = ChatColor.translateAlternateColorCodes('&', configuration.getString("Chat.Prefix"));
+
+		String localeFile = "messages_" + locale + ".properties";
+		if (Objects.isNull(getResource(localeFile))) {
+			log(ChatColor.RED + "Locale not found, revert back to the default. (en)");
+
+			locale = "en";
+			localeFile = "messages_" + locale + ".properties";
+		}
+
+		if (!new File(getDataFolder() + File.separator + localeFile).exists()) {
+			saveResource(localeFile, false);
+		}
+
+		i18n = new I18n(this);
+		i18n.onEnable();
+		i18n.updateLocale(locale);
+	}
+
 	@Override
 	public void onDisable()
 	{
@@ -133,6 +140,7 @@ public final class AdvancedKitsMain extends JavaPlugin
 		cm.loadCommandClass(GiveCommand.class);
 		cm.loadCommandClass(EditCommand.class);
 		cm.loadCommandClass(FlagCommand.class);
+		cm.loadCommandClass(ReloadCommand.class);
 	}
 
 	public void log(String log)
