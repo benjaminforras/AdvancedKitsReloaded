@@ -33,11 +33,21 @@ import static hu.tryharddevs.advancedkits.utils.localization.I18n.getMessage;
 
 public class GiveCommand
 {
-	@CommandManager.Cmd(cmd = "give", help = "Give kits", longhelp = "This command opens up a gui where you can give kits.", permission = "give", args = "<kit> <player> [forceuse]", only = CommandManager.CommandOnly.PLAYER)
+	@CommandManager.Cmd(cmd = "give", help = "Give kits", longhelp = "This command opens up a gui where you can give kits.", permission = "give", args = "<kit> <player> [forceuse]", only = CommandManager.CommandOnly.ALL)
 	public static CommandManager.CommandFinished giveCommand(CommandSender sender, Object[] args)
 	{
-		Player  player   = (Player) sender;
-		String  world    = player.getWorld().getName();
+		Player target = Bukkit.getPlayer(String.valueOf(args[1]));
+		if (Objects.isNull(target)) {
+			sender.sendMessage(AdvancedKitsMain.advancedKits.chatPrefix + " " + getMessage("playerNotFound"));
+			return CommandManager.CommandFinished.DONE;
+		}
+
+		if (target.isDead()) {
+			sender.sendMessage(AdvancedKitsMain.advancedKits.chatPrefix + " " + getMessage("playerIsDead"));
+			return CommandManager.CommandFinished.DONE;
+		}
+
+		String  world    = target.getWorld().getName();
 		Boolean forceUse = false;
 
 		if (args.length > 2) {
@@ -50,47 +60,37 @@ public class GiveCommand
 			return CommandManager.CommandFinished.DONE;
 		}
 
-		Player target = Bukkit.getPlayer(String.valueOf(args[1]));
-		if (Objects.isNull(target)) {
-			sender.sendMessage("No player found."); //TODO!
-			return CommandManager.CommandFinished.DONE;
-		}
-
-		if (target.isDead()) {
-			sender.sendMessage("Player dead."); //TODO!
-			return CommandManager.CommandFinished.DONE;
-		}
 		User user = User.getUser(target.getUniqueId());
 
-		if (kit.getFlag(DISABLEDWORLDS, world).contains(player.getWorld().getName())) {
-			player.sendMessage(AdvancedKitsMain.advancedKits.chatPrefix + " " + getMessage("cantUseWorld"));
+		if (kit.getFlag(DISABLEDWORLDS, world).contains(target.getWorld().getName())) {
+			sender.sendMessage(AdvancedKitsMain.advancedKits.chatPrefix + " " + getMessage("cantUseWorld"));
 			return CommandManager.CommandFinished.DONE;
 		}
 
 		if (forceUse && kit.getFlag(MAXUSES, world) != 0) {
 			if (user.getTimesUsed(kit, world) >= kit.getFlag(MAXUSES, world)) {
-				player.sendMessage(AdvancedKitsMain.advancedKits.chatPrefix + " " + getMessage("cantUseNoMore"));
+				sender.sendMessage(AdvancedKitsMain.advancedKits.chatPrefix + " " + getMessage("cantUseNoMore"));
 				target.sendMessage(AdvancedKitsMain.advancedKits.chatPrefix + " " + getMessage("cantUseNoMore"));
 				return CommandManager.CommandFinished.DONE;
 			}
 		}
 
-		if (forceUse && kit.getFlag(DELAY, world) > 0 && !player.hasPermission(kit.getDelayPermission())) {
+		if (forceUse && kit.getFlag(DELAY, world) > 0 && !sender.hasPermission(kit.getDelayPermission())) {
 			if (!user.checkDelay(kit, world)) {
-				player.sendMessage(AdvancedKitsMain.advancedKits.chatPrefix + " " + getMessage("cantUseDelay", user.getDelay(kit, world)));
+				sender.sendMessage(AdvancedKitsMain.advancedKits.chatPrefix + " " + getMessage("cantUseDelay", user.getDelay(kit, world)));
 				target.sendMessage(AdvancedKitsMain.advancedKits.chatPrefix + " " + getMessage("cantUseDelay", user.getDelay(kit, world)));
 				return CommandManager.CommandFinished.DONE;
 			}
 		}
 
 		if (kit.getFlag(PERUSECOST, world) != 0) {
-			EconomyResponse r = VaultUtil.getEconomy().withdrawPlayer(player, kit.getFlag(PERUSECOST, world));
+			EconomyResponse r = VaultUtil.getEconomy().withdrawPlayer(target, kit.getFlag(PERUSECOST, world));
 			if (r.transactionSuccess()) {
-				player.sendMessage(AdvancedKitsMain.advancedKits.chatPrefix + " " + getMessage("moneyLowered", VaultUtil.getEconomy().format(r.balance), VaultUtil.getEconomy().format(r.amount), "PerUseCost"));
+				sender.sendMessage(AdvancedKitsMain.advancedKits.chatPrefix + " " + getMessage("moneyLowered", VaultUtil.getEconomy().format(r.balance), VaultUtil.getEconomy().format(r.amount), "PerUseCost"));
 				target.sendMessage(AdvancedKitsMain.advancedKits.chatPrefix + " " + getMessage("moneyLowered", VaultUtil.getEconomy().format(r.balance), VaultUtil.getEconomy().format(r.amount), "PerUseCost"));
 			}
 			else {
-				player.sendMessage(AdvancedKitsMain.advancedKits.chatPrefix + " " + getMessage("notEnoughMoney", VaultUtil.getEconomy().format(r.amount)));
+				sender.sendMessage(AdvancedKitsMain.advancedKits.chatPrefix + " " + getMessage("notEnoughMoney", VaultUtil.getEconomy().format(r.amount)));
 				target.sendMessage(AdvancedKitsMain.advancedKits.chatPrefix + " " + getMessage("notEnoughMoney", VaultUtil.getEconomy().format(r.amount)));
 				return CommandManager.CommandFinished.DONE;
 			}
@@ -105,7 +105,7 @@ public class GiveCommand
 			spaceneed += target.getInventory().getArmorContents().length;
 		}
 		if (!kit.getFlag(SPEWITEMS, world) && spaceneed > freeSpace) {
-			player.sendMessage(AdvancedKitsMain.advancedKits.chatPrefix + " " + getMessage("notEnoughSpace"));
+			sender.sendMessage(AdvancedKitsMain.advancedKits.chatPrefix + " " + getMessage("notEnoughSpace"));
 			target.sendMessage(AdvancedKitsMain.advancedKits.chatPrefix + " " + getMessage("notEnoughSpace"));
 			return CommandManager.CommandFinished.DONE;
 		}
@@ -212,13 +212,13 @@ public class GiveCommand
 			if (data != null) fireworkEntity.setFireworkMeta(data);
 		}
 
-		if (forceUse && kit.getFlag(DELAY, world) > 0 && !player.hasPermission(kit.getDelayPermission())) {
+		if (forceUse && kit.getFlag(DELAY, world) > 0 && !sender.hasPermission(kit.getDelayPermission())) {
 			user.setDelay(kit, world, kit.getFlag(DELAY, world));
 		}
 
 		if (forceUse && kit.getFlag(MAXUSES, world) > 0) user.addUse(kit, world);
 
-		player.sendMessage(AdvancedKitsMain.advancedKits.chatPrefix + " " + getMessage("successfullyUsed", kit.getName()));
+		sender.sendMessage(AdvancedKitsMain.advancedKits.chatPrefix + " " + getMessage("successfullyUsed", kit.getName()));
 		target.sendMessage(AdvancedKitsMain.advancedKits.chatPrefix + " " + getMessage("successfullyUsed", kit.getName()));
 
 		return CommandManager.CommandFinished.DONE;
