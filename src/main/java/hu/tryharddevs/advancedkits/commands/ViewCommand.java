@@ -20,6 +20,7 @@ import org.bukkit.inventory.ItemStack;
 
 import java.util.Objects;
 
+import static hu.tryharddevs.advancedkits.kits.flags.DefaultFlags.ICON;
 import static hu.tryharddevs.advancedkits.kits.flags.DefaultFlags.VISIBLE;
 import static hu.tryharddevs.advancedkits.utils.localization.I18n.getMessage;
 
@@ -28,7 +29,7 @@ public class ViewCommand implements ActionListener
 	private static ViewCommand viewInventoryListener = new ViewCommand();
 
 	@CommandManager.Cmd(cmd = "view", help = "View kits", longhelp = "This command opens up a gui where you can view kits.", permission = "view", args = "[kitname]", only = CommandManager.CommandOnly.PLAYER)
-	public static CommandManager.CommandFinished buyCommand(CommandSender sender, Object[] args)
+	public static CommandManager.CommandFinished viewCommand(CommandSender sender, Object[] args)
 	{
 		Player player = (Player) sender;
 		User   user   = User.getUser(player.getUniqueId());
@@ -42,7 +43,7 @@ public class ViewCommand implements ActionListener
 			for (Kit kit : KitManager.getKits()) {
 				if (!kit.getFlag(VISIBLE, world)) continue;
 
-				menuObject = new MenuObject(Material.SULPHUR, (byte) 0, ChatColor.WHITE + kit.getDisplayName(player.getWorld().getName()), KitManager.getKitDescription(player, kit, world));
+				menuObject = new MenuObject(kit.getFlag(ICON, world), (byte) 0, ChatColor.WHITE + kit.getDisplayName(player.getWorld().getName()), KitManager.getKitDescription(player, kit, world));
 				menuObject.setActionListener(viewInventoryListener);
 
 				menu.addMenuObject(menuObject);

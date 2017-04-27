@@ -23,6 +23,7 @@ import org.inventivetalent.reflection.minecraft.Minecraft;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static hu.tryharddevs.advancedkits.kits.flags.DefaultFlags.ICON;
 import static hu.tryharddevs.advancedkits.utils.localization.I18n.getMessage;
 
 public class EditCommand implements ActionListener
@@ -35,6 +36,8 @@ public class EditCommand implements ActionListener
 	@CommandManager.Cmd(cmd = "edit", help = "Edit kit", longhelp = "This command opens up a gui where you can edit kits.", permission = "edit", args = "[kitname] [world]", only = CommandManager.CommandOnly.PLAYER)
 	public static CommandManager.CommandFinished editCommand(CommandSender sender, Object[] args)
 	{
+		String world = "global";
+
 		if (args.length == 0) {
 			Player    player    = (Player) sender;
 			Inventory inventory = Bukkit.createInventory(player, !inEdit.containsKey(player.getUniqueId()) ? ((int) (Math.ceil((double) KitManager.getKits().size() / 9)) * 9) : 9, "AdvancedKitsReborn - Edit kit");
@@ -43,7 +46,7 @@ public class EditCommand implements ActionListener
 			MenuObject menuObject;
 			if (!inEdit.containsKey(player.getUniqueId())) {
 				for (Kit kit : KitManager.getKits()) {
-					menuObject = new MenuObject(Material.STORAGE_MINECART, (byte) 0, ChatColor.GREEN + kit.getDisplayName(player.getWorld().getName()), Arrays.asList(ChatColor.BLACK + "", ChatColor.GREEN + "Click to edit"));
+					menuObject = new MenuObject(kit.getFlag(ICON, player.getWorld().getName()), (byte) 0, ChatColor.GREEN + kit.getDisplayName(player.getWorld().getName()), Arrays.asList(ChatColor.BLACK + "", ChatColor.GREEN + "Click to edit"));
 					menuObject.setActionListener(editCommandListener);
 
 					menu.addMenuObject(menuObject);
@@ -75,7 +78,6 @@ public class EditCommand implements ActionListener
 			return CommandManager.CommandFinished.DONE;
 		}
 
-		String world = "global";
 		if (args.length == 2) {
 			world = String.valueOf(args[1]);
 		}

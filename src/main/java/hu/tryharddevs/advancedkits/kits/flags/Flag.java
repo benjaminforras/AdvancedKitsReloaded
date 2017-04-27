@@ -48,7 +48,7 @@ public abstract class Flag<T>
 	public abstract T parseInput(String input) throws InvalidFlagValueException;
 
 	@Nullable
-	public T parseItem(Player player)
+	public T parseItem(Player player) throws InvalidFlagValueException
 	{
 		return null;
 	}

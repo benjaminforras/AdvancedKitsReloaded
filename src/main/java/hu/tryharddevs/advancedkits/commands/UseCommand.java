@@ -57,7 +57,7 @@ public class UseCommand implements ActionListener
 				if (!kit.getFlag(VISIBLE, world)) continue;
 				if (!kit.getFlag(FREE, world) && !user.isUnlocked(kit)) continue;
 
-				menuObject = new MenuObject(Material.STORAGE_MINECART, (byte) 0, ChatColor.GREEN + kit.getDisplayName(player.getWorld().getName()), KitManager.getKitDescription(player, kit, world));
+				menuObject = new MenuObject(kit.getFlag(ICON, world), (byte) 0, ChatColor.GREEN + kit.getDisplayName(player.getWorld().getName()), KitManager.getKitDescription(player, kit, world));
 				menuObject.setActionListener(useInventoryListener);
 
 				menu.addMenuObject(menuObject);

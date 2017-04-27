@@ -12,7 +12,6 @@ import hu.tryharddevs.advancedkits.utils.menuapi.components.MenuObject;
 import net.milkbowl.vault.economy.EconomyResponse;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
@@ -45,7 +44,7 @@ public class BuyCommand implements ActionListener
 				if (!kit.getFlag(VISIBLE, world)) continue;
 				if (kit.getFlag(FREE, world) || user.isUnlocked(kit)) continue;
 
-				menuObject = new MenuObject(Material.SULPHUR, (byte) 0, ChatColor.RED + kit.getDisplayName(player.getWorld().getName()), KitManager.getKitDescription(player, kit, world));
+				menuObject = new MenuObject(kit.getFlag(ICON, world), (byte) 0, ChatColor.RED + kit.getDisplayName(player.getWorld().getName()), KitManager.getKitDescription(player, kit, world));
 				menuObject.setActionListener(buyInventoryListener);
 
 				menu.addMenuObject(menuObject);
