@@ -7,6 +7,7 @@ import hu.tryharddevs.advancedkits.AdvancedKitsMain;
 import hu.tryharddevs.advancedkits.kits.flags.DefaultFlags;
 import hu.tryharddevs.advancedkits.kits.flags.Flag;
 import hu.tryharddevs.advancedkits.utils.ItemStackUtil;
+import hu.tryharddevs.advancedkits.utils.VaultUtil;
 import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -207,9 +208,9 @@ public class KitManager
 		}
 
 		if (kit.getFlag(COST, world) > 0) {
-			descriptions.add(getMessage("flagCost", kit.getFlag(COST, world)));
+			descriptions.add(getMessage("flagCost", VaultUtil.getEconomy().format(kit.getFlag(COST, world))));
 		}
-		else
+		else if(kit.getFlag(FREE, world))
 		{
 			descriptions.add(getMessage("flagFree"));
 		}
@@ -226,7 +227,7 @@ public class KitManager
 		}
 
 		if (kit.getFlag(PERUSECOST, world) != 0) {
-			descriptions.add(getMessage("flagPerUseCost", kit.getFlag(PERUSECOST, world)));
+			descriptions.add(getMessage("flagPerUseCost", VaultUtil.getEconomy().format(kit.getFlag(PERUSECOST, world))));
 		}
 
 		if (!kit.getFlag(DISABLEDWORLDS, world).isEmpty()) {
