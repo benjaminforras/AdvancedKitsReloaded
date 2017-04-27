@@ -72,8 +72,8 @@ public class KitManager
 						}
 						catch (NullPointerException | JsonSyntaxException e)
 						{
-							instance.log(ChatColor.RED + "Failed to parse items.");
-							instance.log(ChatColor.RED + "Trying to load items using the old methods.");
+							//instance.log(ChatColor.RED + "Failed to parse items.");
+							//instance.log(ChatColor.RED + "Trying to load items using the old methods.");
 							kit.setItems(itemsList.stream().map(object -> ItemStack.deserialize((Map<String, Object>)object)).collect(Collectors.toCollection(ArrayList::new)));
 						}
 					}
@@ -90,8 +90,8 @@ public class KitManager
 					List<?> armorsList = kitConfig.getList("Armor");
 
 					if (!armorsList.isEmpty()) {
-						instance.log(ChatColor.GOLD + "Failed to parse armors.");
-						instance.log(ChatColor.GOLD + "Trying to load items using the old methods.");
+						//instance.log(ChatColor.GOLD + "Failed to parse armors.");
+						//instance.log(ChatColor.GOLD + "Trying to load items using the old methods.");
 						kit.setArmors(armorsList.stream().map(object -> ItemStack.deserialize((Map<String, Object>)object)).collect(Collectors.toCollection(ArrayList::new)));
 					}
 
@@ -108,9 +108,9 @@ public class KitManager
 						}
 						catch (NullPointerException | JsonSyntaxException e)
 						{
-							instance.log(ChatColor.GOLD + "Failed to parse flags.");
-							instance.log(ChatColor.GOLD + "Trying to load flags using the old methods.");
-							instance.log(ChatColor.GOLD + "You may need to reset some flags.");
+							//instance.log(ChatColor.GOLD + "Failed to parse flags.");
+							//instance.log(ChatColor.GOLD + "Trying to load flags using the old methods.");
+							//instance.log(ChatColor.GOLD + "You may need to reset some flags.");
 
 							kitConfig.set("Flags.global", kitConfig.getConfigurationSection("Flags").getValues(false));
 							kit.save();

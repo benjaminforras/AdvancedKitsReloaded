@@ -130,6 +130,7 @@ public final class AdvancedKitsMain extends JavaPlugin
 		cm.loadCommandClass(BuyCommand.class);
 		cm.loadCommandClass(ViewCommand.class);
 		cm.loadCommandClass(CreateCommand.class);
+		cm.loadCommandClass(GiveCommand.class);
 		cm.loadCommandClass(EditCommand.class);
 		cm.loadCommandClass(FlagCommand.class);
 	}
