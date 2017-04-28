@@ -41,10 +41,26 @@ public class MenuObject
 	{
 		metadata = new HashMap<>();
 		item = new ItemStack(icon, 1, data);
+
 		ItemMeta meta = item.getItemMeta();
 		meta.setLore(tooltip);
 		meta.setDisplayName(name);
 		item.setItemMeta(meta);
+
+		this.coordinates = null;
+		this.actionListener = null;
+	}
+
+	public MenuObject(ItemStack item, String name, List<String> tooltip)
+	{
+		metadata = new HashMap<>();
+
+		ItemMeta meta = item.getItemMeta();
+		meta.setLore(tooltip);
+		meta.setDisplayName(name);
+		item.setItemMeta(meta);
+
+		this.item = item;
 		this.coordinates = null;
 		this.actionListener = null;
 	}

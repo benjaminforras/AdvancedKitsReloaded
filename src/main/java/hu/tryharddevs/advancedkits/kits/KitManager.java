@@ -15,10 +15,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ConcurrentMap;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -73,8 +70,8 @@ public class KitManager
 						}
 						catch (NullPointerException | JsonSyntaxException e)
 						{
-							//instance.log(ChatColor.RED + "Failed to parse items.");
-							//instance.log(ChatColor.RED + "Trying to load items using the old methods.");
+							instance.log(ChatColor.RED + "Failed to parse items.");
+							instance.log(ChatColor.RED + "Trying to load items using the old methods.");
 							kit.setItems(itemsList.stream().map(object -> ItemStack.deserialize((Map<String, Object>)object)).collect(Collectors.toCollection(ArrayList::new)));
 						}
 					}
@@ -91,15 +88,15 @@ public class KitManager
 					List<?> armorsList = kitConfig.getList("Armor");
 
 					if (!armorsList.isEmpty()) {
-						//instance.log(ChatColor.GOLD + "Failed to parse armors.");
-						//instance.log(ChatColor.GOLD + "Trying to load items using the old methods.");
+						instance.log(ChatColor.GOLD + "Failed to parse armors.");
+						instance.log(ChatColor.GOLD + "Trying to load items using the old methods.");
 						kit.setArmors(armorsList.stream().map(object -> ItemStack.deserialize((Map<String, Object>)object)).collect(Collectors.toCollection(ArrayList::new)));
 					}
 
 					kitConfig.set("Armor", null);
 					kit.save();
 				}
-
+				Map<String, Object> temp = null;
 				if (kitConfig.contains("Flags")) {
 
 					for (String world : kitConfig.getConfigurationSection("Flags").getKeys(false)) {
@@ -109,14 +106,17 @@ public class KitManager
 						}
 						catch (NullPointerException | JsonSyntaxException e)
 						{
-							//instance.log(ChatColor.GOLD + "Failed to parse flags.");
-							//instance.log(ChatColor.GOLD + "Trying to load flags using the old methods.");
-							//instance.log(ChatColor.GOLD + "You may need to reset some flags.");
+							if(temp == null) {
+								temp = kitConfig.getConfigurationSection("Flags").getValues(false);
+								kit.setFlags("global", unmarshalFlags(temp));
+							}
 
-							kitConfig.set("Flags.global", kitConfig.getConfigurationSection("Flags").getValues(false));
-							kit.save();
-							kit.setFlags("global", unmarshalFlags(kitConfig.getConfigurationSection("Flags").getValues(false)));
+							kitConfig.set("Flags." + world, null);
 						}
+					}
+
+					if(temp != null) {
+						kit.save();
 					}
 				}
 				kitArrayList.add(kit);

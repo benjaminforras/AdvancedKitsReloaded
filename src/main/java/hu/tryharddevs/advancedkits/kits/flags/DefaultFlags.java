@@ -2,6 +2,7 @@ package hu.tryharddevs.advancedkits.kits.flags;
 
 import org.bukkit.Material;
 import org.bukkit.Sound;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.inventivetalent.particle.ParticleEffect;
 
@@ -26,8 +27,8 @@ public class DefaultFlags
 
 	public static final DoubleFlag DELAY = new DoubleFlag("delay", 0.0);
 
-	public static final MaterialFlag ICON = new MaterialFlag("icon", Material.EMERALD_BLOCK);
-	public static final ItemStackFlag FIREWORK = new ItemStackFlag("firework");
+	public static final ItemStackFlag ICON = new ItemStackFlag("icon", Material.EMERALD_BLOCK);
+	public static final ItemStackFlag FIREWORK = new ItemStackFlag("firework", new ItemStack(Material.FIREWORK));
 
 	public static final ListFlag<String>         CUSTOMDESCRIPTION = new ListFlag<>("customdescription", new StringFlag(null));
 	public static final ListFlag<String>         COMMANDS          = new ListFlag<>("commands", new StringFlag(null));

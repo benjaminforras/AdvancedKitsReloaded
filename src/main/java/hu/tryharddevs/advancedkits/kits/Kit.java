@@ -1,11 +1,14 @@
 package hu.tryharddevs.advancedkits.kits;
 
+import co.aikar.commands.InvalidCommandArgument;
+import co.aikar.commands.contexts.ContextResolver;
 import hu.tryharddevs.advancedkits.AdvancedKitsMain;
 import hu.tryharddevs.advancedkits.kits.flags.DefaultFlags;
 import hu.tryharddevs.advancedkits.kits.flags.Flag;
 import hu.tryharddevs.advancedkits.utils.ItemStackUtil;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import javax.annotation.Nullable;
@@ -20,6 +23,7 @@ import java.util.stream.Collectors;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static hu.tryharddevs.advancedkits.kits.flags.DefaultFlags.DISPLAYNAME;
+import static hu.tryharddevs.advancedkits.utils.localization.I18n.getMessage;
 
 public class Kit
 {
@@ -37,6 +41,26 @@ public class Kit
 	{
 		this.name = name;
 		this.kitConfig = YamlConfiguration.loadConfiguration(getSaveFile());
+	}
+
+	public static ContextResolver<Kit> getContextResolver()
+	{
+		return (c) -> {
+			Player player;
+			String world   = "global";
+			String kitName = c.popFirstArg();
+
+			if (c.getSender() instanceof Player) {
+				player = (Player) c.getSender();
+				world = player.getWorld().getName();
+			}
+
+			Kit kit = KitManager.getKit(kitName, world);
+			if (Objects.isNull(kit)) {
+				throw new InvalidCommandArgument(getMessage("kitNotFound"));
+			}
+			return kit;
+		};
 	}
 
 	public final String getName()
@@ -181,6 +205,7 @@ public class Kit
 		else {
 			flags.get(world).put(flag, val);
 		}
+		save();
 	}
 
 	public void setFlags(String world, Map<Flag<?>, Object> flags)

@@ -1,8 +1,12 @@
 package hu.tryharddevs.advancedkits;
 
-import hu.tryharddevs.advancedkits.commands.*;
+import co.aikar.commands.ACF;
+import co.aikar.commands.CommandManager;
+import hu.tryharddevs.advancedkits.commands.MainCommand;
 import hu.tryharddevs.advancedkits.kits.Kit;
 import hu.tryharddevs.advancedkits.kits.KitManager;
+import hu.tryharddevs.advancedkits.kits.flags.DefaultFlags;
+import hu.tryharddevs.advancedkits.kits.flags.Flag;
 import hu.tryharddevs.advancedkits.listeners.PlayerListener;
 import hu.tryharddevs.advancedkits.utils.VaultUtil;
 import hu.tryharddevs.advancedkits.utils.localization.I18n;
@@ -14,6 +18,8 @@ import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
@@ -23,8 +29,6 @@ public final class AdvancedKitsMain extends JavaPlugin
 	public        I18n             i18n;
 
 	public static Boolean usePlaceholderAPI = false;
-
-	private YamlConfiguration configuration;
 
 	public String  chatPrefix = ChatColor.translateAlternateColorCodes('&', "&7[&6AdvancedKits&7]");
 	public Boolean coloredLog = true;
@@ -53,11 +57,11 @@ public final class AdvancedKitsMain extends JavaPlugin
 		loadConfiguration();
 		log("Done loading the configuration.");
 
-		log("Loading Vault.");
+		log("Hooking to Vault.");
 		{
 			VaultUtil.loadVault();
 		}
-		log("Done loading Vault.");
+		log("Successfully hooked Vault.");
 
 		log("Loading MenuAPI by ColonelHedgehog.");
 		{
@@ -126,21 +130,26 @@ public final class AdvancedKitsMain extends JavaPlugin
 		if (i18n != null) {
 			i18n.onDisable();
 		}
-		log(ChatColor.GOLD + "Saving kit files.");
-		KitManager.getKits().forEach(Kit::save);
+		//log(ChatColor.GOLD + "Saving kit files.");
+		//KitManager.getKits().forEach(Kit::save);
 	}
 
 	private void loadCommands()
 	{
-		CommandManager cm = new CommandManager(this, "AdvancedKits", "advancedkits", "kit", "akit", "advancedkits", "kit", "kits", "akits");
-		cm.loadCommandClass(UseCommand.class);
-		cm.loadCommandClass(BuyCommand.class);
-		cm.loadCommandClass(ViewCommand.class);
-		cm.loadCommandClass(CreateCommand.class);
-		cm.loadCommandClass(GiveCommand.class);
-		cm.loadCommandClass(EditCommand.class);
-		cm.loadCommandClass(FlagCommand.class);
-		cm.loadCommandClass(ReloadCommand.class);
+		CommandManager manager = ACF.createManager(this);
+
+		manager.getCommandContexts().registerContext(Flag.class, Flag.getContextResolver());
+		manager.getCommandContexts().registerContext(Kit.class, Kit.getContextResolver());
+
+		manager.getCommandCompletions().registerCompletion("flags", (sender, completionConfig, input) -> (
+				Arrays.stream(DefaultFlags.getFlags()).map(Flag::getName).sorted(String::compareToIgnoreCase).collect(Collectors.toCollection(ArrayList::new))
+		));
+		manager.getCommandCompletions().registerCompletion("kits", (sender, completionConfig, input) -> (
+				KitManager.getKits().stream().map(Kit::getName).sorted(String::compareToIgnoreCase).collect(Collectors.toCollection(ArrayList::new))
+		));
+
+		manager.registerCommand(new MainCommand());
+
 	}
 
 	public void log(String log)

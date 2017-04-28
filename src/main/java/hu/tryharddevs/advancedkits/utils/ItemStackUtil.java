@@ -57,7 +57,7 @@ public class ItemStackUtil
 			bos.writeObject(object);
 			String encoded = Base64Coder.encodeLines(outputStream.toByteArray());
 
-			values.addProperty("item", encoded);
+			values.addProperty("item", encoded.replaceAll("[\n\r]", "").trim());
 		}
 		catch (IOException ex) {
 			AdvancedKitsMain.advancedKits.log(ChatColor.RED + "Error: " + ex.getMessage());
@@ -95,12 +95,12 @@ public class ItemStackUtil
 
 	public static ItemStack itemFromString(String itemStackString)
 	{
-		return (ItemStack) deserializeItem(jsonFromString(itemStackString.replaceAll("[\t\n\r]", "")));
+		return (ItemStack) deserializeItem(jsonFromString(itemStackString));
 	}
 
 	private static JsonObject jsonFromString(String jsonObjectStr)
 	{
-		JsonReader reader = new JsonReader(new StringReader(jsonObjectStr.replaceAll("[\t\n\r]", "")));
+		JsonReader reader = new JsonReader(new StringReader(jsonObjectStr));
 		reader.setLenient(true);
 
 		JsonElement jsonElement = new JsonParser().parse(reader);

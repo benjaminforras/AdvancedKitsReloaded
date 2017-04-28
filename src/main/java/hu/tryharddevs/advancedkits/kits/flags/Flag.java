@@ -1,13 +1,17 @@
 package hu.tryharddevs.advancedkits.kits.flags;
 
+import co.aikar.commands.InvalidCommandArgument;
+import co.aikar.commands.contexts.ContextResolver;
 import com.google.common.collect.Iterators;
 import org.bukkit.entity.Player;
 
 import javax.annotation.Nullable;
 import java.util.Collection;
+import java.util.Objects;
 import java.util.regex.Pattern;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import static hu.tryharddevs.advancedkits.utils.localization.I18n.getMessage;
 
 public abstract class Flag<T>
 {
@@ -26,6 +30,17 @@ public abstract class Flag<T>
 	{
 		checkNotNull(name, "name");
 		return VALID_NAME.matcher(name).matches();
+	}
+
+	public static ContextResolver<Flag> getContextResolver() {
+		return (c) -> {
+			String flagName = c.popFirstArg();
+			Flag flag = DefaultFlags.fuzzyMatchFlag(flagName);
+			if (Objects.isNull(flag)) {
+				throw new InvalidCommandArgument(getMessage("flagNotFound"));
+			}
+			return flag;
+		};
 	}
 
 	public final String getName()
