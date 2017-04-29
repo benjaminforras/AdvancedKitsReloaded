@@ -49,7 +49,7 @@ import static hu.tryharddevs.advancedkits.utils.localization.I18n.getMessage;
 		User              user         = User.getUser(player.getUniqueId());
 
 		if (!kit.getFlag(CUSTOMDESCRIPTION, world).isEmpty()) {
-			kit.getFlag(CUSTOMDESCRIPTION, world).forEach(message -> descriptions.add(ItemStackUtil.wrapString((AdvancedKitsMain.getPlugin().isPlaceholderAPIEnabled() ? PlaceholderAPI.setPlaceholders(player, message) : message.replace("%player_name%", player.getName())), '&', 30, true)));
+			kit.getFlag(CUSTOMDESCRIPTION, world).forEach(message -> descriptions.add(ChatColor.translateAlternateColorCodes('&', (AdvancedKitsMain.getPlugin().isPlaceholderAPIEnabled() ? PlaceholderAPI.setPlaceholders(player, message) : message.replace("%player_name%", player.getName())))));
 			descriptions.add(" ");
 		}
 

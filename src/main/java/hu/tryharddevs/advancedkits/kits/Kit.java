@@ -107,6 +107,7 @@ public class Kit {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		instance.log("Saved " + name);
 	}
 
 	private File getSaveFile() {

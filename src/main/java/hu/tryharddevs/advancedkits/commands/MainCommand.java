@@ -368,28 +368,17 @@ public class MainCommand extends BaseCommand {
 
 	@Subcommand("flag") @CommandPermission("advancedkits.flag") @CommandCompletion("@kits @flags")
 	@Syntax("<kitname> <flag> <value> [world]")
-	public void onFlagCommand(Player player, Kit kit, Flag flag, String value, String world) {
+	public void onFlagCommand(Player player, Kit kit, Flag flag, String value, @Optional String world) {
 
-		/*if (Objects.isNull(kit)) {
-			sendMessage(player, getMessage("kitNotFound"));
-			return;
-		}
-
-		if (Objects.isNull(flag)) {
-			sendMessage(player, getMessage("flagNotFound"));
-			sendMessage(player, getMessage("availableFlags", Arrays.stream(DefaultFlags.getFlags()).map(Flag::getName).sorted(String::compareToIgnoreCase).collect(Collectors.joining(","))));
-			return;
-		}
-*/
-		String   tempValue     = String.join("", value, world);
+		String   tempValue     = String.join(" ", value, Objects.isNull(world) ? "" : world);
 		String[] splittedValue = tempValue.split(" ");
 
 		if (Objects.nonNull(Bukkit.getWorld(splittedValue[splittedValue.length - 1]))) {
 			world = splittedValue[splittedValue.length - 1];
-			value = String.join("", Arrays.copyOf(splittedValue, splittedValue.length - 1));
+			value = String.join(" ", Arrays.copyOf(splittedValue, splittedValue.length - 1));
 		} else {
 			world = "global";
-			value = tempValue;
+			value = String.join(" ", splittedValue);
 		}
 
 		if (value.equalsIgnoreCase("hand")) {
