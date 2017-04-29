@@ -19,8 +19,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.StringReader;
 
-public class ItemStackUtil
-{
+public class ItemStackUtil {
 	/**
 	 * Serialize an Object to a JsonObject.
 	 * <p>
@@ -32,8 +31,7 @@ public class ItemStackUtil
 	 * @param object The item to serialize.
 	 * @return A JsonObject with the serialized item.
 	 */
-	public static JsonObject serializeItem(Object object)
-	{
+	public static JsonObject serializeItem(Object object) {
 		JsonObject values = new JsonObject();
 		if (object == null) return null;
 
@@ -58,10 +56,9 @@ public class ItemStackUtil
 			String encoded = Base64Coder.encodeLines(outputStream.toByteArray());
 
 			values.addProperty("item", encoded.replaceAll("[\n\r]", "").trim());
-		}
-		catch (IOException ex) {
-			AdvancedKitsMain.advancedKits.log(ChatColor.RED + "Error: " + ex.getMessage());
-			AdvancedKitsMain.advancedKits.log(ChatColor.RED + "Unable to serialize item '" + object.toString() + "':");
+		} catch (IOException ex) {
+			AdvancedKitsMain.getPlugin().log(ChatColor.RED + "Error: " + ex.getMessage());
+			AdvancedKitsMain.getPlugin().log(ChatColor.RED + "Unable to serialize item '" + object.toString() + "':");
 			return null;
 		}
 
@@ -74,32 +71,27 @@ public class ItemStackUtil
 	 * @param data The Json to read.
 	 * @return The deserialized item stack.
 	 */
-	public static Object deserializeItem(JsonObject data)
-	{
+	public static Object deserializeItem(JsonObject data) {
 		try (ByteArrayInputStream inputStream = new ByteArrayInputStream(Base64Coder.decodeLines(data.get("item").getAsString())); BukkitObjectInputStream dataInput = new BukkitObjectInputStream(inputStream)) {
 			return dataInput.readObject();
-		}
-		catch (IOException | ClassNotFoundException ex) {
-			AdvancedKitsMain.advancedKits.log(ChatColor.RED + "Error: " + ex.getMessage());
-			AdvancedKitsMain.advancedKits.log(ChatColor.RED + "Unable to deserialize an item");
+		} catch (IOException | ClassNotFoundException ex) {
+			AdvancedKitsMain.getPlugin().log(ChatColor.RED + "Error: " + ex.getMessage());
+			AdvancedKitsMain.getPlugin().log(ChatColor.RED + "Unable to deserialize an item");
 			return new ItemStack(Material.AIR);
 		}
 	}
 
-	public static String itemToString(ItemStack itemStack)
-	{
+	public static String itemToString(ItemStack itemStack) {
 
 		return serializeItem(itemStack).toString();
 	}
 
 
-	public static ItemStack itemFromString(String itemStackString)
-	{
+	public static ItemStack itemFromString(String itemStackString) {
 		return (ItemStack) deserializeItem(jsonFromString(itemStackString));
 	}
 
-	private static JsonObject jsonFromString(String jsonObjectStr)
-	{
+	private static JsonObject jsonFromString(String jsonObjectStr) {
 		JsonReader reader = new JsonReader(new StringReader(jsonObjectStr));
 		reader.setLenient(true);
 
@@ -107,63 +99,51 @@ public class ItemStackUtil
 		return jsonElement.getAsJsonObject();
 	}
 
-	public static boolean isBoots(ItemStack item)
-	{
+	public static boolean isBoots(ItemStack item) {
 		return isBoots(item.getType());
 	}
 
-	public static boolean isBoots(Material material)
-	{
+	public static boolean isBoots(Material material) {
 		return material.name().endsWith("BOOTS");
 	}
 
-	public static boolean isLegs(ItemStack item)
-	{
+	public static boolean isLegs(ItemStack item) {
 		return isLegs(item.getType());
 	}
 
-	public static boolean isLegs(Material material)
-	{
+	public static boolean isLegs(Material material) {
 		return material.name().endsWith("LEGGINGS");
 	}
 
-	public static boolean isChest(ItemStack item)
-	{
+	public static boolean isChest(ItemStack item) {
 		return isChest(item.getType());
 	}
 
-	public static boolean isChest(Material material)
-	{
+	public static boolean isChest(Material material) {
 		return material.name().endsWith("CHESTPLATE");
 	}
 
-	public static boolean isHelmet(ItemStack item)
-	{
+	public static boolean isHelmet(ItemStack item) {
 		return isHelmet(item.getType());
 	}
 
-	public static boolean isHelmet(Material material)
-	{
+	public static boolean isHelmet(Material material) {
 		return material.name().endsWith("HELMET");
 	}
 
-	public static boolean isArmor(ItemStack item)
-	{
+	public static boolean isArmor(ItemStack item) {
 		return isArmor(item.getType());
 	}
 
-	public static boolean isArmor(Material type)
-	{
+	public static boolean isArmor(Material type) {
 		return isBoots(type) || isLegs(type) || isChest(type) || isHelmet(type);
 	}
 
-	public static boolean isShield(ItemStack item)
-	{
+	public static boolean isShield(ItemStack item) {
 		return isShield(item.getType());
 	}
 
-	private static boolean isShield(Material material)
-	{
+	private static boolean isShield(Material material) {
 		return material.name().endsWith("SHIELD");
 	}
 }

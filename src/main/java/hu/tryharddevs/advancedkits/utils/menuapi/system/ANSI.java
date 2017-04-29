@@ -5,8 +5,7 @@ package hu.tryharddevs.advancedkits.utils.menuapi.system;
  * You have freedom to modify given sources. Please credit me as original author.
  * Keep in mind that this is not for sale.
  */
-public class ANSI
-{
+public class ANSI {
 	public static String RESET    = "\u001B[0m";
 	public static String BLACK    = "\u001B[30m";
 	public static String RED      = "\u001B[31m";

@@ -14,11 +14,8 @@ import java.util.List;
  * You have freedom to modify given sources. Please credit me as original author.
  * Keep in mind that this is not for sale.
  */
-public class MenuCloseAction implements Listener
-{
-	@EventHandler
-	public void onClose(InventoryCloseEvent event)
-	{
+public class MenuCloseAction implements Listener {
+	@EventHandler public void onClose(InventoryCloseEvent event) {
 		Menu menu = MenuAPI.i().getMenuRegistry().getByInventory(event.getInventory());
 
 		List<HumanEntity> viewers = event.getViewers();

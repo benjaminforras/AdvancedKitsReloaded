@@ -4,10 +4,10 @@ import co.aikar.commands.BaseCommand;
 import co.aikar.commands.annotation.*;
 import co.aikar.commands.annotation.Optional;
 import hu.tryharddevs.advancedkits.AdvancedKitsMain;
+import hu.tryharddevs.advancedkits.Config;
 import hu.tryharddevs.advancedkits.kits.Kit;
 import hu.tryharddevs.advancedkits.kits.KitManager;
 import hu.tryharddevs.advancedkits.kits.User;
-import hu.tryharddevs.advancedkits.kits.flags.DefaultFlags;
 import hu.tryharddevs.advancedkits.kits.flags.Flag;
 import hu.tryharddevs.advancedkits.kits.flags.InvalidFlagValueException;
 import hu.tryharddevs.advancedkits.utils.ItemStackUtil;
@@ -32,18 +32,18 @@ import org.inventivetalent.particle.ParticleEffect;
 import org.inventivetalent.reflection.minecraft.Minecraft;
 
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 import static hu.tryharddevs.advancedkits.kits.flags.DefaultFlags.*;
 import static hu.tryharddevs.advancedkits.utils.localization.I18n.getMessage;
 
-@SuppressWarnings("ConstantConditions")
-@CommandAlias("kit|akit|advancedkits|kits|akits")
-public class MainCommand extends BaseCommand
-{
-	private AdvancedKitsMain           instance   = AdvancedKitsMain.advancedKits;
-	private HashMap<UUID, ItemStack[]> inEdit     = new HashMap<>();
-	private Kit                        currentKit = null;
+@SuppressWarnings("ConstantConditions") @CommandAlias("kit|akit|advancedkits|kits|akits")
+public class MainCommand extends BaseCommand {
+	private AdvancedKitsMain instance;
+
+	private ConcurrentHashMap<UUID, ItemStack[]> inEdit     = new ConcurrentHashMap<>();
+	private ConcurrentHashMap<UUID, Kit>         currentKit = new ConcurrentHashMap<>();
 
 	private ActionListener useInventoryListener = (clickType, menuObject, whoClicked) -> {
 		ItemStack clickedItem = menuObject.toItemStack();
@@ -51,7 +51,7 @@ public class MainCommand extends BaseCommand
 
 		Kit kit = KitManager.getKit(clickedItem.getItemMeta().getDisplayName(), whoClicked.getWorld().getName());
 		if (Objects.isNull(kit)) {
-			whoClicked.sendMessage(AdvancedKitsMain.advancedKits.chatPrefix + " " + getMessage("kitNotFound"));
+			sendMessage(whoClicked, getMessage("kitNotFound"));
 			return;
 		}
 
@@ -66,9 +66,8 @@ public class MainCommand extends BaseCommand
 		if (clickedItem.getType().equals(Material.STAINED_GLASS)) {
 			if (menuObject.getCoordinates().asSlotNumber() == 2) {
 				Bukkit.dispatchCommand(whoClicked, "kit edit " + "cancel");
-			}
-			else if (menuObject.getCoordinates().asSlotNumber() == 6) {
-				Bukkit.dispatchCommand(whoClicked, "kit edit " + currentKit.getName());
+			} else if (menuObject.getCoordinates().asSlotNumber() == 6) {
+				Bukkit.dispatchCommand(whoClicked, "kit edit " + currentKit.get(whoClicked.getUniqueId()));
 			}
 			menuObject.getMenu().close(whoClicked);
 			return;
@@ -76,7 +75,7 @@ public class MainCommand extends BaseCommand
 
 		Kit kit = KitManager.getKit(clickedItem.getItemMeta().getDisplayName(), whoClicked.getWorld().getName());
 		if (Objects.isNull(kit)) {
-			whoClicked.sendMessage(AdvancedKitsMain.advancedKits.chatPrefix + " " + getMessage("kitNotFound"));
+			sendMessage(whoClicked, getMessage("kitNotFound"));
 			return;
 		}
 
@@ -90,10 +89,9 @@ public class MainCommand extends BaseCommand
 
 		if (clickedItem.getType() == Material.STAINED_GLASS_PANE) {
 			if (clickedItem.getDurability() == (short) 13) {
-				Bukkit.dispatchCommand(whoClicked, "kit use " + currentKit.getName());
-			}
-			else if (clickedItem.getDurability() == (short) 14) {
-				Bukkit.dispatchCommand(whoClicked, "kit buy " + currentKit.getName());
+				Bukkit.dispatchCommand(whoClicked, "kit use " + currentKit.get(whoClicked.getUniqueId()));
+			} else if (clickedItem.getDurability() == (short) 14) {
+				Bukkit.dispatchCommand(whoClicked, "kit buy " + currentKit.get(whoClicked.getUniqueId()));
 			}
 		}
 		menuObject.getMenu().close(whoClicked);
@@ -105,7 +103,7 @@ public class MainCommand extends BaseCommand
 
 		Kit kit = KitManager.getKit(clickedItem.getItemMeta().getDisplayName(), whoClicked.getWorld().getName());
 		if (Objects.isNull(kit)) {
-			whoClicked.sendMessage(AdvancedKitsMain.advancedKits.chatPrefix + " " + getMessage("kitNotFound"));
+			sendMessage(whoClicked, getMessage("kitNotFound"));
 			return;
 		}
 
@@ -113,15 +111,14 @@ public class MainCommand extends BaseCommand
 		menuObject.getMenu().close(whoClicked);
 	};
 
-	@Subcommand("buy")
-	@CommandPermission("advancedkits.buy")
-	@CommandCompletion("@kits")
-	@Syntax("[kitname]")
-	public void onBuyCommand(CommandSender sender, @Optional Kit kit)
-	{
-		Player player = (Player) sender;
-		User   user   = User.getUser(player.getUniqueId());
-		String world  = player.getWorld().getName();
+	public MainCommand(AdvancedKitsMain instance) {
+		this.instance = instance;
+	}
+
+	@Subcommand("buy") @CommandPermission("advancedkits.buy") @CommandCompletion("@kits") @Syntax("[kitname]")
+	public void onBuyCommand(Player player, @Optional Kit kit) {
+		User   user  = User.getUser(player.getUniqueId());
+		String world = player.getWorld().getName();
 
 		if (Objects.isNull(kit)) {
 			Inventory inventory = Bukkit.createInventory(player, ((int) (Math.ceil((double) KitManager.getKits().size() / 9)) * 9), "AdvancedKitsReborn - Buy kit");
@@ -142,45 +139,35 @@ public class MainCommand extends BaseCommand
 			return;
 		}
 
-		/*if (Objects.isNull(kit)) {
-			sender.sendMessage(AdvancedKitsMain.advancedKits.chatPrefix + " " + getMessage("kitNotFound"));
-			return;
-		}*/
-
 		if (!player.hasPermission(kit.getPermission())) {
-			player.sendMessage(AdvancedKitsMain.advancedKits.chatPrefix + " " + getMessage("noKitPermission"));
+			sendMessage(player, getMessage("noKitPermission"));
 			return;
 		}
 
 
+		if (user.isUnlocked(kit)) {
+			sendMessage(player, getMessage("alreadyUnlocked", kit.getName()));
+			return;
+		}
+
 		EconomyResponse r = VaultUtil.getEconomy().withdrawPlayer(player, kit.getFlag(COST, world));
 		if (r.transactionSuccess()) {
-			player.sendMessage(AdvancedKitsMain.advancedKits.chatPrefix + " " + getMessage("successfullyBought", kit.getDisplayName(world)));
+			sendMessage(player, getMessage("successfullyBought", kit.getDisplayName(world)));
 
 			user.addToUnlocked(kit);
 			user.save();
 
 			if (kit.getFlag(USEONBUY, world)) Bukkit.dispatchCommand(player, "kit use " + kit.getName());
-		}
-		else {
-			player.sendMessage(AdvancedKitsMain.advancedKits.chatPrefix + " " + getMessage("notEnoughMoney", r.amount));
+		} else {
+			sendMessage(player, getMessage("notEnoughMoney", r.amount));
 		}
 	}
 
 
-	@Subcommand("use")
-	@CommandPermission("advancedkits.use")
-	@CommandCompletion("@kits")
-	@Syntax("[kitname]")
-	public void onGiveCommand(CommandSender sender, @Optional Kit kit)
-	{
-		if (!(sender instanceof Player)) {
-			sender.sendMessage("not player.");
-			return;
-		}
-		Player player = (Player) sender;
-		User   user   = User.getUser(player.getUniqueId());
-		String world  = player.getWorld().getName();
+	@Subcommand("use") @CommandPermission("advancedkits.use") @CommandCompletion("@kits") @Syntax("[kitname]")
+	public void onUseCommand(Player player, @Optional Kit kit) {
+		User   user  = User.getUser(player.getUniqueId());
+		String world = player.getWorld().getName();
 
 		if (Objects.isNull(kit)) {
 			Inventory inventory = Bukkit.createInventory(player, ((int) (Math.ceil((double) KitManager.getKits().size() / 9)) * 9), "AdvancedKitsReborn - Use kit");
@@ -202,25 +189,25 @@ public class MainCommand extends BaseCommand
 		}
 
 		if (!player.hasPermission(kit.getPermission())) {
-			player.sendMessage(AdvancedKitsMain.advancedKits.chatPrefix + " " + getMessage("noKitPermission"));
+			sendMessage(player, getMessage("noKitPermission"));
 			return;
 		}
 
 		if (kit.getFlag(DISABLEDWORLDS, world).contains(player.getWorld().getName())) {
-			player.sendMessage(AdvancedKitsMain.advancedKits.chatPrefix + " " + getMessage("cantUseWorld"));
+			sendMessage(player, getMessage("cantUseWorld"));
 			return;
 		}
 
 		if (kit.getFlag(MAXUSES, world) != 0) {
 			if (user.getTimesUsed(kit, world) >= kit.getFlag(MAXUSES, world)) {
-				player.sendMessage(AdvancedKitsMain.advancedKits.chatPrefix + " " + getMessage("cantUseNoMore"));
+				sendMessage(player, getMessage("cantUseNoMore"));
 				return;
 			}
 		}
 
 		if (kit.getFlag(DELAY, world) > 0 && !player.hasPermission(kit.getDelayPermission())) {
 			if (!user.checkDelay(kit, world)) {
-				player.sendMessage(AdvancedKitsMain.advancedKits.chatPrefix + " " + getMessage("cantUseDelay", user.getDelay(kit, world)));
+				sendMessage(player, getMessage("cantUseDelay", user.getDelay(kit, world)));
 				return;
 			}
 		}
@@ -228,10 +215,9 @@ public class MainCommand extends BaseCommand
 		if (kit.getFlag(PERUSECOST, world) != 0) {
 			EconomyResponse r = VaultUtil.getEconomy().withdrawPlayer(player, kit.getFlag(PERUSECOST, world));
 			if (r.transactionSuccess()) {
-				player.sendMessage(AdvancedKitsMain.advancedKits.chatPrefix + " " + getMessage("moneyLowered", VaultUtil.getEconomy().format(r.balance), VaultUtil.getEconomy().format(r.amount), "PerUseCost"));
-			}
-			else {
-				player.sendMessage(AdvancedKitsMain.advancedKits.chatPrefix + " " + getMessage("notEnoughMoney", VaultUtil.getEconomy().format(r.amount)));
+				sendMessage(player, getMessage("moneyLowered", VaultUtil.getEconomy().format(r.balance), VaultUtil.getEconomy().format(r.amount), "PerUseCost"));
+			} else {
+				sendMessage(player, getMessage("notEnoughMoney", VaultUtil.getEconomy().format(r.amount)));
 				return;
 			}
 		}
@@ -245,10 +231,9 @@ public class MainCommand extends BaseCommand
 			spaceneed += player.getInventory().getArmorContents().length;
 		}
 		if (!kit.getFlag(SPEWITEMS, world) && spaceneed > freeSpace) {
-			player.sendMessage(AdvancedKitsMain.advancedKits.chatPrefix + " " + getMessage("notEnoughSpace"));
+			sendMessage(player, getMessage("notEnoughSpace"));
 			return;
 		}
-		//ItemStack[] storage = playerInventory.getStorageContents();
 		ItemStack[] equipment = playerInventory.getArmorContents();
 
 		if (kit.getFlag(CLEARINVENTORY, world)) {
@@ -259,8 +244,7 @@ public class MainCommand extends BaseCommand
 		kit.getItems().forEach(itemStack -> {
 			if (hasInventorySpace(player, itemStack)) {
 				player.getInventory().addItem(itemStack);
-			}
-			else if (kit.getFlag(SPEWITEMS, world)) {
+			} else if (kit.getFlag(SPEWITEMS, world)) {
 				player.getWorld().dropItemNaturally(player.getLocation(), itemStack);
 			}
 		});
@@ -272,8 +256,7 @@ public class MainCommand extends BaseCommand
 
 				if (hasInventorySpace(player, armor)) {
 					playerInventory.addItem(armor); // add it to his inventory
-				}
-				else if (kit.getFlag(SPEWITEMS, world)) {
+				} else if (kit.getFlag(SPEWITEMS, world)) {
 					player.getWorld().dropItemNaturally(player.getLocation(), armor); // Or drop it
 				}
 			}
@@ -282,14 +265,11 @@ public class MainCommand extends BaseCommand
 			kit.getArmors().forEach(itemStack -> {
 				if (ItemStackUtil.isHelmet(itemStack)) {
 					playerInventory.setHelmet(itemStack);
-				}
-				else if (ItemStackUtil.isChest(itemStack)) {
+				} else if (ItemStackUtil.isChest(itemStack)) {
 					playerInventory.setChestplate(itemStack);
-				}
-				else if (ItemStackUtil.isLegs(itemStack)) {
+				} else if (ItemStackUtil.isLegs(itemStack)) {
 					playerInventory.setLeggings(itemStack);
-				}
-				else if (ItemStackUtil.isBoots(itemStack)) {
+				} else if (ItemStackUtil.isBoots(itemStack)) {
 					playerInventory.setBoots(itemStack);
 				}
 
@@ -297,13 +277,11 @@ public class MainCommand extends BaseCommand
 					playerInventory.setItemInOffHand(itemStack);
 				}
 			});
-		}
-		else {
+		} else {
 			for (ItemStack armor : kit.getArmors()) { //Add items to the player's inventory.
 				if (hasInventorySpace(player, armor)) {
 					playerInventory.addItem(armor);
-				}
-				else if (kit.getFlag(SPEWITEMS, world)) {
+				} else if (kit.getFlag(SPEWITEMS, world)) {
 					player.getWorld().dropItemNaturally(player.getLocation(), armor);
 				}
 			}
@@ -311,23 +289,20 @@ public class MainCommand extends BaseCommand
 
 		String temp;
 		for (String command : kit.getFlag(COMMANDS, world)) {
-			temp = (AdvancedKitsMain.usePlaceholderAPI ? PlaceholderAPI.setPlaceholders(player, command) : command.replace("%player_name%", player.getName()));
+			temp = (instance.isPlaceholderAPIEnabled() ? PlaceholderAPI.setPlaceholders(player, command) : command.replace("%player_name%", player.getName()));
 			Bukkit.dispatchCommand(Bukkit.getConsoleSender(), temp);
 		}
 
 		for (String message : kit.getFlag(MESSAGES, world)) {
-			temp = (AdvancedKitsMain.usePlaceholderAPI ? PlaceholderAPI.setPlaceholders(player, message) : message.replace("%player_name%", player.getName()));
+			temp = (instance.isPlaceholderAPIEnabled() ? PlaceholderAPI.setPlaceholders(player, message) : message.replace("%player_name%", player.getName()));
 
 			if (temp.contains("subtitle:")) {
 				MessagesApi.sendTitle(player, "", temp.replace("subtitle:", ""));
-			}
-			else if (temp.contains("title:")) {
+			} else if (temp.contains("title:")) {
 				MessagesApi.sendTitle(player, temp.replace("title:", ""), "");
-			}
-			else if (temp.contains("actionbar:")) {
+			} else if (temp.contains("actionbar:")) {
 				MessagesApi.sendActionBar(player, ChatColor.translateAlternateColorCodes('&', temp.replace("actionbar:", "")));
-			}
-			else {
+			} else {
 				player.sendMessage(ChatColor.translateAlternateColorCodes('&', temp));
 			}
 		}
@@ -357,23 +332,25 @@ public class MainCommand extends BaseCommand
 
 		if (kit.getFlag(MAXUSES, world) > 0) user.addUse(kit, world);
 
-		sender.sendMessage(AdvancedKitsMain.advancedKits.chatPrefix + " " + getMessage("successfullyUsed", kit.getName()));
+		sendMessage(player, getMessage("successfullyUsed", kit.getName()));
 	}
 
-	@Subcommand("create")
-	@CommandPermission("advancedkits.create")
-	@Syntax("<kitname>")
-	public void onGiveCommand(CommandSender sender, String kitName)
-	{
-		Player player = (Player) sender;
+	@Subcommand("create") @CommandPermission("advancedkits.create") @Syntax("<kitname>")
+	public void onCreateCommand(Player player, String kitName) {
+		/*Player player = sender instanceof Player ? (Player) sender : null;
+		if (player == null) {
+			sendMessage(sender, getMessage("onlyPlayer"));
+			return;
+		}*/
+
 		if (Objects.nonNull(KitManager.getKit(kitName, player.getWorld().getName()))) {
-			sender.sendMessage(AdvancedKitsMain.advancedKits.chatPrefix + " " + getMessage("kitAlreadyExists"));
+			sendMessage(player, getMessage("kitAlreadyExists"));
 			return;
 		}
 		Kit kit = new Kit(kitName);
 
 		if (player.getInventory().getContents().length == 0) {
-			player.sendMessage(AdvancedKitsMain.advancedKits.chatPrefix + " " + getMessage("emptyInventory"));
+			sendMessage(player, getMessage("emptyInventory"));
 			return;
 		}
 
@@ -386,291 +363,122 @@ public class MainCommand extends BaseCommand
 		kit.save();
 		KitManager.getKits().add(kit);
 
-		player.sendMessage(AdvancedKitsMain.advancedKits.chatPrefix + " " + getMessage("successfullyCreated", kit.getName()));
+		sendMessage(player, getMessage("successfullyCreated", kit.getName()));
 	}
 
-	@Subcommand("flag")
-	@CommandPermission("advancedkits.flag")
-	@CommandCompletion("@kits @flags")
-	@Syntax("<kitname> <flag> <value>")
-	public void onFlagCommand(CommandSender sender, Kit kit, Flag flag, String value)
-	{
-		if (!(sender instanceof Player)) {
-			sender.sendMessage("not player.");
-			return;
-		}
-		Player player = (Player) sender;
-		String  world  = player.getWorld().getName();
-		if (Objects.isNull(kit)) {
-			player.sendMessage(AdvancedKitsMain.advancedKits.chatPrefix + " " + getMessage("kitNotFound"));
+	@Subcommand("flag") @CommandPermission("advancedkits.flag") @CommandCompletion("@kits @flags")
+	@Syntax("<kitname> <flag> <value> [world]")
+	public void onFlagCommand(Player player, Kit kit, Flag flag, String value, String world) {
+
+		/*if (Objects.isNull(kit)) {
+			sendMessage(player, getMessage("kitNotFound"));
 			return;
 		}
 
 		if (Objects.isNull(flag)) {
-			player.sendMessage(AdvancedKitsMain.advancedKits.chatPrefix + " " + getMessage("flagNotFound"));
-			player.sendMessage(AdvancedKitsMain.advancedKits.chatPrefix + " " + getMessage("availableFlags", Arrays.stream(DefaultFlags.getFlags()).map(Flag::getName).sorted(String::compareToIgnoreCase).collect(Collectors.joining(","))));
+			sendMessage(player, getMessage("flagNotFound"));
+			sendMessage(player, getMessage("availableFlags", Arrays.stream(DefaultFlags.getFlags()).map(Flag::getName).sorted(String::compareToIgnoreCase).collect(Collectors.joining(","))));
 			return;
+		}
+*/
+		String   tempValue     = String.join("", value, world);
+		String[] splittedValue = tempValue.split(" ");
+
+		if (Objects.nonNull(Bukkit.getWorld(splittedValue[splittedValue.length - 1]))) {
+			world = splittedValue[splittedValue.length - 1];
+			value = String.join("", Arrays.copyOf(splittedValue, splittedValue.length - 1));
+		} else {
+			world = "global";
+			value = tempValue;
 		}
 
 		if (value.equalsIgnoreCase("hand")) {
 			if (flag.getName().equalsIgnoreCase("firework")) {
 				if (Objects.isNull(player.getInventory().getItemInMainHand()) || !player.getInventory().getItemInMainHand().getType().equals(Material.FIREWORK)) {
-					player.sendMessage(AdvancedKitsMain.advancedKits.chatPrefix + " " + getMessage("notFirework"));
+					sendMessage(player, getMessage("notFirework"));
 					return;
 				}
 
 				try {
 					kit.setFlag(flag, world, flag.parseItem(player));
-				}
-				catch (InvalidFlagValueException e) {
+				} catch (InvalidFlagValueException e) {
 					player.sendMessage(e.getMessages());
 					return;
 				}
 
-				player.sendMessage(AdvancedKitsMain.advancedKits.chatPrefix + " " + getMessage("flagSet", flag.getName(), value, kit.getDisplayName(world), world));
+				sendMessage(player, getMessage("flagSet", flag.getName(), value, kit.getDisplayName(world), world));
 				return;
-			}
-			else if (flag.getName().equalsIgnoreCase("icon")) {
+			} else if (flag.getName().equalsIgnoreCase("icon")) {
 				if (Objects.isNull(player.getInventory().getItemInMainHand()) || player.getInventory().getItemInMainHand().getType().equals(Material.AIR)) {
-					player.sendMessage(AdvancedKitsMain.advancedKits.chatPrefix + " " + getMessage("notValidIcon"));
+					sendMessage(player, getMessage("notValidIcon"));
 					return;
 				}
 				try {
 					kit.setFlag(flag, world, flag.parseItem(player));
-				}
-				catch (InvalidFlagValueException e) {
+				} catch (InvalidFlagValueException e) {
 					player.sendMessage(e.getMessages());
 					return;
 				}
 
-				player.sendMessage(AdvancedKitsMain.advancedKits.chatPrefix + " " + getMessage("flagSet", flag.getName(), value, kit.getDisplayName(world), world));
+				sendMessage(player, getMessage("flagSet", flag.getName(), value, kit.getDisplayName(world), world));
 				return;
 			}
 		}
 
 		if (flag.getName().equalsIgnoreCase("firework") || flag.getName().equalsIgnoreCase("icon")) {
-			player.sendMessage(AdvancedKitsMain.advancedKits.chatPrefix + " " + ChatColor.GRAY + "Usage: /kit flag <kitname> <flag> hand");
+			sendMessage(player, ChatColor.GRAY + "Usage: /kit flag <kitname> <flag> hand");
 			return;
 		}
 
 		try {
 			kit.setFlag(flag, world, flag.parseInput(value));
-		}
-		catch (InvalidFlagValueException e) {
+		} catch (InvalidFlagValueException e) {
 			player.sendMessage(e.getMessages());
 			return;
 		}
 
-		player.sendMessage(AdvancedKitsMain.advancedKits.chatPrefix + " " + getMessage("flagSet", flag.getName(), value, kit.getDisplayName(world), world));
+		sendMessage(player, getMessage("flagSet", flag.getName(), value, kit.getDisplayName(world), world));
 	}
 
-	@Subcommand("give")
-	@CommandPermission("advancedkits.give")
-	@CommandCompletion("@kits @players true|false")
+	@Subcommand("give") @CommandPermission("advancedkits.give") @CommandCompletion("@kits @players true|false")
 	@Syntax("<kitname> <player> [forceuse]")
-	public void onGiveCommand(CommandSender sender, Kit kit, Player player, @Optional @Default("false") Boolean forceuse)
-	{
+	public void onGiveCommand(CommandSender sender, Kit kit, Player player, @Optional @Default("false") Boolean forceuse) {
+
 		if (Objects.isNull(player)) {
-			sender.sendMessage(AdvancedKitsMain.advancedKits.chatPrefix + " " + getMessage("playerNotFound"));
+			sendMessage(sender, getMessage("playerNotFound"));
 			return;
 		}
-
 		if (player.isDead()) {
-			sender.sendMessage(AdvancedKitsMain.advancedKits.chatPrefix + " " + getMessage("playerIsDead"));
-			return;
-		}
-
-		String world = player.getWorld().getName();
-
-		//Kit kit = KitManager.getKit(String.valueOf(args[0]), world);
-		if (Objects.isNull(kit)) {
-			sender.sendMessage(AdvancedKitsMain.advancedKits.chatPrefix + " " + getMessage("kitNotFound"));
+			sendMessage(sender, getMessage("playerIsDead"));
 			return;
 		}
 
 		User user = User.getUser(player.getUniqueId());
-
-		if (kit.getFlag(DISABLEDWORLDS, world).contains(player.getWorld().getName())) {
-			sender.sendMessage(AdvancedKitsMain.advancedKits.chatPrefix + " " + getMessage("cantUseWorld"));
+		if (!user.isUnlocked(kit)) {
+			user.addToUnlocked(kit);
+			sendMessage(sender, getMessage("successfullyGiven", kit.getName(), player.getName()));
+		} else {
+			sendMessage(sender, getMessage("giveAlreadyUnlocked", kit.getName()));
 			return;
 		}
 
-		if (forceuse && kit.getFlag(MAXUSES, world) != 0) {
-			if (user.getTimesUsed(kit, world) >= kit.getFlag(MAXUSES, world)) {
-				sender.sendMessage(AdvancedKitsMain.advancedKits.chatPrefix + " " + getMessage("cantUseNoMore"));
-				player.sendMessage(AdvancedKitsMain.advancedKits.chatPrefix + " " + getMessage("cantUseNoMore"));
-				return;
-			}
-		}
-
-		if (forceuse && kit.getFlag(DELAY, world) > 0 && !sender.hasPermission(kit.getDelayPermission())) {
-			if (!user.checkDelay(kit, world)) {
-				sender.sendMessage(AdvancedKitsMain.advancedKits.chatPrefix + " " + getMessage("cantUseDelay", user.getDelay(kit, world)));
-				player.sendMessage(AdvancedKitsMain.advancedKits.chatPrefix + " " + getMessage("cantUseDelay", user.getDelay(kit, world)));
-				return;
-			}
-		}
-
-		if (kit.getFlag(PERUSECOST, world) != 0) {
-			EconomyResponse r = VaultUtil.getEconomy().withdrawPlayer(player, kit.getFlag(PERUSECOST, world));
-			if (r.transactionSuccess()) {
-				sender.sendMessage(AdvancedKitsMain.advancedKits.chatPrefix + " " + getMessage("moneyLowered", VaultUtil.getEconomy().format(r.balance), VaultUtil.getEconomy().format(r.amount), "PerUseCost"));
-				player.sendMessage(AdvancedKitsMain.advancedKits.chatPrefix + " " + getMessage("moneyLowered", VaultUtil.getEconomy().format(r.balance), VaultUtil.getEconomy().format(r.amount), "PerUseCost"));
-			}
-			else {
-				sender.sendMessage(AdvancedKitsMain.advancedKits.chatPrefix + " " + getMessage("notEnoughMoney", VaultUtil.getEconomy().format(r.amount)));
-				player.sendMessage(AdvancedKitsMain.advancedKits.chatPrefix + " " + getMessage("notEnoughMoney", VaultUtil.getEconomy().format(r.amount)));
-				return;
-			}
-		}
-
-		PlayerInventory playerInventory = player.getInventory();
-
-		int freeSpace = getEmptySpaces(player);
-		int spaceneed = kit.getItems().size();
-
-		if (kit.getFlag(AUTOEQUIPARMOR, world)) {
-			spaceneed += player.getInventory().getArmorContents().length;
-		}
-		if (!kit.getFlag(SPEWITEMS, world) && spaceneed > freeSpace) {
-			sender.sendMessage(AdvancedKitsMain.advancedKits.chatPrefix + " " + getMessage("notEnoughSpace"));
-			player.sendMessage(AdvancedKitsMain.advancedKits.chatPrefix + " " + getMessage("notEnoughSpace"));
-			return;
-		}
-		//ItemStack[] storage = playerInventory.getStorageContents();
-		ItemStack[] equipment = playerInventory.getArmorContents();
-
-		if (kit.getFlag(CLEARINVENTORY, world)) {
-			player.getInventory().clear();
-			player.getEquipment().clear();
-		}
-
-		kit.getItems().forEach(itemStack -> {
-			if (hasInventorySpace(player, itemStack)) {
-				player.getInventory().addItem(itemStack);
-			}
-			else if (kit.getFlag(SPEWITEMS, world)) {
-				player.getWorld().dropItemNaturally(player.getLocation(), itemStack);
-			}
-		});
-
-		// AutoEquip
-		if (kit.getFlag(AUTOEQUIPARMOR, world)) {
-			for (ItemStack armor : equipment) { //If player had prev armor on
-				if (Objects.isNull(armor)) continue;
-
-				if (hasInventorySpace(player, armor)) {
-					playerInventory.addItem(armor); // add it to his inventory
-				}
-				else if (kit.getFlag(SPEWITEMS, world)) {
-					player.getWorld().dropItemNaturally(player.getLocation(), armor); // Or drop it
-				}
-			}
-
-			//Equip armor
-			kit.getArmors().forEach(itemStack -> {
-				if (ItemStackUtil.isHelmet(itemStack)) {
-					playerInventory.setHelmet(itemStack);
-				}
-				else if (ItemStackUtil.isChest(itemStack)) {
-					playerInventory.setChestplate(itemStack);
-				}
-				else if (ItemStackUtil.isLegs(itemStack)) {
-					playerInventory.setLeggings(itemStack);
-				}
-				else if (ItemStackUtil.isBoots(itemStack)) {
-					playerInventory.setBoots(itemStack);
-				}
-
-				if (Minecraft.VERSION.newerThan(Minecraft.Version.v1_9_R1) && ItemStackUtil.isShield(itemStack)) {
-					playerInventory.setItemInOffHand(itemStack);
-				}
-			});
-		}
-		else {
-			for (ItemStack armor : kit.getArmors()) { //Add items to the player's inventory.
-				if (hasInventorySpace(player, armor)) {
-					playerInventory.addItem(armor);
-				}
-				else if (kit.getFlag(SPEWITEMS, world)) {
-					player.getWorld().dropItemNaturally(player.getLocation(), armor);
-				}
-			}
-		}
-
-		String temp;
-		for (String command : kit.getFlag(COMMANDS, world)) {
-			temp = (AdvancedKitsMain.usePlaceholderAPI ? PlaceholderAPI.setPlaceholders(player, command) : command.replace("%player_name%", player.getName()));
-			Bukkit.dispatchCommand(Bukkit.getConsoleSender(), temp);
-		}
-
-		for (String message : kit.getFlag(MESSAGES, world)) {
-			temp = (AdvancedKitsMain.usePlaceholderAPI ? PlaceholderAPI.setPlaceholders(player, message) : message.replace("%player_name%", player.getName()));
-
-			if (temp.contains("subtitle:")) {
-				MessagesApi.sendTitle(player, "", temp.replace("subtitle:", ""));
-			}
-			else if (temp.contains("title:")) {
-				MessagesApi.sendTitle(player, temp.replace("title:", ""), "");
-			}
-			else if (temp.contains("actionbar:")) {
-				MessagesApi.sendActionBar(player, ChatColor.translateAlternateColorCodes('&', temp.replace("actionbar:", "")));
-			}
-			else {
-				player.sendMessage(ChatColor.translateAlternateColorCodes('&', temp));
-			}
-		}
-
-		for (PotionEffect potionEffect : kit.getFlag(POTIONEFFECTS, world)) {
-			player.addPotionEffect(potionEffect);
-		}
-
-		for (ParticleEffect particleEffect : kit.getFlag(PARTICLEEFFECTS, world)) {
-			particleEffect.send(Collections.singletonList(player), player.getLocation().clone(), 0, 0, 0, 0, 1);
-		}
-
-		for (Sound sound : kit.getFlag(SOUNDEFFECTS, world)) {
-			player.playSound(player.getLocation().clone(), sound, 1.0F, 1.0F);
-		}
-
-		if (kit.getFlag(FIREWORK, world) != null) {
-			ItemStack    firework       = kit.getFlag(FIREWORK, world);
-			Firework     fireworkEntity = player.getWorld().spawn(player.getLocation().clone(), Firework.class);
-			FireworkMeta data           = (FireworkMeta) firework.getItemMeta();
-			if (data != null) fireworkEntity.setFireworkMeta(data);
-		}
-
-		if (forceuse && kit.getFlag(DELAY, world) > 0 && !sender.hasPermission(kit.getDelayPermission())) {
-			user.setDelay(kit, world, kit.getFlag(DELAY, world));
-		}
-
-		if (forceuse && kit.getFlag(MAXUSES, world) > 0) user.addUse(kit, world);
-
-		sender.sendMessage(AdvancedKitsMain.advancedKits.chatPrefix + " " + getMessage("successfullyUsed", kit.getName()));
-		player.sendMessage(AdvancedKitsMain.advancedKits.chatPrefix + " " + getMessage("successfullyUsed", kit.getName()));
+		if (forceuse) Bukkit.dispatchCommand(player, "kit use " + kit.getName());
 	}
 
-	@Subcommand("reload")
-	@CommandPermission("advancedkits.reload")
-	public void onReloadCommand(CommandSender sender)
-	{
-		sender.sendMessage(AdvancedKitsMain.advancedKits.chatPrefix + " " + "Starting to reload configuration.");
-		instance.loadConfiguration();
-		sender.sendMessage(AdvancedKitsMain.advancedKits.chatPrefix + " " + "Done reloading the configuration.");
+	@Subcommand("reload") @CommandPermission("advancedkits.reload") public void onReloadCommand(CommandSender sender) {
+		sendMessage(sender, "Starting to reload configuration.");
+		Config.loadConfigurationValues(instance);
+		sendMessage(sender, "Done reloading the configuration.");
 
-		sender.sendMessage(AdvancedKitsMain.advancedKits.chatPrefix + " " + "Loading KitManager.");
-		KitManager.loadKits();
-		sender.sendMessage(AdvancedKitsMain.advancedKits.chatPrefix + " " + "Done loading KitManager.");
+		sendMessage(sender, "Loading KitManager.");
+		instance.getKitManager().loadKits();
+		sendMessage(sender, "Done loading KitManager.");
 	}
 
-	@Subcommand("edit")
-	@CommandPermission("advancedkits.edit")
-	@CommandCompletion("@kits @worlds")
+	@Subcommand("edit") @CommandPermission("advancedkits.edit") @CommandCompletion("@kits @worlds")
 	@Syntax("[kitname] [world] [action]")
-	public void onEditCommand(CommandSender sender, @Optional Kit kit, @Optional World world, @Optional String action)
-	{
+	public void onEditCommand(Player player, @Optional Kit kit, @Optional @Default("global") World world, @Optional String action) {
 		if (Objects.isNull(kit)) {
-			Player    player    = (Player) sender;
 			Inventory inventory = Bukkit.createInventory(player, !inEdit.containsKey(player.getUniqueId()) ? ((int) (Math.ceil((double) KitManager.getKits().size() / 9)) * 9) : 9, "AdvancedKitsReborn - Edit kit");
 			Menu      menu      = new Menu(inventory);
 
@@ -682,8 +490,7 @@ public class MainCommand extends BaseCommand
 
 					menu.addMenuObject(menuObject);
 				}
-			}
-			else {
+			} else {
 				menuObject = new MenuObject(Material.STAINED_GLASS, (byte) 14, ChatColor.RED + getMessage("cancelEdit"), Collections.emptyList());
 				menuObject.setActionListener(editCommandListener);
 				menu.setMenuObjectAt(new Coordinates(menu, 2), menuObject);
@@ -697,7 +504,6 @@ public class MainCommand extends BaseCommand
 			return;
 		}
 
-		Player player = (Player) sender;
 		if (Objects.nonNull(action) && action.equalsIgnoreCase("cancel")) {
 			player.getEquipment().clear();
 			player.getInventory().clear();
@@ -705,25 +511,21 @@ public class MainCommand extends BaseCommand
 			player.getInventory().setContents(inEdit.get(player.getUniqueId()));
 			inEdit.remove(player.getUniqueId());
 
-			player.sendMessage(AdvancedKitsMain.advancedKits.chatPrefix + " " + getMessage("inventoryRestored"));
-			player.sendMessage(AdvancedKitsMain.advancedKits.chatPrefix + " " + getMessage("exitedEditMode"));
+			sendMessage(player, getMessage("inventoryRestored"));
+			sendMessage(player, getMessage("exitedEditMode"));
 			return;
 		}
 
-		currentKit = kit;
-		/*if (Objects.isNull(currentKit)) {
-			player.sendMessage(AdvancedKitsMain.advancedKits.chatPrefix + " " + getMessage("kitNotFound"));
-			return;
-		}*/
+		currentKit.put(player.getUniqueId(), kit);
 
 		PlayerInventory playerInventory = player.getInventory();
 		if (inEdit.containsKey(player.getUniqueId())) {
-			currentKit.setItems(Arrays.stream(playerInventory.getStorageContents()).filter(Objects::nonNull).collect(Collectors.toCollection(ArrayList::new)));
+			currentKit.get(player.getUniqueId()).setItems(Arrays.stream(playerInventory.getStorageContents()).filter(Objects::nonNull).collect(Collectors.toCollection(ArrayList::new)));
 			if (player.getInventory().getArmorContents().length != 0) {
-				currentKit.setArmors(Arrays.stream(playerInventory.getArmorContents()).filter(Objects::nonNull).collect(Collectors.toCollection(ArrayList::new)));
+				currentKit.get(player.getUniqueId()).setArmors(Arrays.stream(playerInventory.getArmorContents()).filter(Objects::nonNull).collect(Collectors.toCollection(ArrayList::new)));
 			}
 
-			currentKit.save();
+			currentKit.get(player.getUniqueId()).save();
 
 			player.getEquipment().clear();
 			playerInventory.clear();
@@ -731,32 +533,28 @@ public class MainCommand extends BaseCommand
 			playerInventory.setContents(inEdit.get(player.getUniqueId()));
 			inEdit.remove(player.getUniqueId());
 
-			player.sendMessage(AdvancedKitsMain.advancedKits.chatPrefix + " " + getMessage("successfullyEdited", currentKit.getDisplayName(world.getName())));
-			player.sendMessage(AdvancedKitsMain.advancedKits.chatPrefix + " " + getMessage("inventoryRestored"));
-			player.sendMessage(AdvancedKitsMain.advancedKits.chatPrefix + " " + getMessage("exitedEditMode"));
-		}
-		else {
-			player.sendMessage(AdvancedKitsMain.advancedKits.chatPrefix + " " + getMessage("enteredEditMode"));
-			player.sendMessage(AdvancedKitsMain.advancedKits.chatPrefix + " " + getMessage("editModeHint", currentKit.getName()));
-			player.sendMessage(AdvancedKitsMain.advancedKits.chatPrefix + " " + getMessage("editModeHint2", currentKit.getName()));
-			player.sendMessage(AdvancedKitsMain.advancedKits.chatPrefix + " " + getMessage("editModeHint3"));
+			sendMessage(player, getMessage("successfullyEdited", currentKit.get(player.getUniqueId()).getDisplayName(world.getName())));
+			sendMessage(player, getMessage("inventoryRestored"));
+			sendMessage(player, getMessage("exitedEditMode"));
+		} else {
+			sendMessage(player, getMessage("enteredEditMode"));
+			sendMessage(player, getMessage("editModeHint", currentKit.get(player.getUniqueId()).getName()));
+			sendMessage(player, getMessage("editModeHint2", currentKit.get(player.getUniqueId()).getName()));
+			sendMessage(player, getMessage("editModeHint3"));
 
 			inEdit.put(player.getUniqueId(), playerInventory.getContents());
 			player.getInventory().clear();
 			player.getEquipment().clear();
 
-			currentKit.getItems().forEach(playerInventory::addItem);
-			currentKit.getArmors().forEach(itemStack -> {
+			currentKit.get(player.getUniqueId()).getItems().forEach(playerInventory::addItem);
+			currentKit.get(player.getUniqueId()).getArmors().forEach(itemStack -> {
 				if (ItemStackUtil.isHelmet(itemStack)) {
 					playerInventory.setHelmet(itemStack);
-				}
-				else if (ItemStackUtil.isChest(itemStack)) {
+				} else if (ItemStackUtil.isChest(itemStack)) {
 					playerInventory.setChestplate(itemStack);
-				}
-				else if (ItemStackUtil.isLegs(itemStack)) {
+				} else if (ItemStackUtil.isLegs(itemStack)) {
 					playerInventory.setLeggings(itemStack);
-				}
-				else if (ItemStackUtil.isBoots(itemStack)) {
+				} else if (ItemStackUtil.isBoots(itemStack)) {
 					playerInventory.setBoots(itemStack);
 				}
 
@@ -767,19 +565,10 @@ public class MainCommand extends BaseCommand
 		}
 	}
 
-	@Subcommand("view")
-	@CommandPermission("advancedkits.view")
-	@CommandCompletion("@kits")
-	@Syntax("[kitname]")
-	public void onViewCommand(CommandSender sender, @Optional Kit kit)
-	{
-		if (!(sender instanceof Player)) {
-			sender.sendMessage("not player.");
-			return;
-		}
-		Player player = (Player) sender;
-		User   user   = User.getUser(player.getUniqueId());
-		String world  = player.getWorld().getName();
+	@Subcommand("view") @CommandPermission("advancedkits.view") @CommandCompletion("@kits") @Syntax("[kitname]")
+	public void onViewCommand(Player player, @Optional Kit kit) {
+		User   user  = User.getUser(player.getUniqueId());
+		String world = player.getWorld().getName();
 
 
 		if (Objects.isNull(kit)) {
@@ -795,9 +584,9 @@ public class MainCommand extends BaseCommand
 					ItemStack clickedItem = menuObject1.toItemStack();
 					if (!clickedItem.hasItemMeta() || !clickedItem.getItemMeta().hasDisplayName()) return;
 
-					Kit kit1 = KitManager.getKit(clickedItem.getItemMeta().getDisplayName(), whoClicked.getWorld().getName());
-					if (Objects.isNull(kit1)) {
-						whoClicked.sendMessage(AdvancedKitsMain.advancedKits.chatPrefix + " " + getMessage("kitNotFound"));
+					Kit clickedKit = KitManager.getKit(clickedItem.getItemMeta().getDisplayName(), whoClicked.getWorld().getName());
+					if (Objects.isNull(clickedKit)) {
+						sendMessage(whoClicked, getMessage("kitNotFound"));
 						return;
 					}
 
@@ -811,64 +600,58 @@ public class MainCommand extends BaseCommand
 
 			return;
 		}
-		currentKit = kit;
-
-		/*currentKit = KitManager.getKit(String.valueOf(args[0]), world);
-		if (Objects.isNull(currentKit)) {
-			sender.sendMessage(AdvancedKitsMain.advancedKits.chatPrefix + " " + getMessage("kitNotFound"));
-			return;
-		}*/
+		currentKit.put(player.getUniqueId(), kit);
 
 		Inventory inventory = Bukkit.createInventory(player, 54, "AdvancedKitsReborn - View kit");
 		Menu      menu      = new Menu(inventory);
 
 		MenuObject menuObject;
-		for (ItemStack itemStack : currentKit.getItems()) {
+		for (ItemStack itemStack : currentKit.get(player.getUniqueId()).getItems()) {
 			menuObject = new MenuObject(itemStack);
 			menu.addMenuObject(menuObject);
 		}
 
 		int x = 1;
-		for (ItemStack itemStack : currentKit.getArmors()) {
+		for (ItemStack itemStack : currentKit.get(player.getUniqueId()).getArmors()) {
 			menuObject = new MenuObject(itemStack);
 			menu.setMenuObjectAt(new Coordinates(menu, x, 5), menuObject);
 			x++;
 		}
-		menuObject = new MenuObject(Material.PAPER, (byte) 0, getMessage("informations"), KitManager.getKitDescription(player, currentKit, world));
+		menuObject = new MenuObject(Material.PAPER, (byte) 0, getMessage("informations"), KitManager.getKitDescription(player, currentKit.get(player.getUniqueId()), world));
 		menu.setMenuObjectAt(new Coordinates(menu, 5, 6), menuObject);
 
-		if (user.isUnlocked(currentKit) || currentKit.getFlag(FREE, world)) {
+		if (user.isUnlocked(currentKit.get(player.getUniqueId())) || currentKit.get(player.getUniqueId()).getFlag(FREE, world)) {
 			menuObject = new MenuObject(Material.STAINED_GLASS_PANE, (byte) 13, ChatColor.GREEN + "Use", Collections.emptyList());
 			menuObject.setActionListener(viewInventoryListener);
 			menu.setMenuObjectAt(new Coordinates(menu, 9, 6), menuObject);
-		}
-		else if (currentKit.getFlag(COST, world) > 0) {
+		} else if (currentKit.get(player.getUniqueId()).getFlag(COST, world) > 0) {
 			menuObject = new MenuObject(Material.STAINED_GLASS_PANE, (byte) 14, ChatColor.GREEN + "Buy", Collections.emptyList());
 			menuObject.setActionListener(viewInventoryListener);
 			menu.setMenuObjectAt(new Coordinates(menu, 9, 6), menuObject);
 		}
 
 		menu.openForPlayer(player);
-		player.sendMessage(AdvancedKitsMain.advancedKits.chatPrefix + " " + getMessage("kitView", currentKit.getDisplayName(world)));
+		sendMessage(player, getMessage("kitView", currentKit.get(player.getUniqueId()).getDisplayName(world)));
 	}
 
 
-	private static boolean hasInventorySpace(Player player, ItemStack item)
-	{
+	private boolean hasInventorySpace(Player player, ItemStack item) {
 		int free = 0;
 		for (ItemStack itemStack : player.getInventory().getStorageContents()) {
 			if (itemStack == null || itemStack.getType() == Material.AIR) {
 				free += item.getMaxStackSize();
-			}
-			else if (itemStack.isSimilar(item)) {
+			} else if (itemStack.isSimilar(item)) {
 				free += item.getMaxStackSize() - itemStack.getAmount();
 			}
 		}
 		return free >= item.getAmount();
 	}
 
-	private static int getEmptySpaces(Player player)
-	{
+	private int getEmptySpaces(Player player) {
 		return (int) Arrays.stream(player.getInventory().getStorageContents()).filter(item -> Objects.isNull(item) || item.getType() == Material.AIR).count();
+	}
+
+	private void sendMessage(CommandSender sender, String... messages) {
+		Arrays.stream(messages).forEach(message -> sender.sendMessage(Config.CHAT_PREFIX + " " + message));
 	}
 }

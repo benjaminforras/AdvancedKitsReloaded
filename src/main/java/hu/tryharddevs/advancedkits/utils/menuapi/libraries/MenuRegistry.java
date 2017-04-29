@@ -12,32 +12,26 @@ import java.util.List;
  * Keep in mind that this is not for sale.
  */
 
-public class MenuRegistry
-{
+public class MenuRegistry {
 	private List<Menu> menus;
 
-	public MenuRegistry()
-	{
+	public MenuRegistry() {
 		menus = new ArrayList<>();
 	}
 
-	public List<Menu> getMenus()
-	{
+	public List<Menu> getMenus() {
 		return menus;
 	}
 
-	public void register(Menu inv)
-	{
+	public void register(Menu inv) {
 		menus.add(inv);
 	}
 
-	public void deregister(Menu inv)
-	{
+	public void deregister(Menu inv) {
 		menus.remove(inv);
 	}
 
-	public Menu getByInventory(Inventory inventory)
-	{
+	public Menu getByInventory(Inventory inventory) {
 		for (Menu menu : menus) {
 			if (menu.getInventory().equals(inventory)) {
 				return menu;

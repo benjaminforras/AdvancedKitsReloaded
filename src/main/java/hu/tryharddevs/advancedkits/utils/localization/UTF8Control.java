@@ -12,11 +12,9 @@ import java.util.ResourceBundle;
 /*****************************************************
  *              Created by TryHardDood on 2016. 12. 22..
  ****************************************************/
-public class UTF8Control extends ResourceBundle.Control
-{
+public class UTF8Control extends ResourceBundle.Control {
 
-	public ResourceBundle newBundle(String baseName, Locale locale, String format, ClassLoader loader, boolean reload) throws IllegalAccessException, InstantiationException, IOException
-	{
+	public ResourceBundle newBundle(String baseName, Locale locale, String format, ClassLoader loader, boolean reload) throws IllegalAccessException, InstantiationException, IOException {
 
 		String bundleName   = toBundleName(baseName, locale);
 		String resourceName = toResourceName(bundleName, "properties");
@@ -33,16 +31,14 @@ public class UTF8Control extends ResourceBundle.Control
 					stream = connection.getInputStream();
 				}
 			}
-		}
-		else {
+		} else {
 			stream = loader.getResourceAsStream(resourceName);
 		}
 
 		if (stream != null) {
 			try {
 				bundle = new PropertyResourceBundle(new InputStreamReader(stream, "UTF-8"));
-			}
-			finally {
+			} finally {
 				stream.close();
 			}
 		}

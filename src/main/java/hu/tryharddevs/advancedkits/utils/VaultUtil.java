@@ -5,13 +5,19 @@ import net.milkbowl.vault.economy.Economy;
 import org.bukkit.ChatColor;
 import org.bukkit.plugin.RegisteredServiceProvider;
 
-public class VaultUtil
-{
-	private static AdvancedKitsMain instance = AdvancedKitsMain.advancedKits;
-	private static Economy          econ     = null;
+public class VaultUtil {
+	private static Economy econ = null;
+	private AdvancedKitsMain instance;
 
-	public static void loadVault()
-	{
+	public VaultUtil(AdvancedKitsMain instance) {
+		this.instance = instance;
+	}
+
+	public static Economy getEconomy() {
+		return econ;
+	}
+
+	public void hookVault() {
 		if (!setupEconomy()) {
 			instance.log(ChatColor.RED + String.format("[%s] - Disabled due to no Vault dependency found!", instance.getDescription().getName()));
 			instance.getServer().getPluginManager().disablePlugin(instance);
@@ -19,8 +25,7 @@ public class VaultUtil
 		}
 	}
 
-	private static boolean setupEconomy()
-	{
+	private boolean setupEconomy() {
 		if (instance.getServer().getPluginManager().getPlugin("Vault") == null) {
 			return false;
 		}
@@ -30,10 +35,5 @@ public class VaultUtil
 		}
 		econ = rsp.getProvider();
 		return econ != null;
-	}
-
-	public static Economy getEconomy()
-	{
-		return econ;
 	}
 }

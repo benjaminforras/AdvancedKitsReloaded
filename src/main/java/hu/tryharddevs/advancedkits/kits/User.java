@@ -12,8 +12,7 @@ import java.util.stream.Collectors;
 
 import static hu.tryharddevs.advancedkits.kits.KitManager.getDifferenceText;
 
-public class User
-{
+public class User {
 	private static HashMap<UUID, User> userHashMap = new HashMap<>();
 	private final UUID uuid;
 
@@ -21,12 +20,11 @@ public class User
 	private Map<String, Map<String, Double>>  delaysList   = new HashMap<>();
 	private Map<String, Map<String, Integer>> usedList     = new HashMap<>();
 
-	private AdvancedKitsMain instance = AdvancedKitsMain.advancedKits;
+	private AdvancedKitsMain instance = AdvancedKitsMain.getPlugin();
 
 	private YamlConfiguration userConfig;
 
-	public User(UUID uuid)
-	{
+	public User(UUID uuid) {
 		this.uuid = uuid;
 		this.userConfig = YamlConfiguration.loadConfiguration(getSaveFile());
 
@@ -52,8 +50,7 @@ public class User
 		}
 	}
 
-	public static User getUser(UUID uuid)
-	{
+	public static User getUser(UUID uuid) {
 		if (!userHashMap.containsKey(uuid)) {
 			User user = new User(uuid);
 			userHashMap.put(uuid, user);
@@ -62,31 +59,26 @@ public class User
 		return userHashMap.get(uuid);
 	}
 
-	public void addToUnlocked(Kit kit)
-	{
+	public void addToUnlocked(Kit kit) {
 		unlockedList.add(kit.getName());
 	}
 
-	public boolean isUnlocked(Kit kit)
-	{
+	public boolean isUnlocked(Kit kit) {
 		return isUnlocked(kit.getName());
 	}
 
-	public boolean isUnlocked(String name)
-	{
+	public boolean isUnlocked(String name) {
 		return unlockedList.contains(name);
 	}
 
-	public int getTimesUsed(Kit kit, String world)
-	{
+	public int getTimesUsed(Kit kit, String world) {
 		if (usedList.containsKey(kit.getName()) && usedList.get(kit.getName()).containsKey(world)) {
 			return usedList.get(kit.getName()).get(world);
 		}
 		return 0;
 	}
 
-	public void addUse(Kit kit, String world)
-	{
+	public void addUse(Kit kit, String world) {
 		if (!usedList.containsKey(kit.getName())) usedList.put(kit.getName(), Maps.newHashMap());
 
 		int prevVal = 1;
@@ -96,15 +88,13 @@ public class User
 		usedList.get(kit.getName()).put(world, prevVal);
 	}
 
-	public void setDelay(Kit kit, String world, double delay)
-	{
+	public void setDelay(Kit kit, String world, double delay) {
 		if (!delaysList.containsKey(kit.getName())) delaysList.put(kit.getName(), Maps.newHashMap());
 
 		delaysList.get(kit.getName()).put(world, System.currentTimeMillis() + (delay * 1000));
 	}
 
-	public String getDelay(Kit kit, String world)
-	{
+	public String getDelay(Kit kit, String world) {
 		if (checkDelay(kit, world) || !delaysList.containsKey(kit.getName()) || !delaysList.get(kit.getName()).containsKey(world)) {
 			return "None";
 		}
@@ -114,8 +104,7 @@ public class User
 		return getDifferenceText(new Date(System.currentTimeMillis()), date);
 	}
 
-	public boolean checkDelay(Kit kit, String world)
-	{
+	public boolean checkDelay(Kit kit, String world) {
 		if (!delaysList.containsKey(kit.getName())) {
 			return true;
 		}
@@ -128,20 +117,17 @@ public class User
 	}
 
 
-	public UUID getUuid()
-	{
+	public UUID getUuid() {
 		return uuid;
 	}
 
-	public void save()
-	{
+	public void save() {
 		try {
 			userConfig.set("UnlockedKits", unlockedList);
 			userConfig.set("LastUseTime", delaysList);
 			userConfig.set("TimesUsed", usedList);
 			userConfig.save(getSaveFile());
-		}
-		catch (IOException e) {
+		} catch (IOException e) {
 			instance.log(ChatColor.RED + "Please send this to the author of this plugin:");
 			instance.log(" -- StackTrace --");
 			e.printStackTrace();
@@ -149,8 +135,7 @@ public class User
 		}
 	}
 
-	private File getSaveFile()
-	{
+	private File getSaveFile() {
 		if (!instance.getDataFolder().exists()) {
 			instance.getDataFolder().mkdir();
 		}
@@ -163,8 +148,7 @@ public class User
 		if (!file.exists()) {
 			try {
 				file.createNewFile();
-			}
-			catch (IOException e) {
+			} catch (IOException e) {
 				instance.getLogger().info("Couldn't create the savefile for " + uuid.toString());
 				instance.getLogger().info(" -- StackTrace --");
 				e.printStackTrace();

@@ -13,147 +13,111 @@ import hu.tryharddevs.advancedkits.utils.localization.I18n;
 import hu.tryharddevs.advancedkits.utils.menuapi.core.MenuAPI;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.inventivetalent.reflection.minecraft.Minecraft;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
-public final class AdvancedKitsMain extends JavaPlugin
-{
-	public static AdvancedKitsMain advancedKits;
-	public        I18n             i18n;
+public final class AdvancedKitsMain extends JavaPlugin {
+	private static AdvancedKitsMain advancedKits;
 
-	public static Boolean usePlaceholderAPI = false;
+	public I18n i18n;
 
-	public String  chatPrefix = ChatColor.translateAlternateColorCodes('&', "&7[&6AdvancedKits&7]");
-	public Boolean coloredLog = true;
-	public String  locale     = "en";
+	private VaultUtil      vaultUtil;
+	private KitManager     kitManager;
+	private CommandManager commandManager;
 
-	private PluginDescriptionFile descriptionFile = getDescription();
+	private Boolean usePlaceholderAPI = false;
 
-	@Override
-	public void onEnable()
-	{
-		log(ChatColor.GREEN + "Starting " + descriptionFile.getName() + " " + descriptionFile.getVersion());
-		advancedKits = this;
+	public static AdvancedKitsMain getPlugin() {
+		return advancedKits;
+	}
 
-		if (getServer().getPluginManager().getPlugin("Vault") == null) {
-			log(ChatColor.RED + "ERROR: Couldn't find necessary dependency: " + "Vault");
-			setEnabled(false);
+	@Override public void onEnable() {
+		this.log(ChatColor.GREEN + "Starting " + this.getDescription().getName() + " " + this.getDescription().getVersion());
+
+		if (Minecraft.VERSION.olderThan(Minecraft.Version.v1_8_R1)) {
+			this.log(ChatColor.RED + "ERROR: Unsupported Minecraft version. (" + Minecraft.VERSION.toString() + ")");
+			this.setEnabled(false);
 			return;
 		}
 
-		if (getServer().getPluginManager().isPluginEnabled("PlaceholderAPI")) {
-			usePlaceholderAPI = true;
-			log(ChatColor.GREEN + "Successfully hooked to PlaceholderAPI!");
+		if (this.getServer().getPluginManager().getPlugin("Vault") == null) {
+			this.log(ChatColor.RED + "ERROR: Couldn't find necessary dependency: " + "Vault");
+			this.setEnabled(false);
+			return;
 		}
+		advancedKits = this;
 
-		log("Loading configuration.");
-		loadConfiguration();
-		log("Done loading the configuration.");
+		this.usePlaceholderAPI = Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null;
 
-		log("Hooking to Vault.");
-		{
-			VaultUtil.loadVault();
-		}
-		log("Successfully hooked Vault.");
+		// Loading configuration
+		this.log("Loading configuration.");
+		this.saveDefaultConfig();
+		Config.loadConfigurationValues(this);
 
-		log("Loading MenuAPI by ColonelHedgehog.");
-		{
-			MenuAPI menuAPI = new MenuAPI();
-			menuAPI.onEnable();
-		}
-		log("Finished loading MenuAPI by ColonelHedgehog.");
+		// Hooking vault
+		this.log("Hooking to Vault.");
+		this.vaultUtil = new VaultUtil(this);
+		this.vaultUtil.hookVault();
 
-		log("Loading KitManager.");
-		{
-			KitManager.loadKits();
-		}
-		log("Done loading KitManager.");
+		// Loading MenuAPI
+		this.log("Loading MenuAPI by ColonelHedgehog.");
+		MenuAPI menuAPI = new MenuAPI();
+		menuAPI.onEnable();
 
-		log("Registering listeners");
-		{
-			getServer().getPluginManager().registerEvents(new PlayerListener(), this);
-		}
-		log("Done registering listeners");
+		// Load KitManager and the kits
+		this.log("Loading KitManager.");
+		this.kitManager = new KitManager(this);
+		this.kitManager.loadKits();
 
-		log("Loading commands.");
-		{
-			loadCommands();
-		}
-		log("Finished loading commands.");
+		// Register events
+		this.log("Registering events");
+		this.getServer().getPluginManager().registerEvents(new PlayerListener(this), this);
 
-		log("Checking for updates.");
+		// Register CommandManager and the Commands.
+		this.log("Registering commands.");
+		this.commandManager = ACF.createManager(this);
+
+		this.commandManager.getCommandContexts().registerContext(Flag.class, Flag.getContextResolver());
+		this.commandManager.getCommandContexts().registerContext(Kit.class, Kit.getContextResolver());
+
+		this.commandManager.getCommandCompletions().registerCompletion("flags", (sender, config, input, c) -> (Arrays.stream(DefaultFlags.getFlags()).map(Flag::getName).sorted(String::compareToIgnoreCase).collect(Collectors.toCollection(ArrayList::new))));
+		this.commandManager.getCommandCompletions().registerCompletion("kits", (sender, config, input, c) -> (KitManager.getKits().stream().map(Kit::getName).sorted(String::compareToIgnoreCase).collect(Collectors.toCollection(ArrayList::new))));
+
+		this.commandManager.registerCommand(new MainCommand(this));
+
+		// Check for update
+		this.log("Checking for updates.");
 		new Updater(this, 91129, this.getFile(), Updater.UpdateType.DEFAULT, true);
 
-		log("Loading metrics.");
-		new MetricsLite(this);
-
-		log(ChatColor.GREEN + "Finished loading " + descriptionFile.getName() + " " + descriptionFile.getVersion() + " by " + descriptionFile.getAuthors().stream().collect(Collectors.joining(",")));
-	}
-
-	public void loadConfiguration()
-	{
-		saveDefaultConfig();
-		YamlConfiguration configuration = YamlConfiguration.loadConfiguration(new File(getDataFolder() + File.separator + "config.yml"));
-
-		locale = configuration.getString("Locale");
-		coloredLog = configuration.getBoolean("Log.ColoredLog");
-		chatPrefix = ChatColor.translateAlternateColorCodes('&', configuration.getString("Chat.Prefix"));
-
-		String localeFile = "messages_" + locale + ".properties";
-		if (Objects.isNull(getResource(localeFile))) {
-			log(ChatColor.RED + "Locale not found, revert back to the default. (en)");
-
-			locale = "en";
-			localeFile = "messages_" + locale + ".properties";
+		// Check if metrics is enabled
+		if (Config.METRICS_ENABLED) {
+			log("Enabling Plugin Metrics.");
+			new MetricsLite(this);
 		}
 
-		if (!new File(getDataFolder() + File.separator + localeFile).exists()) {
-			saveResource(localeFile, false);
+		this.log(ChatColor.GREEN + "Finished loading " + this.getDescription().getName() + " " + this.getDescription().getVersion() + " by " + this.getDescription().getAuthors().stream().collect(Collectors.joining(",")));
+	}
+
+	@Override public void onDisable() {
+		this.log(ChatColor.GOLD + "Stopping " + this.getDescription().getName() + " " + this.getDescription().getVersion());
+		if (this.i18n != null) {
+			this.i18n.onDisable();
 		}
-
-		i18n = new I18n(this);
-		i18n.onEnable();
-		i18n.updateLocale(locale);
 	}
 
-	@Override
-	public void onDisable()
-	{
-		log(ChatColor.GOLD + "Stopping " + descriptionFile.getName() + " " + descriptionFile.getVersion());
-		if (i18n != null) {
-			i18n.onDisable();
-		}
-		//log(ChatColor.GOLD + "Saving kit files.");
-		//KitManager.getKits().forEach(Kit::save);
+	public void log(String log) {
+		this.getServer().getConsoleSender().sendMessage(Config.COLORED_LOG ? Config.CHAT_PREFIX + ChatColor.RESET + " " + log : ChatColor.stripColor(Config.CHAT_PREFIX + ChatColor.RESET + " " + log));
 	}
 
-	private void loadCommands()
-	{
-		CommandManager manager = ACF.createManager(this);
-
-		manager.getCommandContexts().registerContext(Flag.class, Flag.getContextResolver());
-		manager.getCommandContexts().registerContext(Kit.class, Kit.getContextResolver());
-
-		manager.getCommandCompletions().registerCompletion("flags", (sender, completionConfig, input) -> (
-				Arrays.stream(DefaultFlags.getFlags()).map(Flag::getName).sorted(String::compareToIgnoreCase).collect(Collectors.toCollection(ArrayList::new))
-		));
-		manager.getCommandCompletions().registerCompletion("kits", (sender, completionConfig, input) -> (
-				KitManager.getKits().stream().map(Kit::getName).sorted(String::compareToIgnoreCase).collect(Collectors.toCollection(ArrayList::new))
-		));
-
-		manager.registerCommand(new MainCommand());
-
+	public boolean isPlaceholderAPIEnabled() {
+		return this.usePlaceholderAPI;
 	}
 
-	public void log(String log)
-	{
-		Bukkit.getConsoleSender().sendMessage(coloredLog ? chatPrefix + ChatColor.RESET + " " + log : ChatColor.stripColor(chatPrefix + ChatColor.RESET + " " + log));
+	public KitManager getKitManager() {
+		return this.kitManager;
 	}
 }

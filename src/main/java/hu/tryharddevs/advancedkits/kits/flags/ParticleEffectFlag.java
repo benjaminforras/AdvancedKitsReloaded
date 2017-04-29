@@ -1,6 +1,6 @@
 package hu.tryharddevs.advancedkits.kits.flags;
 
-import hu.tryharddevs.advancedkits.AdvancedKitsMain;
+import hu.tryharddevs.advancedkits.Config;
 import org.bukkit.ChatColor;
 import org.inventivetalent.particle.ParticleEffect;
 
@@ -9,15 +9,12 @@ import java.util.Arrays;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-public class ParticleEffectFlag extends Flag<ParticleEffect>
-{
-	public ParticleEffectFlag(String name)
-	{
+public class ParticleEffectFlag extends Flag<ParticleEffect> {
+	public ParticleEffectFlag(String name) {
 		super(name);
 	}
 
-	public static ParticleEffect getParticleEffectByName(String input)
-	{
+	public static ParticleEffect getParticleEffectByName(String input) {
 		ParticleEffect lowMatch = null;
 
 		for (ParticleEffect particleEffect : ParticleEffect.values()) {
@@ -33,28 +30,21 @@ public class ParticleEffectFlag extends Flag<ParticleEffect>
 		return lowMatch;
 	}
 
-	@Override
-	public ParticleEffect parseInput(String input) throws InvalidFlagValueException
-	{
+	@Override public ParticleEffect parseInput(String input) throws InvalidFlagValueException {
 		return getParticleEffectFromString(input);
 	}
 
-	@Override
-	public ParticleEffect unmarshal(@Nullable Object o)
-	{
+	@Override public ParticleEffect unmarshal(@Nullable Object o) {
 		return getParticleEffectByName(String.valueOf(o));
 	}
 
-	@Override
-	public Object marshal(ParticleEffect o)
-	{
+	@Override public Object marshal(ParticleEffect o) {
 		return o.name();
 	}
 
-	public ParticleEffect getParticleEffectFromString(String input) throws InvalidFlagValueException
-	{
+	public ParticleEffect getParticleEffectFromString(String input) throws InvalidFlagValueException {
 		if (Objects.isNull(getParticleEffectByName(input))) {
-			throw new InvalidFlagValueException(AdvancedKitsMain.advancedKits.chatPrefix + " " + ChatColor.RED + "Invalid particle name.", AdvancedKitsMain.advancedKits.chatPrefix + " " + ChatColor.RED + "Here are the available effects: ", ChatColor.GRAY + Arrays.stream(ParticleEffect.values()).map(ParticleEffect::name).collect(Collectors.joining(",")));
+			throw new InvalidFlagValueException(Config.CHAT_PREFIX + " " + ChatColor.RED + "Invalid particle name.", Config.CHAT_PREFIX + " " + ChatColor.RED + "Here are the available effects: ", ChatColor.GRAY + Arrays.stream(ParticleEffect.values()).map(ParticleEffect::name).collect(Collectors.joining(",")));
 		}
 		return getParticleEffectByName(input);
 	}

@@ -23,55 +23,45 @@ import java.lang.reflect.Method;
  **
  *
  ****************************************************/
-public class MessagesApi
-{
+public class MessagesApi {
 	private static OBCClassResolver obcClassResolver = new OBCClassResolver();
 	private static NMSClassResolver nmsClassResolver = new NMSClassResolver();
 	private static boolean          useOldMethods    = Minecraft.VERSION.olderThan(Minecraft.Version.v1_8_R1);
 
 	@Deprecated
-	public static void sendTitle(Player player, Integer fadeIn, Integer stay, Integer fadeOut, String message)
-	{
+	public static void sendTitle(Player player, Integer fadeIn, Integer stay, Integer fadeOut, String message) {
 		sendTitle(player, fadeIn, stay, fadeOut, message, null);
 	}
 
 	@Deprecated
-	public static void sendSubtitle(Player player, Integer fadeIn, Integer stay, Integer fadeOut, String message)
-	{
+	public static void sendSubtitle(Player player, Integer fadeIn, Integer stay, Integer fadeOut, String message) {
 		sendTitle(player, fadeIn, stay, fadeOut, null, message);
 	}
 
 	@Deprecated
-	public static void sendFullTitle(Player player, Integer fadeIn, Integer stay, Integer fadeOut, String title, String subtitle)
-	{
+	public static void sendFullTitle(Player player, Integer fadeIn, Integer stay, Integer fadeOut, String title, String subtitle) {
 		sendTitle(player, fadeIn, stay, fadeOut, title, subtitle);
 	}
 
-	@Deprecated
-	public static Integer getPlayerProtocol(Player player)
-	{
+	@Deprecated public static Integer getPlayerProtocol(Player player) {
 		return 47;
 	}
 
-	private static void sendPacket(Player player, Object packet)
-	{
+	private static void sendPacket(Player player, Object packet) {
 		try {
 			Object handle           = new MethodResolver(player.getClass()).resolveSilent("getHandle").invoke(player);
 			Object playerConnection = new FieldResolver(handle.getClass()).resolveSilent("playerConnection").get(handle);
 			new MethodResolver(playerConnection.getClass()).resolveSilent(new ResolverQuery("sendPacket", nmsClassResolver.resolveSilent("Packet"))).invoke(playerConnection, packet);
-		}
-		catch (Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
-	public static void sendTitle(Player player, String title, String subtitle)
-	{
+	public static void sendTitle(Player player, String title, String subtitle) {
 		sendTitle(player, 4, 23, 4, title, subtitle);
 	}
 
-	public static void sendTitle(Player player, Integer fadeIn, Integer stay, Integer fadeOut, String title, String subtitle)
-	{
+	public static void sendTitle(Player player, Integer fadeIn, Integer stay, Integer fadeOut, String title, String subtitle) {
 		try {
 			Object      e;
 			Object      chatTitle;
@@ -113,19 +103,16 @@ public class MessagesApi
 				subtitlePacket = subtitleConstructor.newInstance(e, chatSubtitle, fadeIn, stay, fadeOut);
 				sendPacket(player, subtitlePacket);
 			}
-		}
-		catch (Exception var11) {
+		} catch (Exception var11) {
 			var11.printStackTrace();
 		}
 	}
 
-	public static void clearTitle(Player player)
-	{
+	public static void clearTitle(Player player) {
 		sendTitle(player, 0, 0, 0, "", "");
 	}
 
-	public static void sendTabTitle(Player player, String header, String footer)
-	{
+	public static void sendTabTitle(Player player, String header, String footer) {
 		if (header == null) header = "";
 		header = ChatColor.translateAlternateColorCodes('&', header);
 
@@ -136,22 +123,20 @@ public class MessagesApi
 		footer = footer.replaceAll("%player%", player.getDisplayName());
 
 		try {
-			Object tabHeader = nmsClassResolver.resolveSilent("IChatBaseComponent").getDeclaredClasses()[0].getMethod("a", String.class).invoke(null, "{\"text\":\"" + header + "\"}");
-			Object tabFooter = nmsClassResolver.resolveSilent("IChatBaseComponent").getDeclaredClasses()[0].getMethod("a", String.class).invoke(null, "{\"text\":\"" + footer + "\"}");
+			Object         tabHeader        = nmsClassResolver.resolveSilent("IChatBaseComponent").getDeclaredClasses()[0].getMethod("a", String.class).invoke(null, "{\"text\":\"" + header + "\"}");
+			Object         tabFooter        = nmsClassResolver.resolveSilent("IChatBaseComponent").getDeclaredClasses()[0].getMethod("a", String.class).invoke(null, "{\"text\":\"" + footer + "\"}");
 			Constructor<?> titleConstructor = nmsClassResolver.resolveSilent("PacketPlayOutPlayerListHeaderFooter").getConstructor(nmsClassResolver.resolveSilent("IChatBaseComponent"));
-			Object packet = titleConstructor.newInstance(tabHeader);
-			Field  field  = packet.getClass().getDeclaredField("b");
+			Object         packet           = titleConstructor.newInstance(tabHeader);
+			Field          field            = packet.getClass().getDeclaredField("b");
 			field.setAccessible(true);
 			field.set(packet, tabFooter);
 			sendPacket(player, packet);
-		}
-		catch (Exception ex) {
+		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
 	}
 
-	public static void sendActionBar(Player player, String message)
-	{
+	public static void sendActionBar(Player player, String message) {
 		try {
 			Class<?> c1 = obcClassResolver.resolveSilent("entity.CraftPlayer");
 			Object   p  = c1.cast(player);
@@ -159,16 +144,15 @@ public class MessagesApi
 			Class<?> c4 = nmsClassResolver.resolveSilent("PacketPlayOutChat");
 			Class<?> c5 = nmsClassResolver.resolveSilent("Packet");
 			if (useOldMethods) {
-				Class<?> c2 = nmsClassResolver.resolveSilent("ChatSerializer");
-				Class<?> c3 = nmsClassResolver.resolveSilent("IChatBaseComponent");
-				Method m3  = c2.getDeclaredMethod("a", String.class);
-				Object cbc = c3.cast(m3.invoke(c2, "{\"text\": \"" + message + "\"}"));
+				Class<?> c2  = nmsClassResolver.resolveSilent("ChatSerializer");
+				Class<?> c3  = nmsClassResolver.resolveSilent("IChatBaseComponent");
+				Method   m3  = c2.getDeclaredMethod("a", String.class);
+				Object   cbc = c3.cast(m3.invoke(c2, "{\"text\": \"" + message + "\"}"));
 				ppoc = c4.getConstructor(new Class<?>[]{c3, byte.class}).newInstance(cbc, (byte) 2);
-			}
-			else {
+			} else {
 				Class<?> c2 = nmsClassResolver.resolveSilent("ChatComponentText");
 				Class<?> c3 = nmsClassResolver.resolveSilent("IChatBaseComponent");
-				Object o = c2.getConstructor(new Class<?>[]{String.class}).newInstance(message);
+				Object   o  = c2.getConstructor(new Class<?>[]{String.class}).newInstance(message);
 				ppoc = c4.getConstructor(new Class<?>[]{c3, byte.class}).newInstance(o, (byte) 2);
 			}
 			Method m1 = c1.getDeclaredMethod("getHandle");
@@ -177,50 +161,40 @@ public class MessagesApi
 			Object pc = f1.get(h);
 			Method m5 = pc.getClass().getDeclaredMethod("sendPacket", c5);
 			m5.invoke(pc, ppoc);
-		}
-		catch (Exception ex) {
+		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
 	}
 
-	public static void sendActionBar(final Player player, final String message, int duration)
-	{
+	public static void sendActionBar(final Player player, final String message, int duration) {
 		sendActionBar(player, message);
 
 		if (duration >= 0) {
 			// Sends empty message at the end of the duration. Allows messages shorter than 3 seconds, ensures precision.
-			new BukkitRunnable()
-			{
-				@Override
-				public void run()
-				{
+			new BukkitRunnable() {
+				@Override public void run() {
 					sendActionBar(player, "");
 				}
-			}.runTaskLater(AdvancedKitsMain.advancedKits, duration + 1);
+			}.runTaskLater(AdvancedKitsMain.getPlugin(), duration + 1);
 		}
 
 		// Re-sends the messages every 3 seconds so it doesn't go away from the player's screen.
 		while (duration > 60) {
 			duration -= 60;
 			int sched = duration % 60;
-			new BukkitRunnable()
-			{
-				@Override
-				public void run()
-				{
+			new BukkitRunnable() {
+				@Override public void run() {
 					sendActionBar(player, message);
 				}
-			}.runTaskLater(AdvancedKitsMain.advancedKits, (long) sched);
+			}.runTaskLater(AdvancedKitsMain.getPlugin(), (long) sched);
 		}
 	}
 
-	public static void sendActionBarToAllPlayers(String message)
-	{
+	public static void sendActionBarToAllPlayers(String message) {
 		sendActionBarToAllPlayers(message, -1);
 	}
 
-	public static void sendActionBarToAllPlayers(String message, int duration)
-	{
+	public static void sendActionBarToAllPlayers(String message, int duration) {
 		for (Player p : Bukkit.getOnlinePlayers()) {
 			sendActionBar(p, message, duration);
 		}

@@ -9,8 +9,7 @@ import org.inventivetalent.particle.ParticleEffect;
 import java.util.Arrays;
 import java.util.List;
 
-public class DefaultFlags
-{
+public class DefaultFlags {
 	public static final BooleanFlag VISIBLE        = new BooleanFlag("visible", true);
 	public static final BooleanFlag FIRSTJOIN      = new BooleanFlag("firstjoin", false);
 	public static final BooleanFlag AUTOEQUIPARMOR = new BooleanFlag("autoequiparmor", false);
@@ -27,7 +26,7 @@ public class DefaultFlags
 
 	public static final DoubleFlag DELAY = new DoubleFlag("delay", 0.0);
 
-	public static final ItemStackFlag ICON = new ItemStackFlag("icon", Material.EMERALD_BLOCK);
+	public static final ItemStackFlag ICON     = new ItemStackFlag("icon", Material.EMERALD_BLOCK);
 	public static final ItemStackFlag FIREWORK = new ItemStackFlag("firework", new ItemStack(Material.FIREWORK));
 
 	public static final ListFlag<String>         CUSTOMDESCRIPTION = new ListFlag<>("customdescription", new StringFlag(null));
@@ -40,18 +39,15 @@ public class DefaultFlags
 
 	public static final Flag<?>[] flagsList = new Flag<?>[]{VISIBLE, FIRSTJOIN, AUTOEQUIPARMOR, FREE, USEONBUY, CLEARINVENTORY, SPEWITEMS, DISPLAYNAME, PERUSECOST, COST, MAXUSES, DELAY, FIREWORK, ICON, CUSTOMDESCRIPTION, COMMANDS, MESSAGES, DISABLEDWORLDS, POTIONEFFECTS, PARTICLEEFFECTS, SOUNDEFFECTS};
 
-	public static Flag<?>[] getFlags()
-	{
+	public static Flag<?>[] getFlags() {
 		return flagsList;
 	}
 
-	public static List<Flag<?>> getDefaultFlags()
-	{
+	public static List<Flag<?>> getDefaultFlags() {
 		return Arrays.asList(flagsList);
 	}
 
-	public static Flag<?> fuzzyMatchFlag(String id)
-	{
+	public static Flag<?> fuzzyMatchFlag(String id) {
 		for (Flag<?> flag : getDefaultFlags()) {
 			if (flag.getName().replace("-", "").equalsIgnoreCase(id.replace("-", ""))) {
 				return flag;

@@ -7,10 +7,8 @@ import hu.tryharddevs.advancedkits.utils.menuapi.components.Coordinates;
  * You have freedom to modify given sources. Please credit me as original author.
  * Keep in mind that this is not for sale.
  */
-public class MenuUtils
-{
-	public static int[] calculateCoordinates(int slot)
-	{
+public class MenuUtils {
+	public static int[] calculateCoordinates(int slot) {
 		//system.out.println("Calculating by slot: " + slot);
 		int slotx = (slot % 9) + 1;
 		int sloty = (slot / 9) + 1;
@@ -19,8 +17,7 @@ public class MenuUtils
 		return new int[]{slotx, sloty};
 	}
 
-	public static int toSlotNumber(Coordinates coordinates)
-	{
+	public static int toSlotNumber(Coordinates coordinates) {
 		return ((coordinates.getY() - 1) * 9) + (coordinates.getX() - 1);
 	}
 }

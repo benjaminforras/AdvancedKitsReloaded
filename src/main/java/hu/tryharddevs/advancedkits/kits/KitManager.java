@@ -15,7 +15,10 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import java.io.File;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ConcurrentMap;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -24,171 +27,29 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import static hu.tryharddevs.advancedkits.kits.flags.DefaultFlags.*;
 import static hu.tryharddevs.advancedkits.utils.localization.I18n.getMessage;
 
-@SuppressWarnings("ConstantConditions")
-public class KitManager
-{
-	private static final Pattern          FILE_PATTERN = Pattern.compile("[^A-Za-z0-9_]+", Pattern.CASE_INSENSITIVE);
-	private static       AdvancedKitsMain instance     = AdvancedKitsMain.advancedKits;
-	private static       ArrayList<Kit>   kitArrayList = new ArrayList<>();
+@SuppressWarnings("ConstantConditions") public class KitManager {
+	private static final Pattern        FILE_PATTERN = Pattern.compile("[^A-Za-z0-9_]+", Pattern.CASE_INSENSITIVE);
+	private static       ArrayList<Kit> kitArrayList = new ArrayList<>();
+	private AdvancedKitsMain instance;
 
-	public static void loadKits()
-	{
-		final File folder = new File(instance.getDataFolder(), "kits");
-
-		if (!folder.isDirectory()) {
-			instance.log(ChatColor.GOLD + "- kits folder not found. Creating...");
-			folder.mkdirs();
-			return;
-		}
-		kitArrayList = new ArrayList<>();
-
-		Kit               kit;
-		YamlConfiguration kitConfig;
-
-		String fileName;
-		File[] directoryListing = folder.listFiles();
-		if (directoryListing != null) {
-			for (File child : directoryListing) {
-				if (!child.isFile()) continue;
-				if (!Files.getFileExtension(child.getName()).equalsIgnoreCase("yml")) continue;
-
-				fileName = Files.getNameWithoutExtension(child.getName());
-				if (FILE_PATTERN.matcher(fileName).find()) {
-					instance.log(ChatColor.RED + "Error when trying to load " + fileName);
-					instance.log(ChatColor.RED + "- The name contains special characters.");
-					continue;
-				}
-				kit = new Kit(fileName);
-				kitConfig = kit.getConfig();
-
-				if (kitConfig.contains("Items")) {
-					List<?> itemsList = kitConfig.getList("Items");
-
-					if (!itemsList.isEmpty()) {
-						try {
-							kit.setItems(itemsList.stream().map(item -> ItemStackUtil.itemFromString(String.valueOf(item))).collect(Collectors.toCollection(ArrayList::new)));
-						}
-						catch (NullPointerException | JsonSyntaxException e)
-						{
-							instance.log(ChatColor.RED + "Failed to parse items.");
-							instance.log(ChatColor.RED + "Trying to load items using the old methods.");
-							kit.setItems(itemsList.stream().map(object -> ItemStack.deserialize((Map<String, Object>)object)).collect(Collectors.toCollection(ArrayList::new)));
-						}
-					}
-				}
-
-				if (kitConfig.contains("Armors")) {
-					List<?> armorsList = kitConfig.getList("Armors");
-
-					if (!armorsList.isEmpty()) {
-						kit.setArmors(armorsList.stream().map(armor -> ItemStackUtil.itemFromString(String.valueOf(armor))).collect(Collectors.toCollection(ArrayList::new)));
-					}
-				}
-				else if (kitConfig.contains("Armor")) {
-					List<?> armorsList = kitConfig.getList("Armor");
-
-					if (!armorsList.isEmpty()) {
-						instance.log(ChatColor.GOLD + "Failed to parse armors.");
-						instance.log(ChatColor.GOLD + "Trying to load items using the old methods.");
-						kit.setArmors(armorsList.stream().map(object -> ItemStack.deserialize((Map<String, Object>)object)).collect(Collectors.toCollection(ArrayList::new)));
-					}
-
-					kitConfig.set("Armor", null);
-					kit.save();
-				}
-				Map<String, Object> temp = null;
-				if (kitConfig.contains("Flags")) {
-
-					for (String world : kitConfig.getConfigurationSection("Flags").getKeys(false)) {
-						try
-						{
-							kit.setFlags(world, unmarshalFlags(kitConfig.getConfigurationSection("Flags." + world).getValues(false)));
-						}
-						catch (NullPointerException | JsonSyntaxException e)
-						{
-							if(temp == null) {
-								temp = kitConfig.getConfigurationSection("Flags").getValues(false);
-								kit.setFlags("global", unmarshalFlags(temp));
-							}
-
-							kitConfig.set("Flags." + world, null);
-						}
-					}
-
-					if(temp != null) {
-						kit.save();
-					}
-				}
-				kitArrayList.add(kit);
-			}
-		}
-
-		instance.log(ChatColor.GREEN + "Loaded " + kitArrayList.size() + " kit(s).");
+	public KitManager(AdvancedKitsMain instance) {
+		this.instance = instance;
 	}
 
-	public static ArrayList<Kit> getKits()
-	{
+	public static ArrayList<Kit> getKits() {
 		return kitArrayList;
 	}
 
-	private static Map<Flag<?>, Object> unmarshalFlags(Map<String, Object> rawValues)
-	{
-		checkNotNull(rawValues, "rawValues");
-
-		ConcurrentMap<Flag<?>, Object> values = Maps.newConcurrentMap();
-
-		for (Map.Entry<String, Object> entry : rawValues.entrySet()) {
-			Flag<?> flag = DefaultFlags.fuzzyMatchFlag(entry.getKey());
-
-			if (flag != null) {
-				try {
-					values.put(flag, flag.unmarshal(entry.getValue()));
-				}
-				catch (Exception e) {
-					instance.log(ChatColor.RED + "Error: " + e.getMessage());
-					instance.log(ChatColor.RED + "Failed to unmarshal flag value for " + flag);
-				}
-			}
-		}
-		return values;
-	}
-
-	public static Map<String, Object> marshal(Map<Flag<?>, Object> values)
-	{
-		checkNotNull(values, "values");
-
-		Map<String, Object> rawValues = Maps.newHashMap();
-		for (Map.Entry<Flag<?>, Object> entry : values.entrySet()) {
-			try {
-				rawValues.put(entry.getKey().getName(), marshal(entry.getKey(), entry.getValue()));
-			}
-			catch (Exception e) {
-				instance.log(ChatColor.RED + "Error: " + e.getMessage());
-				instance.log(ChatColor.RED + "Failed to marshal flag value for " + entry.getKey() + "; value is " + entry.getValue());
-			}
-		}
-
-		return rawValues;
-	}
-
-	@SuppressWarnings("unchecked")
-	private static <T> Object marshal(Flag<T> flag, Object value)
-	{
-		return flag.marshal((T) value);
-	}
-
-	public static Kit getKit(String name, String world)
-	{
+	public static Kit getKit(String name, String world) {
 		return kitArrayList.stream().filter(kit -> kit.getName().equalsIgnoreCase(name) || ChatColor.stripColor(kit.getDisplayName(world)).equalsIgnoreCase(ChatColor.stripColor(name))).findFirst().orElse(null);
 	}
 
-	public static ArrayList<String> getKitDescription(Player player, Kit kit, String world)
-	{
+	public static ArrayList<String> getKitDescription(Player player, Kit kit, String world) {
 		ArrayList<String> descriptions = new ArrayList<>();
 		User              user         = User.getUser(player.getUniqueId());
 
 		if (!kit.getFlag(CUSTOMDESCRIPTION, world).isEmpty()) {
-			kit.getFlag(CUSTOMDESCRIPTION, world).forEach(message -> descriptions.add(ChatColor.translateAlternateColorCodes('&', (AdvancedKitsMain.usePlaceholderAPI ? PlaceholderAPI.setPlaceholders(player, message) : message.replace("%player_name%", player.getName())))));
+			kit.getFlag(CUSTOMDESCRIPTION, world).forEach(message -> descriptions.add(ItemStackUtil.wrapString((AdvancedKitsMain.getPlugin().isPlaceholderAPIEnabled() ? PlaceholderAPI.setPlaceholders(player, message) : message.replace("%player_name%", player.getName())), '&', 30, true)));
 			descriptions.add(" ");
 		}
 
@@ -197,8 +58,7 @@ public class KitManager
 				descriptions.add(" ");
 				descriptions.add(getMessage("cantUseDelay", user.getDelay(kit, world)));
 				descriptions.add(" ");
-			}
-			else if (player.hasPermission(kit.getDelayPermission())) {
+			} else if (player.hasPermission(kit.getDelayPermission())) {
 				descriptions.add(" ");
 				descriptions.add(getMessage("delayImmunity"));
 				descriptions.add(" ");
@@ -209,17 +69,14 @@ public class KitManager
 
 		if (kit.getFlag(COST, world) > 0) {
 			descriptions.add(getMessage("flagCost", VaultUtil.getEconomy().format(kit.getFlag(COST, world))));
-		}
-		else if(kit.getFlag(FREE, world))
-		{
+		} else if (kit.getFlag(FREE, world)) {
 			descriptions.add(getMessage("flagFree"));
 		}
 
 		if (kit.getFlag(MAXUSES, world) != 0) {
 			if (user.getTimesUsed(kit, world) >= kit.getFlag(MAXUSES, world)) {
 				descriptions.add(getMessage("cantUseNoMore"));
-			}
-			else {
+			} else {
 				descriptions.add(getMessage("flagAmountOfUses", (kit.getFlag(MAXUSES, world) - user.getTimesUsed(kit, world))));
 			}
 
@@ -238,8 +95,7 @@ public class KitManager
 		return descriptions;
 	}
 
-	static String getDifferenceText(Date startDate, Date endDate)
-	{
+	static String getDifferenceText(Date startDate, Date endDate) {
 		long different = endDate.getTime() - startDate.getTime();
 
 		long secondsInMilli = 1000;
@@ -277,8 +133,7 @@ public class KitManager
 		return sb.toString();
 	}
 
-	private static String getDelayInString(int delay)
-	{
+	private static String getDelayInString(int delay) {
 		int numberOfDays;
 		int numberOfHours;
 		int numberOfMinutes;
@@ -307,5 +162,133 @@ public class KitManager
 		}
 		return sb.toString();
 
+	}
+
+	public void loadKits() {
+		final File folder = new File(instance.getDataFolder(), "kits");
+
+		if (!folder.isDirectory()) {
+			instance.log(ChatColor.GOLD + "- kits folder not found. Creating...");
+			folder.mkdirs();
+			return;
+		}
+		kitArrayList = new ArrayList<>();
+
+		Kit               kit;
+		YamlConfiguration kitConfig;
+
+		String fileName;
+		File[] directoryListing = folder.listFiles();
+		if (directoryListing != null) {
+			for (File child : directoryListing) {
+				if (!child.isFile()) continue;
+				if (!Files.getFileExtension(child.getName()).equalsIgnoreCase("yml")) continue;
+
+				fileName = Files.getNameWithoutExtension(child.getName());
+				if (FILE_PATTERN.matcher(fileName).find()) {
+					instance.log(ChatColor.RED + "Error when trying to load " + fileName);
+					instance.log(ChatColor.RED + "- The name contains special characters.");
+					continue;
+				}
+				kit = new Kit(fileName);
+				kitConfig = kit.getConfig();
+
+				if (kitConfig.contains("Items")) {
+					List<?> itemsList = kitConfig.getList("Items");
+
+					if (!itemsList.isEmpty()) {
+						try {
+							kit.setItems(itemsList.stream().map(item -> ItemStackUtil.itemFromString(String.valueOf(item))).collect(Collectors.toCollection(ArrayList::new)));
+						} catch (NullPointerException | JsonSyntaxException e) {
+							instance.log(ChatColor.RED + "Failed to parse items.");
+							instance.log(ChatColor.RED + "Trying to load items using the old methods.");
+							kit.setItems(itemsList.stream().map(object -> ItemStack.deserialize((Map<String, Object>) object)).collect(Collectors.toCollection(ArrayList::new)));
+						}
+					}
+				}
+
+				if (kitConfig.contains("Armors")) {
+					List<?> armorsList = kitConfig.getList("Armors");
+
+					if (!armorsList.isEmpty()) {
+						kit.setArmors(armorsList.stream().map(armor -> ItemStackUtil.itemFromString(String.valueOf(armor))).collect(Collectors.toCollection(ArrayList::new)));
+					}
+				} else if (kitConfig.contains("Armor")) {
+					List<?> armorsList = kitConfig.getList("Armor");
+
+					if (!armorsList.isEmpty()) {
+						instance.log(ChatColor.GOLD + "Failed to parse armors.");
+						instance.log(ChatColor.GOLD + "Trying to load items using the old methods.");
+						kit.setArmors(armorsList.stream().map(object -> ItemStack.deserialize((Map<String, Object>) object)).collect(Collectors.toCollection(ArrayList::new)));
+					}
+
+					kitConfig.set("Armor", null);
+					kit.save();
+				}
+				Map<String, Object> temp = null;
+				if (kitConfig.contains("Flags")) {
+
+					for (String world : kitConfig.getConfigurationSection("Flags").getKeys(false)) {
+						try {
+							kit.setFlags(world, unmarshalFlags(kitConfig.getConfigurationSection("Flags." + world).getValues(false)));
+						} catch (NullPointerException | JsonSyntaxException e) {
+							if (temp == null) {
+								temp = kitConfig.getConfigurationSection("Flags").getValues(false);
+								kit.setFlags("global", unmarshalFlags(temp));
+							}
+
+							kitConfig.set("Flags." + world, null);
+						}
+					}
+
+					if (temp != null) {
+						kit.save();
+					}
+				}
+				kitArrayList.add(kit);
+			}
+		}
+
+		instance.log(ChatColor.GREEN + "Loaded " + kitArrayList.size() + " kit(s).");
+	}
+
+	private Map<Flag<?>, Object> unmarshalFlags(Map<String, Object> rawValues) {
+		checkNotNull(rawValues, "rawValues");
+
+		ConcurrentMap<Flag<?>, Object> values = Maps.newConcurrentMap();
+
+		for (Map.Entry<String, Object> entry : rawValues.entrySet()) {
+			Flag<?> flag = DefaultFlags.fuzzyMatchFlag(entry.getKey());
+
+			if (flag != null) {
+				try {
+					values.put(flag, flag.unmarshal(entry.getValue()));
+				} catch (Exception e) {
+					instance.log(ChatColor.RED + "Error: " + e.getMessage());
+					instance.log(ChatColor.RED + "Failed to unmarshal flag value for " + flag);
+				}
+			}
+		}
+		return values;
+	}
+
+	public Map<String, Object> marshal(Map<Flag<?>, Object> values) {
+		checkNotNull(values, "values");
+
+		Map<String, Object> rawValues = Maps.newHashMap();
+		for (Map.Entry<Flag<?>, Object> entry : values.entrySet()) {
+			try {
+				rawValues.put(entry.getKey().getName(), marshal(entry.getKey(), entry.getValue()));
+			} catch (Exception e) {
+				instance.log(ChatColor.RED + "Error: " + e.getMessage());
+				instance.log(ChatColor.RED + "Failed to marshal flag value for " + entry.getKey() + "; value is " + entry.getValue());
+			}
+		}
+
+		return rawValues;
+	}
+
+	@SuppressWarnings("unchecked") private <T> Object marshal(Flag<T> flag, Object value) {
+		return flag.marshal((T) value);
 	}
 }

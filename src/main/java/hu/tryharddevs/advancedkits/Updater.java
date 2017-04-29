@@ -39,50 +39,50 @@ public class Updater {
     /* Constants */
 
 	// Remote file's title
-	private static final String TITLE_VALUE = "name";
+	private static final String   TITLE_VALUE        = "name";
 	// Remote file's download link
-	private static final String LINK_VALUE = "downloadUrl";
+	private static final String   LINK_VALUE         = "downloadUrl";
 	// Remote file's release type
-	private static final String TYPE_VALUE = "releaseType";
+	private static final String   TYPE_VALUE         = "releaseType";
 	// Remote file's build version
-	private static final String VERSION_VALUE = "gameVersion";
+	private static final String   VERSION_VALUE      = "gameVersion";
 	// Path to GET
-	private static final String QUERY = "/servermods/files?projectIds=";
+	private static final String   QUERY              = "/servermods/files?projectIds=";
 	// Slugs will be appended to this to get to the project's RSS feed
-	private static final String HOST = "https://api.curseforge.com";
+	private static final String   HOST               = "https://api.curseforge.com";
 	// User-agent when querying Curse
-	private static final String USER_AGENT = "Updater (by Gravity)";
+	private static final String   USER_AGENT         = "Updater (by Gravity)";
 	// Used for locating version numbers in file names
-	private static final String DELIMETER = "^v|[\\s_-]v";
+	private static final String   DELIMETER          = "^v|[\\s_-]v";
 	// If the version number contains one of these, don't update.
-	private static final String[] NO_UPDATE_TAG = { "-DEV", "-PRE", "-SNAPSHOT" };
+	private static final String[] NO_UPDATE_TAG      = {"-DEV", "-PRE", "-SNAPSHOT"};
 	// Used for downloading files
-	private static final int BYTE_SIZE = 1024;
+	private static final int      BYTE_SIZE          = 1024;
 	// Config key for api key
-	private static final String API_KEY_CONFIG_KEY = "api-key";
+	private static final String   API_KEY_CONFIG_KEY = "api-key";
 	// Config key for disabling Updater
-	private static final String DISABLE_CONFIG_KEY = "disable";
+	private static final String   DISABLE_CONFIG_KEY = "disable";
 	// Default api key value in config
-	private static final String API_KEY_DEFAULT = "PUT_API_KEY_HERE";
+	private static final String   API_KEY_DEFAULT    = "PUT_API_KEY_HERE";
 	// Default disable value in config
-	private static final boolean DISABLE_DEFAULT = false;
+	private static final boolean  DISABLE_DEFAULT    = false;
 
     /* User-provided variables */
 
 	// Plugin running Updater
-	private final Plugin plugin;
+	private final Plugin         plugin;
 	// Type of update check to run
-	private final UpdateType type;
+	private final UpdateType     type;
 	// Whether to announce file downloads
-	private final boolean announce;
+	private final boolean        announce;
 	// The plugin file (jar)
-	private final File file;
+	private final File           file;
 	// The folder that downloads will be placed in
-	private final File updateFolder;
+	private final File           updateFolder;
 	// The provided callback (if any)
 	private final UpdateCallback callback;
 	// Project's Curse ID
-	private int id = -1;
+	private int    id     = -1;
 	// BukkitDev ServerMods API key
 	private String apiKey = null;
 
@@ -96,89 +96,11 @@ public class Updater {
     /* Update process variables */
 
 	// Connection to RSS
-	private URL url;
+	private URL    url;
 	// Updater thread
 	private Thread thread;
 	// Used for determining the outcome of the update process
 	private Updater.UpdateResult result = Updater.UpdateResult.SUCCESS;
-
-	/**
-	 * Gives the developer the result of the update process. Can be obtained by called {@link #getResult()}
-	 */
-	public enum UpdateResult {
-		/**
-		 * The updater found an update, and has readied it to be loaded the next time the server restarts/reloads.
-		 */
-		SUCCESS,
-		/**
-		 * The updater did not find an update, and nothing was downloaded.
-		 */
-		NO_UPDATE,
-		/**
-		 * The server administrator has disabled the updating system.
-		 */
-		DISABLED,
-		/**
-		 * The updater found an update, but was unable to download it.
-		 */
-		FAIL_DOWNLOAD,
-		/**
-		 * For some reason, the updater was unable to contact dev.bukkit.org to download the file.
-		 */
-		FAIL_DBO,
-		/**
-		 * When running the version check, the file on DBO did not contain a recognizable version.
-		 */
-		FAIL_NOVERSION,
-		/**
-		 * The id provided by the plugin running the updater was invalid and doesn't exist on DBO.
-		 */
-		FAIL_BADID,
-		/**
-		 * The server administrator has improperly configured their API key in the configuration.
-		 */
-		FAIL_APIKEY,
-		/**
-		 * The updater found an update, but because of the UpdateType being set to NO_DOWNLOAD, it wasn't downloaded.
-		 */
-		UPDATE_AVAILABLE
-	}
-
-	/**
-	 * Allows the developer to specify the type of update that will be run.
-	 */
-	public enum UpdateType {
-		/**
-		 * Run a version check, and then if the file is out of date, download the newest version.
-		 */
-		DEFAULT,
-		/**
-		 * Don't run a version check, just find the latest update and download it.
-		 */
-		NO_VERSION_CHECK,
-		/**
-		 * Get information about the version and the download size, but don't actually download anything.
-		 */
-		NO_DOWNLOAD
-	}
-
-	/**
-	 * Represents the various release types of a file on BukkitDev.
-	 */
-	public enum ReleaseType {
-		/**
-		 * An "alpha" file.
-		 */
-		ALPHA,
-		/**
-		 * A "beta" file.
-		 */
-		BETA,
-		/**
-		 * A "release" file.
-		 */
-		RELEASE
-	}
 
 	/**
 	 * Initialize the updater.
@@ -225,14 +147,12 @@ public class Updater {
 		this.updateFolder = this.plugin.getServer().getUpdateFolderFile();
 		this.callback = callback;
 
-		final File pluginFile = this.plugin.getDataFolder().getParentFile();
-		final File updaterFile = new File(pluginFile, "Updater");
+		final File pluginFile        = this.plugin.getDataFolder().getParentFile();
+		final File updaterFile       = new File(pluginFile, "Updater");
 		final File updaterConfigFile = new File(updaterFile, "config.yml");
 
 		YamlConfiguration config = new YamlConfiguration();
-		config.options().header("This configuration file affects all plugins using the Updater system (version 2+ - http://forums.bukkit.org/threads/96681/ )" + '\n'
-				                        + "If you wish to use your API key, read http://wiki.bukkit.org/ServerMods_API and place it below." + '\n'
-				                        + "Some updating systems will not adhere to the disabled value, but these may be turned off in their plugin's configuration.");
+		config.options().header("This configuration file affects all plugins using the Updater system (version 2+ - http://forums.bukkit.org/threads/96681/ )" + '\n' + "If you wish to use your API key, read http://wiki.bukkit.org/ServerMods_API and place it below." + '\n' + "Some updating systems will not adhere to the disabled value, but these may be turned off in their plugin's configuration.");
 		config.addDefault(API_KEY_CONFIG_KEY, API_KEY_DEFAULT);
 		config.addDefault(DISABLE_CONFIG_KEY, DISABLE_DEFAULT);
 
@@ -290,6 +210,7 @@ public class Updater {
 	 * Get the result of the update process.
 	 *
 	 * @return result of the update process.
+	 *
 	 * @see UpdateResult
 	 */
 	public Updater.UpdateResult getResult() {
@@ -301,6 +222,7 @@ public class Updater {
 	 * Get the latest version's release type.
 	 *
 	 * @return latest version's release type.
+	 *
 	 * @see ReleaseType
 	 */
 	public ReleaseType getLatestType() {
@@ -388,16 +310,16 @@ public class Updater {
 	 * Download a file and save it to the specified folder.
 	 */
 	private void downloadFile() {
-		BufferedInputStream in = null;
-		FileOutputStream fout = null;
+		BufferedInputStream in   = null;
+		FileOutputStream    fout = null;
 		try {
-			URL fileUrl = followRedirects(this.versionLink);
+			URL       fileUrl    = followRedirects(this.versionLink);
 			final int fileLength = fileUrl.openConnection().getContentLength();
 			in = new BufferedInputStream(fileUrl.openStream());
 			fout = new FileOutputStream(new File(this.updateFolder, file.getName()));
 
 			final byte[] data = new byte[Updater.BYTE_SIZE];
-			int count;
+			int          count;
 			if (this.announce) {
 				this.plugin.getLogger().info("About to download a new update: " + this.versionName);
 			}
@@ -432,9 +354,9 @@ public class Updater {
 	}
 
 	private URL followRedirects(String location) throws IOException {
-		URL resourceUrl, base, next;
+		URL               resourceUrl, base, next;
 		HttpURLConnection conn;
-		String redLoc;
+		String            redLoc;
 		while (true) {
 			resourceUrl = new URL(location);
 			conn = (HttpURLConnection) resourceUrl.openConnection();
@@ -479,19 +401,19 @@ public class Updater {
 	private void unzip(String file) {
 		final File fSourceZip = new File(file);
 		try {
-			final String zipPath = file.substring(0, file.length() - 4);
-			ZipFile zipFile = new ZipFile(fSourceZip);
-			Enumeration<? extends ZipEntry> e = zipFile.entries();
+			final String                    zipPath = file.substring(0, file.length() - 4);
+			ZipFile                         zipFile = new ZipFile(fSourceZip);
+			Enumeration<? extends ZipEntry> e       = zipFile.entries();
 			while (e.hasMoreElements()) {
-				ZipEntry entry = e.nextElement();
-				File destinationFilePath = new File(zipPath, entry.getName());
+				ZipEntry entry               = e.nextElement();
+				File     destinationFilePath = new File(zipPath, entry.getName());
 				this.fileIOOrError(destinationFilePath.getParentFile(), destinationFilePath.getParentFile().mkdirs(), true);
 				if (!entry.isDirectory()) {
-					final BufferedInputStream bis = new BufferedInputStream(zipFile.getInputStream(entry));
-					int b;
-					final byte[] buffer = new byte[Updater.BYTE_SIZE];
-					final FileOutputStream fos = new FileOutputStream(destinationFilePath);
-					final BufferedOutputStream bos = new BufferedOutputStream(fos, Updater.BYTE_SIZE);
+					final BufferedInputStream  bis    = new BufferedInputStream(zipFile.getInputStream(entry));
+					int                        b;
+					final byte[]               buffer = new byte[Updater.BYTE_SIZE];
+					final FileOutputStream     fos    = new FileOutputStream(destinationFilePath);
+					final BufferedOutputStream bos    = new BufferedOutputStream(fos, Updater.BYTE_SIZE);
 					while ((b = bis.read(buffer, 0, Updater.BYTE_SIZE)) != -1) {
 						bos.write(buffer, 0, b);
 					}
@@ -520,6 +442,7 @@ public class Updater {
 
 	/**
 	 * Find any new files extracted from an update into the plugin's data directory.
+	 *
 	 * @param zipPath path of extracted files.
 	 */
 	private void moveNewZipFiles(String zipPath) {
@@ -628,7 +551,8 @@ public class Updater {
 	 * Without revision, this method will always consider a remote version at all different from
 	 * that of the local version a new update.
 	 * </p>
-	 * @param localVersion the current version
+	 *
+	 * @param localVersion  the current version
 	 * @param remoteVersion the remote version
 	 * @return true if Updater should consider the remote version an update, false if not.
 	 */
@@ -668,8 +592,8 @@ public class Updater {
 
 			conn.setDoOutput(true);
 
-			final BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-			final String response = reader.readLine();
+			final BufferedReader reader   = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+			final String         response = reader.readLine();
 
 			final JSONArray array = (JSONArray) JSONValue.parse(response);
 
@@ -703,7 +627,8 @@ public class Updater {
 
 	/**
 	 * Perform a file operation and log any errors if it fails.
-	 * @param file file operation is performed on.
+	 *
+	 * @param file   file operation is performed on.
 	 * @param result result of file operation.
 	 * @param create true if a file is being created, false if deleted.
 	 */
@@ -720,25 +645,6 @@ public class Updater {
 			return new File[0];
 		} else {
 			return contents;
-		}
-	}
-
-	/**
-	 * Called on main thread when the Updater has finished working, regardless
-	 * of result.
-	 */
-	public interface UpdateCallback {
-		/**
-		 * Called when the updater has finished working.
-		 * @param updater The updater instance
-		 */
-		void onFinish(Updater updater);
-	}
-
-	private class UpdateRunnable implements Runnable {
-		@Override
-		public void run() {
-			runUpdater();
 		}
 	}
 
@@ -759,8 +665,7 @@ public class Updater {
 
 		if (this.callback != null) {
 			new BukkitRunnable() {
-				@Override
-				public void run() {
+				@Override public void run() {
 					runCallback();
 				}
 			}.runTask(this.plugin);
@@ -769,5 +674,90 @@ public class Updater {
 
 	private void runCallback() {
 		this.callback.onFinish(this);
+	}
+
+	/**
+	 * Gives the developer the result of the update process. Can be obtained by called {@link #getResult()}
+	 */
+	public enum UpdateResult {
+		/**
+		 * The updater found an update, and has readied it to be loaded the next time the server restarts/reloads.
+		 */
+		SUCCESS, /**
+		 * The updater did not find an update, and nothing was downloaded.
+		 */
+		NO_UPDATE, /**
+		 * The server administrator has disabled the updating system.
+		 */
+		DISABLED, /**
+		 * The updater found an update, but was unable to download it.
+		 */
+		FAIL_DOWNLOAD, /**
+		 * For some reason, the updater was unable to contact dev.bukkit.org to download the file.
+		 */
+		FAIL_DBO, /**
+		 * When running the version check, the file on DBO did not contain a recognizable version.
+		 */
+		FAIL_NOVERSION, /**
+		 * The id provided by the plugin running the updater was invalid and doesn't exist on DBO.
+		 */
+		FAIL_BADID, /**
+		 * The server administrator has improperly configured their API key in the configuration.
+		 */
+		FAIL_APIKEY, /**
+		 * The updater found an update, but because of the UpdateType being set to NO_DOWNLOAD, it wasn't downloaded.
+		 */
+		UPDATE_AVAILABLE
+	}
+
+	/**
+	 * Allows the developer to specify the type of update that will be run.
+	 */
+	public enum UpdateType {
+		/**
+		 * Run a version check, and then if the file is out of date, download the newest version.
+		 */
+		DEFAULT, /**
+		 * Don't run a version check, just find the latest update and download it.
+		 */
+		NO_VERSION_CHECK, /**
+		 * Get information about the version and the download size, but don't actually download anything.
+		 */
+		NO_DOWNLOAD
+	}
+
+	/**
+	 * Represents the various release types of a file on BukkitDev.
+	 */
+	public enum ReleaseType {
+		/**
+		 * An "alpha" file.
+		 */
+		ALPHA, /**
+		 * A "beta" file.
+		 */
+		BETA, /**
+		 * A "release" file.
+		 */
+		RELEASE
+	}
+
+	/**
+	 * Called on main thread when the Updater has finished working, regardless
+	 * of result.
+	 */
+	public interface UpdateCallback {
+		/**
+		 * Called when the updater has finished working.
+		 *
+		 * @param updater The updater instance
+		 */
+		void onFinish(Updater updater);
+	}
+
+	private class UpdateRunnable implements Runnable {
+		@Override public void run() {
+			runUpdater();
+		}
 	}
 }

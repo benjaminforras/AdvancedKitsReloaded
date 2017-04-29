@@ -16,38 +16,32 @@ import java.util.Map;
  * You have freedom to modify given sources. Please credit me as original author.
  * Keep in mind that this is not for sale.
  */
-public class Menu
-{
+public class Menu {
 	private HashMap<Object, Object>      metadata;
 	private Inventory                    inv;
 	private HashMap<Integer, MenuObject> objects;
 
-	public Menu(Inventory inv)
-	{
+	public Menu(Inventory inv) {
 		MenuAPI.i().getMenuRegistry().register(this);
 		objects = new HashMap<>();
 		this.inv = inv;
 		metadata = new HashMap<>();
 	}
 
-	public Inventory getInventory()
-	{
+	public Inventory getInventory() {
 		return inv;
 	}
 
-	public void setInventory(Inventory inv)
-	{
+	public void setInventory(Inventory inv) {
 		objects.clear();
 		this.inv = inv;
 	}
 
-	public MenuObject getItemAt(Coordinates coordinates)
-	{
+	public MenuObject getItemAt(Coordinates coordinates) {
 		return this.equals(coordinates.getMenu()) ? objects.get(coordinates.asSlotNumber()) : null;
 	}
 
-	public void setMenuObjectAt(Coordinates coordinates, MenuObject menuObject)
-	{
+	public void setMenuObjectAt(Coordinates coordinates, MenuObject menuObject) {
 		if (menuObject.getCoordinates() != null && objects.containsKey(menuObject.getCoordinates().asSlotNumber())) {
 			objects.remove(menuObject.getCoordinates().asSlotNumber());
 		}
@@ -65,14 +59,12 @@ public class Menu
 		inv.setItem(slot, menuObject.toItemStack());
 	}
 
-	public void removeMenuObjectAt(Coordinates coordinates)
-	{
+	public void removeMenuObjectAt(Coordinates coordinates) {
 		coordinates.getMenu().getItemAt(coordinates).setCoordinates(null);
 		inv.setItem(coordinates.asSlotNumber(), null);
 	}
 
-	public void addMenuObject(MenuObject... menuObject)
-	{
+	public void addMenuObject(MenuObject... menuObject) {
 		for (MenuObject me : menuObject) {
 			if (inv.firstEmpty() != -1) {
 				setMenuObjectAt(new Coordinates(this, inv.firstEmpty()), me);
@@ -80,9 +72,7 @@ public class Menu
 		}
 	}
 
-	@Deprecated
-	public void close()
-	{
+	@Deprecated public void close() {
 		this.objects.clear();
 		inv.clear();
 		MenuAPI.i().getMenuRegistry().deregister(this);
@@ -91,24 +81,20 @@ public class Menu
 		}
 	}
 
-	public void clear()
-	{
+	public void clear() {
 		this.objects.clear();
 		inv.clear();
 	}
 
-	public void close(Player p)
-	{
+	public void close(Player p) {
 		p.closeInventory();
 	}
 
-	public void openForPlayer(Player p)
-	{
+	public void openForPlayer(Player p) {
 		p.openInventory(inv);
 	}
 
-	public MenuObject getItemByItemStack(ItemStack currentItem)
-	{
+	public MenuObject getItemByItemStack(ItemStack currentItem) {
 		for (Map.Entry<Integer, MenuObject> entry : objects.entrySet()) {
 			if (entry.getValue().toItemStack().equals(currentItem)) {
 				return entry.getValue();
@@ -117,19 +103,16 @@ public class Menu
 		return null;
 	}
 
-	public HashMap<Integer, MenuObject> getObjects()
-	{
+	public HashMap<Integer, MenuObject> getObjects() {
 		return objects;
 	}
 
-	public HashMap<Object, Object> getMetadata()
-	{
+	public HashMap<Object, Object> getMetadata() {
 		return metadata;
 	}
 
 
-	public void setMetadata(HashMap<Object, Object> metadata)
-	{
+	public void setMetadata(HashMap<Object, Object> metadata) {
 		this.metadata = metadata;
 	}
 }

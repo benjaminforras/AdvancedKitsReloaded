@@ -13,31 +13,24 @@ import hu.tryharddevs.advancedkits.utils.menuapi.listeners.MenuCloseAction;
  * - If using over 60 lines of my code, please provide visible credit.
  */
 
-public class MenuAPI
-{
+public class MenuAPI {
 	private static MenuRegistry menuRegistry;
 	private static MenuAPI      plugin;
-	private AdvancedKitsMain instance = AdvancedKitsMain.advancedKits;
+	private AdvancedKitsMain instance = AdvancedKitsMain.getPlugin();
 
-	public static MenuAPI i()
-	{
+	public static MenuAPI i() {
 		return plugin;
 	}
 
-	public void onEnable()
-	{
+	public void onEnable() {
 		plugin = this;
 		menuRegistry = new MenuRegistry();
 
 		instance.getServer().getPluginManager().registerEvents(new MenuActions(), instance);
 		instance.getServer().getPluginManager().registerEvents(new MenuCloseAction(), instance);
-
-		//Removed
-		//Bukkit.getConsoleSender().sendMessage("Initializing " + ChatColor.BLUE + ChatColor.BOLD + "Colonel" + ChatColor.DARK_AQUA + "Hedgehog" + ChatColor.RESET + "'s " + ChatColor.YELLOW + "MenuAPI. All libraries loaded." + ChatColor.RESET);
 	}
 
-	public MenuRegistry getMenuRegistry()
-	{
+	public MenuRegistry getMenuRegistry() {
 		return menuRegistry;
 	}
 }

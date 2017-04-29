@@ -1,6 +1,6 @@
 package hu.tryharddevs.advancedkits.kits.flags;
 
-import hu.tryharddevs.advancedkits.AdvancedKitsMain;
+import hu.tryharddevs.advancedkits.Config;
 import org.bukkit.ChatColor;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
@@ -10,37 +10,28 @@ import java.util.Arrays;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-public class PotionEffectFlag extends Flag<PotionEffect>
-{
-	public PotionEffectFlag(String name)
-	{
+public class PotionEffectFlag extends Flag<PotionEffect> {
+	public PotionEffectFlag(String name) {
 		super(name);
 	}
 
-	@Override
-	public PotionEffect parseInput(String input) throws InvalidFlagValueException
-	{
+	@Override public PotionEffect parseInput(String input) throws InvalidFlagValueException {
 		if (Objects.isNull(getPotionEffectFromString(input))) {
-			throw new InvalidFlagValueException(AdvancedKitsMain.advancedKits.chatPrefix + " " + ChatColor.RED + "Invalid format or effect.", AdvancedKitsMain.advancedKits.chatPrefix + " " + ChatColor.RED + "Correct format: effect;duration;amplifier.", AdvancedKitsMain.advancedKits.chatPrefix + " " + ChatColor.RED + "Here are the available potioneffects: ", ChatColor.GRAY + Arrays.stream(PotionEffectType.values()).filter(Objects::nonNull).map(PotionEffectType::getName).collect(Collectors.joining(",")));
+			throw new InvalidFlagValueException(Config.CHAT_PREFIX + " " + ChatColor.RED + "Invalid format or effect.", Config.CHAT_PREFIX + " " + ChatColor.RED + "Correct format: effect;duration;amplifier.", Config.CHAT_PREFIX + " " + ChatColor.RED + "Here are the available potioneffects: ", ChatColor.GRAY + Arrays.stream(PotionEffectType.values()).filter(Objects::nonNull).map(PotionEffectType::getName).collect(Collectors.joining(",")));
 		}
 
 		return getPotionEffectFromString(input);
 	}
 
-	@Override
-	public PotionEffect unmarshal(@Nullable Object o)
-	{
+	@Override public PotionEffect unmarshal(@Nullable Object o) {
 		return getPotionEffectFromString(String.valueOf(o));
 	}
 
-	@Override
-	public Object marshal(PotionEffect o)
-	{
+	@Override public Object marshal(PotionEffect o) {
 		return getPotionEffectAsString(o);
 	}
 
-	public PotionEffect getPotionEffectFromString(String value)
-	{
+	public PotionEffect getPotionEffectFromString(String value) {
 		if (value.split(";").length != 3) {
 			return null;
 		}
@@ -54,16 +45,14 @@ public class PotionEffectFlag extends Flag<PotionEffect>
 
 		try {
 			potionEffect = new PotionEffect(PotionEffectType.getByName(split[0]), Integer.parseInt(split[1]), Integer.parseInt(split[2]));
-		}
-		catch (Exception e) {
+		} catch (Exception e) {
 			return null;
 		}
 		return potionEffect;
 	}
 
 	// effect,duration,amplifier
-	private String getPotionEffectAsString(PotionEffect potionEffect)
-	{
+	private String getPotionEffectAsString(PotionEffect potionEffect) {
 		return potionEffect.getType().getName() + ";" + potionEffect.getDuration() + ";" + potionEffect.getAmplifier();
 	}
 

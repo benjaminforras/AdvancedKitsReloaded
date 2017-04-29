@@ -36,7 +36,7 @@ repositories {
     }
     maven {
         name = 'aikar-repo'
-        url  = 'http://ci.emc.gs/nexus/content/groups/aikar/'
+        url = 'http://ci.emc.gs/nexus/content/groups/aikar/'
     }
     maven {
         name = 'jitpack.io'
@@ -54,7 +54,7 @@ dependencies {
     compile 'me.clip:placeholderapi:2.7.1'
     compile 'net.milkbowl.vault:VaultAPI:1.6'
 
-    compile 'co.aikar:acf-core:0.3.0-SNAPSHOT'
+    compile 'co.aikar:acf-core:0.4.0-SNAPSHOT'
     compile 'com.github.InventivetalentDev:ReflectionHelper:395cfea950'
     compile 'com.github.InventivetalentDev:ParticleAPI:65b701708a'
 }

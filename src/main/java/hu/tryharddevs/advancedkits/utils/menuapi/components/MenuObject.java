@@ -15,16 +15,14 @@ import java.util.List;
  * You have freedom to modify given sources. Please credit me as original author.
  * Keep in mind that this is not for sale.
  */
-public class MenuObject
-{
+public class MenuObject {
 	private ItemStack               item;
 	private Coordinates             coordinates;
 	private ActionListener          actionListener;
 	private HashMap<Object, Object> metadata;
 	private GUISound                sound;
 
-	public MenuObject(ItemStack holder)
-	{
+	public MenuObject(ItemStack holder) {
 		metadata = new HashMap<>();
 		if (holder == null) {
 			Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "The ItemStack used as a menu object was null." + ChatColor.RESET);
@@ -37,8 +35,7 @@ public class MenuObject
 		this.actionListener = null;
 	}
 
-	public MenuObject(Material icon, byte data, String name, List<String> tooltip)
-	{
+	public MenuObject(Material icon, byte data, String name, List<String> tooltip) {
 		metadata = new HashMap<>();
 		item = new ItemStack(icon, 1, data);
 
@@ -51,8 +48,7 @@ public class MenuObject
 		this.actionListener = null;
 	}
 
-	public MenuObject(ItemStack item, String name, List<String> tooltip)
-	{
+	public MenuObject(ItemStack item, String name, List<String> tooltip) {
 		metadata = new HashMap<>();
 
 		ItemMeta meta = item.getItemMeta();
@@ -65,15 +61,13 @@ public class MenuObject
 		this.actionListener = null;
 	}
 
-	public void setIcon(ItemStack holder)
-	{
+	public void setIcon(ItemStack holder) {
 		this.item = holder;
 
 		update();
 	}
 
-	public void setIcon(Material icon, byte data, String name, List<String> tooltip)
-	{
+	public void setIcon(Material icon, byte data, String name, List<String> tooltip) {
 		item = new ItemStack(icon, 1, data);
 		ItemMeta meta = item.getItemMeta();
 		meta.setLore(tooltip);
@@ -83,58 +77,47 @@ public class MenuObject
 		update();
 	}
 
-	public ItemStack toItemStack()
-	{
+	public ItemStack toItemStack() {
 		return this.item;
 	}
 
-	public Coordinates getCoordinates()
-	{
+	public Coordinates getCoordinates() {
 		return coordinates;
 	}
 
-	public void setCoordinates(Coordinates coordinates)
-	{
+	public void setCoordinates(Coordinates coordinates) {
 		this.coordinates = coordinates;
 	}
 
-	public ActionListener getActionListener()
-	{
+	public ActionListener getActionListener() {
 		return actionListener;
 	}
 
-	public void setActionListener(ActionListener actionListener)
-	{
+	public void setActionListener(ActionListener actionListener) {
 		this.actionListener = actionListener;
 	}
 
-	public void update()
-	{
+	public void update() {
 		coordinates.getMenu().getInventory().setItem(coordinates.asSlotNumber(), toItemStack());
 	}
 
-	public HashMap<Object, Object> getMetadata()
-	{
+	public HashMap<Object, Object> getMetadata() {
 		return metadata;
 	}
 
-	public void setMetadata(HashMap<Object, Object> metadata)
-	{
+	public void setMetadata(HashMap<Object, Object> metadata) {
 		this.metadata = metadata;
 	}
 
-	public Menu getMenu()
-	{
+	public Menu getMenu() {
 		return getCoordinates().getMenu();
 	}
 
-	public GUISound getGUISound()
-	{
+	public GUISound getGUISound() {
 		return sound;
 	}
 
-	public void setGUISound(GUISound sound)
-	{
+	public void setGUISound(GUISound sound) {
 		this.sound = sound;
 	}
 }

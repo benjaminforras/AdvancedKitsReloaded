@@ -7,87 +7,71 @@ import org.bukkit.entity.Player;
 /**
  * Created by ColonelHedgehog on 8/15/15.
  */
-public class GUISound
-{
+public class GUISound {
 	private Sound   sound;
 	private float   volume;
 	private float   pitch;
 	private boolean playOnClick;
 
-	public GUISound(Sound sound)
-	{
+	public GUISound(Sound sound) {
 		this(sound, 1, 1, true);
 	}
 
-	public GUISound(Sound sound, float volume, float pitch)
-	{
+	public GUISound(Sound sound, float volume, float pitch) {
 		this(sound, volume, pitch, true);
 	}
 
-	public GUISound(Sound sound, float volume, float pitch, boolean playOnClick)
-	{
+	public GUISound(Sound sound, float volume, float pitch, boolean playOnClick) {
 		this.sound = sound;
 		this.volume = volume;
 		this.pitch = pitch;
 		this.playOnClick = playOnClick;
 	}
 
-	public Sound getSound()
-	{
+	public Sound getSound() {
 		return sound;
 	}
 
-	public void setSound(Sound sound)
-	{
+	public void setSound(Sound sound) {
 		this.sound = sound;
 	}
 
-	public float getVolume()
-	{
+	public float getVolume() {
 		return volume;
 	}
 
-	public void setVolume(float volume)
-	{
+	public void setVolume(float volume) {
 		this.volume = volume;
 	}
 
-	public float getPitch()
-	{
+	public float getPitch() {
 		return pitch;
 	}
 
-	public void setPitch(float pitch)
-	{
+	public void setPitch(float pitch) {
 		this.pitch = pitch;
 	}
 
-	public boolean getPlayOnClick()
-	{
+	public boolean getPlayOnClick() {
 		return playOnClick;
 	}
 
-	public void setPlayOnClick(boolean playOnClick)
-	{
+	public void setPlayOnClick(boolean playOnClick) {
 		this.playOnClick = playOnClick;
 	}
 
-	public void playGUISound(Player player)
-	{
+	public void playGUISound(Player player) {
 		playGUISound(player.getLocation(), player);
 	}
 
-	public void playGUISound(Location loc)
-	{
+	public void playGUISound(Location loc) {
 		playGUISound(loc, null);
 	}
 
-	public void playGUISound(Location loc, Player player)
-	{
+	public void playGUISound(Location loc, Player player) {
 		if (player == null) {
 			loc.getWorld().playSound(loc, this.sound, this.pitch, this.volume);
-		}
-		else {
+		} else {
 			player.playSound(loc, this.sound, this.pitch, this.volume);
 		}
 	}

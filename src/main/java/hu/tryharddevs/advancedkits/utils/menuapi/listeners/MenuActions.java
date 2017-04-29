@@ -17,11 +17,8 @@ import org.bukkit.scheduler.BukkitRunnable;
  * You have freedom to modify given sources. Please credit me as original author.
  * Keep in mind that this is not for sale.
  */
-public class MenuActions implements Listener
-{
-	@EventHandler
-	public void onClick(final InventoryClickEvent event)
-	{
+public class MenuActions implements Listener {
+	@EventHandler public void onClick(final InventoryClickEvent event) {
 		if (event.getCurrentItem() == null) {
 			return;
 		}
@@ -44,11 +41,8 @@ public class MenuActions implements Listener
 			return;
 		}
 
-		new BukkitRunnable()
-		{
-			@Override
-			public void run()
-			{
+		new BukkitRunnable() {
+			@Override public void run() {
 				GUISound sound = menuObject.getGUISound();
 				if (menuObject.getGUISound() != null) {
 					if (sound.getPlayOnClick()) {
@@ -57,6 +51,6 @@ public class MenuActions implements Listener
 				}
 				menuObject.getActionListener().onClick(event.getClick(), menuObject, (Player) event.getWhoClicked());
 			}
-		}.runTask(AdvancedKitsMain.advancedKits);
+		}.runTask(AdvancedKitsMain.getPlugin());
 	}
 }

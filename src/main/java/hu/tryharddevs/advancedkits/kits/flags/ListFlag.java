@@ -4,34 +4,26 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-public class ListFlag<T> extends Flag<ArrayList<T>>
-{
+public class ListFlag<T> extends Flag<ArrayList<T>> {
 	private Flag<T> subFlag;
 
-	public ListFlag(String name, Flag<T> subFlag)
-	{
+	public ListFlag(String name, Flag<T> subFlag) {
 		super(name);
 		this.subFlag = subFlag;
 	}
 
-	public Flag<T> getType()
-	{
+	public Flag<T> getType() {
 		return subFlag;
 	}
 
-	@Override
-	public ArrayList<T> getDefault()
-	{
+	@Override public ArrayList<T> getDefault() {
 		return new ArrayList<>();
 	}
 
-	@Override
-	public ArrayList<T> parseInput(String input) throws InvalidFlagValueException
-	{
+	@Override public ArrayList<T> parseInput(String input) throws InvalidFlagValueException {
 		if (input.isEmpty()) {
 			return new ArrayList<>();
-		}
-		else {
+		} else {
 			ArrayList<T> items = new ArrayList<>();
 
 			for (String str : input.split(",")) {
@@ -41,9 +33,7 @@ public class ListFlag<T> extends Flag<ArrayList<T>>
 		}
 	}
 
-	@Override
-	public ArrayList<T> unmarshal(Object o)
-	{
+	@Override public ArrayList<T> unmarshal(Object o) {
 		if (o instanceof Collection<?>) {
 			Collection<?> collection = (Collection<?>) o;
 			ArrayList<T>  items      = new ArrayList<>();
@@ -56,15 +46,12 @@ public class ListFlag<T> extends Flag<ArrayList<T>>
 			}
 
 			return items;
-		}
-		else {
+		} else {
 			return null;
 		}
 	}
 
-	@Override
-	public Object marshal(ArrayList<T> o)
-	{
+	@Override public Object marshal(ArrayList<T> o) {
 		List<Object> list = new ArrayList<>();
 		for (T item : o) {
 			list.add(subFlag.marshal(item));

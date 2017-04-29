@@ -8,7 +8,6 @@ import org.bukkit.event.inventory.ClickType;
  * You have freedom to modify given sources. Please credit me as original author.
  * Keep in mind that this is not for sale.
  */
-public interface ActionListener
-{
+public interface ActionListener {
 	public void onClick(ClickType clickType, MenuObject menuObject, Player whoClicked);
 }
