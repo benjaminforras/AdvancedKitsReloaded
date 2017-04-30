@@ -2,7 +2,7 @@
 ===================
 
 - **Status:** ![Progress](http://progressed.io/bar/100)
-- **Latest version:** [v1.0.3-pre3](https://github.com/TryHardDood/AdvancedKitsReloaded/releases/tag/v1.0.3-pre3)
+- **Latest version:** [v1.0.4](https://github.com/TryHardDood/AdvancedKitsReloaded/releases/tag/v1.0.4)
 
 ## Links
 - [SpigotMC](https://www.spigotmc.org/resources/advancedkits-reloaded.11193/) 
@@ -56,8 +56,7 @@ Feel free to fork the project and share your code.*
 
 ## Credits:
 - [Aikar](https://github.com/aikar): For his ACF: Aikar Command Framework.
-- [ColonelHedgehog](https://github.com/ColonelHedgehog/): For his MenuAPI.
-- [InventivetalentDev](https://github.com/InventivetalentDev/): For her ParticleAPI and ReflectionHelper.
+- [InventivetalentDev](https://github.com/InventivetalentDev/): For her ParticleAPI, ReflectionHelper and InventoryAPI.
 
 ## Metrics
 This plugin utilizes bStats plugin metrics system, which means that the following information is collected and sent to bstats.org:
