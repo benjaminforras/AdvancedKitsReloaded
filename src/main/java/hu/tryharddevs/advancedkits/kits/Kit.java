@@ -110,7 +110,7 @@ public class Kit {
 		instance.log("Saved " + name);
 	}
 
-	private File getSaveFile() {
+	public File getSaveFile() {
 		File file = new File(instance.getDataFolder() + File.separator + "kits", name + ".yml");
 		if (!file.exists()) {
 			try {

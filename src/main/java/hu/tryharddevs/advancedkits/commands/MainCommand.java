@@ -13,17 +13,13 @@ import hu.tryharddevs.advancedkits.kits.flags.InvalidFlagValueException;
 import hu.tryharddevs.advancedkits.utils.ItemStackUtil;
 import hu.tryharddevs.advancedkits.utils.MessagesApi;
 import hu.tryharddevs.advancedkits.utils.VaultUtil;
-import hu.tryharddevs.advancedkits.utils.menuapi.components.ActionListener;
-import hu.tryharddevs.advancedkits.utils.menuapi.components.Coordinates;
-import hu.tryharddevs.advancedkits.utils.menuapi.components.Menu;
-import hu.tryharddevs.advancedkits.utils.menuapi.components.MenuObject;
+import hu.tryharddevs.advancedkits.utils.invapi.*;
 import me.clip.placeholderapi.PlaceholderAPI;
 import net.milkbowl.vault.economy.EconomyResponse;
 import org.bukkit.*;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Firework;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.inventory.meta.FireworkMeta;
@@ -38,104 +34,48 @@ import java.util.stream.Collectors;
 import static hu.tryharddevs.advancedkits.kits.flags.DefaultFlags.*;
 import static hu.tryharddevs.advancedkits.utils.localization.I18n.getMessage;
 
-@SuppressWarnings("ConstantConditions") @CommandAlias("kit|akit|advancedkits|kits|akits")
+@SuppressWarnings("ConstantConditions")
+@CommandAlias("kit|akit|advancedkits|kits|akits")
 public class MainCommand extends BaseCommand {
 	private AdvancedKitsMain instance;
 
 	private ConcurrentHashMap<UUID, ItemStack[]> inEdit     = new ConcurrentHashMap<>();
 	private ConcurrentHashMap<UUID, Kit>         currentKit = new ConcurrentHashMap<>();
 
-	private ActionListener useInventoryListener = (clickType, menuObject, whoClicked) -> {
-		ItemStack clickedItem = menuObject.toItemStack();
-		if (!clickedItem.hasItemMeta() || !clickedItem.getItemMeta().hasDisplayName()) return;
-
-		Kit kit = KitManager.getKit(clickedItem.getItemMeta().getDisplayName(), whoClicked.getWorld().getName());
-		if (Objects.isNull(kit)) {
-			sendMessage(whoClicked, getMessage("kitNotFound"));
-			return;
-		}
-
-		Bukkit.dispatchCommand(whoClicked, "kit use " + ChatColor.stripColor(clickedItem.getItemMeta().getDisplayName()));
-		menuObject.setIcon(Material.MINECART, (byte) 0, kit.getDisplayName(whoClicked.getWorld().getName()), KitManager.getKitDescription(whoClicked, kit, whoClicked.getWorld().getName()));
-	};
-
-	private ActionListener editCommandListener = (clickType, menuObject, whoClicked) -> {
-		ItemStack clickedItem = menuObject.toItemStack();
-		if (!clickedItem.hasItemMeta() || !clickedItem.getItemMeta().hasDisplayName()) return;
-
-		if (clickedItem.getType().equals(Material.STAINED_GLASS)) {
-			if (menuObject.getCoordinates().asSlotNumber() == 2) {
-				Bukkit.dispatchCommand(whoClicked, "kit edit " + "cancel");
-			} else if (menuObject.getCoordinates().asSlotNumber() == 6) {
-				Bukkit.dispatchCommand(whoClicked, "kit edit " + currentKit.get(whoClicked.getUniqueId()));
-			}
-			menuObject.getMenu().close(whoClicked);
-			return;
-		}
-
-		Kit kit = KitManager.getKit(clickedItem.getItemMeta().getDisplayName(), whoClicked.getWorld().getName());
-		if (Objects.isNull(kit)) {
-			sendMessage(whoClicked, getMessage("kitNotFound"));
-			return;
-		}
-
-		Bukkit.dispatchCommand(whoClicked, "kit edit " + ChatColor.stripColor(clickedItem.getItemMeta().getDisplayName()));
-		menuObject.getMenu().close(whoClicked);
-	};
-
-	private ActionListener viewInventoryListener = (clickType, menuObject, whoClicked) -> {
-		ItemStack clickedItem = menuObject.toItemStack();
-		if (!clickedItem.hasItemMeta() || !clickedItem.getItemMeta().hasDisplayName()) return;
-
-		if (clickedItem.getType() == Material.STAINED_GLASS_PANE) {
-			if (clickedItem.getDurability() == (short) 13) {
-				Bukkit.dispatchCommand(whoClicked, "kit use " + currentKit.get(whoClicked.getUniqueId()));
-			} else if (clickedItem.getDurability() == (short) 14) {
-				Bukkit.dispatchCommand(whoClicked, "kit buy " + currentKit.get(whoClicked.getUniqueId()));
-			}
-		}
-		menuObject.getMenu().close(whoClicked);
-	};
-
-	private ActionListener buyInventoryListener = (clickType, menuObject, whoClicked) -> {
-		ItemStack clickedItem = menuObject.toItemStack();
-		if (!clickedItem.hasItemMeta() || !clickedItem.getItemMeta().hasDisplayName()) return;
-
-		Kit kit = KitManager.getKit(clickedItem.getItemMeta().getDisplayName(), whoClicked.getWorld().getName());
-		if (Objects.isNull(kit)) {
-			sendMessage(whoClicked, getMessage("kitNotFound"));
-			return;
-		}
-
-		Bukkit.dispatchCommand(whoClicked, "kit buy " + ChatColor.stripColor(clickedItem.getItemMeta().getDisplayName()));
-		menuObject.getMenu().close(whoClicked);
-	};
-
 	public MainCommand(AdvancedKitsMain instance) {
 		this.instance = instance;
 	}
 
-	@Subcommand("buy") @CommandPermission("advancedkits.buy") @CommandCompletion("@kits") @Syntax("[kitname]")
+	@Subcommand("buy")
+	@CommandPermission("advancedkits.buy")
+	@CommandCompletion("@kits")
+	@Syntax("[kitname]")
 	public void onBuyCommand(Player player, @Optional Kit kit) {
 		User   user  = User.getUser(player.getUniqueId());
 		String world = player.getWorld().getName();
 
 		if (Objects.isNull(kit)) {
-			Inventory inventory = Bukkit.createInventory(player, ((int) (Math.ceil((double) KitManager.getKits().size() / 9)) * 9), "AdvancedKitsReborn - Buy kit");
-			Menu      menu      = new Menu(inventory);
 
-			MenuObject menuObject;
-			for (Kit _kit : KitManager.getKits()) {
-				if (!_kit.getFlag(VISIBLE, world)) continue;
-				if (_kit.getFlag(FREE, world) || user.isUnlocked(_kit)) continue;
+			PageInventory pageInventory = new PageInventory("AdvancedKits - Buy Kit", player);
+			pageInventory.setPages(KitManager.getKits().stream().filter(_kit -> _kit.getFlag(VISIBLE, world) && (!_kit.getFlag(FREE, world) && !user.isUnlocked(_kit))).sorted(Comparator.comparing(Kit::getName)).map(_kit -> new ItemBuilder(_kit.getFlag(ICON, world)).setName(ChatColor.WHITE + _kit.getDisplayName(world)).setLore(KitManager.getKitDescription(player, _kit, world)).toItemStack()).collect(Collectors.toCollection(ArrayList::new)));
+			pageInventory.openInventory();
 
-				menuObject = new MenuObject(_kit.getFlag(ICON, world), ChatColor.RED + _kit.getDisplayName(player.getWorld().getName()), KitManager.getKitDescription(player, _kit, world));
-				menuObject.setActionListener(buyInventoryListener);
+			pageInventory.onPagesItemClickEvent((_pageInventory, _event) -> {
+				ItemStack clickedItem = _event.getCurrentItem();
+				if (Objects.isNull(clickedItem) || !clickedItem.hasItemMeta() || !clickedItem.getItemMeta().hasDisplayName())
+					return;
 
-				menu.addMenuObject(menuObject);
-			}
-			menu.openForPlayer(player);
+				Player _player = (Player) _event.getWhoClicked();
 
+				Kit clickedKit = KitManager.getKit(clickedItem.getItemMeta().getDisplayName(), _player.getWorld().getName());
+				if (Objects.isNull(clickedKit)) {
+					sendMessage(_player, getMessage("kitNotFound"));
+					return;
+				}
+
+				_pageInventory.closeInventory();
+				Bukkit.dispatchCommand(_player, "kit buy " + clickedKit.getName());
+			});
 			return;
 		}
 
@@ -164,32 +104,40 @@ public class MainCommand extends BaseCommand {
 	}
 
 
-	@Subcommand("use") @CommandPermission("advancedkits.use") @CommandCompletion("@kits") @Syntax("[kitname]")
+	@Subcommand("use")
+	@CommandPermission("advancedkits.use")
+	@CommandCompletion("@kits")
+	@Syntax("[kitname]")
 	public void onUseCommand(Player player, @Optional Kit kit) {
 		User   user  = User.getUser(player.getUniqueId());
 		String world = player.getWorld().getName();
 
 		if (Objects.isNull(kit)) {
-			Inventory inventory = Bukkit.createInventory(player, ((int) (Math.ceil((double) KitManager.getKits().size() / 9)) * 9), "AdvancedKitsReborn - Use kit");
-			Menu      menu      = new Menu(inventory);
+			PageInventory pageInventory = new PageInventory("AdvancedKits - Use Kit", player);
+			pageInventory.setPages(KitManager.getKits().stream().filter(_kit -> _kit.getFlag(VISIBLE, world) && (_kit.getFlag(FREE, world) || user.isUnlocked(_kit))).sorted(Comparator.comparing(Kit::getName)).map(_kit -> new ItemBuilder(_kit.getFlag(ICON, world)).setName(ChatColor.WHITE + _kit.getDisplayName(world)).setLore(KitManager.getKitDescription(player, _kit, world)).toItemStack()).collect(Collectors.toCollection(ArrayList::new)));
+			pageInventory.openInventory();
 
-			MenuObject menuObject;
-			for (Kit _kit : KitManager.getKits()) {
-				if (!_kit.getFlag(VISIBLE, world)) continue;
-				if (!_kit.getFlag(FREE, world) && !user.isUnlocked(_kit)) continue;
+			pageInventory.onPagesItemClickEvent((_pageInventory, _event) -> {
+				ItemStack clickedItem = _event.getCurrentItem();
+				if (Objects.isNull(clickedItem) || !clickedItem.hasItemMeta() || !clickedItem.getItemMeta().hasDisplayName())
+					return;
 
-				menuObject = new MenuObject(_kit.getFlag(ICON, world), ChatColor.GREEN + _kit.getDisplayName(player.getWorld().getName()), KitManager.getKitDescription(player, _kit, world));
-				menuObject.setActionListener(useInventoryListener);
+				Player _player = (Player) _event.getWhoClicked();
 
-				menu.addMenuObject(menuObject);
-			}
-			menu.openForPlayer(player);
+				Kit clickedKit = KitManager.getKit(clickedItem.getItemMeta().getDisplayName(), _player.getWorld().getName());
+				if (Objects.isNull(clickedKit)) {
+					sendMessage(_player, getMessage("kitNotFound"));
+					return;
+				}
 
+				_pageInventory.closeInventory();
+				Bukkit.dispatchCommand(_player, "kit use " + clickedKit.getName());
+			});
 			return;
 		}
 
 		if (!player.hasPermission(kit.getPermission())) {
-			sendMessage(player, getMessage("noKitPermission"));
+			sendMessage(player, getMessage("noKitPermission", kit.getPermission()));
 			return;
 		}
 
@@ -231,7 +179,7 @@ public class MainCommand extends BaseCommand {
 			spaceneed += player.getInventory().getArmorContents().length;
 		}
 		if (!kit.getFlag(SPEWITEMS, world) && spaceneed > freeSpace) {
-			sendMessage(player, getMessage("notEnoughSpace"));
+			sendMessage(player, getMessage("notEnoughSpace", spaceneed));
 			return;
 		}
 		ItemStack[] equipment = playerInventory.getArmorContents();
@@ -335,24 +283,21 @@ public class MainCommand extends BaseCommand {
 		sendMessage(player, getMessage("successfullyUsed", kit.getName()));
 	}
 
-	@Subcommand("create") @CommandPermission("advancedkits.create") @Syntax("<kitname>")
+	@Subcommand("create")
+	@CommandPermission("advancedkits.create")
+	@Syntax("<kitname>")
 	public void onCreateCommand(Player player, String kitName) {
-		/*Player player = sender instanceof Player ? (Player) sender : null;
-		if (player == null) {
-			sendMessage(sender, getMessage("onlyPlayer"));
-			return;
-		}*/
-
 		if (Objects.nonNull(KitManager.getKit(kitName, player.getWorld().getName()))) {
 			sendMessage(player, getMessage("kitAlreadyExists"));
 			return;
 		}
-		Kit kit = new Kit(kitName);
 
-		if (player.getInventory().getContents().length == 0) {
+		if (getEmptySpaces(player) == 0) {
 			sendMessage(player, getMessage("emptyInventory"));
 			return;
 		}
+
+		Kit kit = new Kit(kitName);
 
 		PlayerInventory playerInventory = player.getInventory();
 		kit.setItems(Arrays.stream(playerInventory.getStorageContents()).filter(Objects::nonNull).collect(Collectors.toCollection(ArrayList::new)));
@@ -366,7 +311,74 @@ public class MainCommand extends BaseCommand {
 		sendMessage(player, getMessage("successfullyCreated", kit.getName()));
 	}
 
-	@Subcommand("flag") @CommandPermission("advancedkits.flag") @CommandCompletion("@kits @flags")
+	@Subcommand("delete")
+	@CommandPermission("advancedkits.delete")
+	@Syntax("<kitname>")
+	@CommandCompletion("@kits")
+	public void onDeleteCommand(CommandSender sender, @Optional Kit kit) {
+
+		Player player = sender instanceof Player ? (Player) sender : null;
+
+		if (Objects.isNull(kit) && Objects.nonNull(player)) {
+			String world = player.getWorld().getName();
+
+			PageInventory pageInventory = new PageInventory("AdvancedKits - View Kit", (Player) sender);
+			pageInventory.setPages(KitManager.getKits().stream().filter(_kit -> _kit.getFlag(VISIBLE, world)).sorted(Comparator.comparing(Kit::getName)).map(_kit -> new ItemBuilder(_kit.getFlag(ICON, world)).setName(ChatColor.WHITE + _kit.getDisplayName(world)).setLore(KitManager.getKitDescription(player, _kit, world)).toItemStack()).collect(Collectors.toCollection(ArrayList::new)));
+			pageInventory.openInventory();
+
+			pageInventory.onPagesItemClickEvent((_pageInventory, _event) -> {
+				ItemStack clickedItem = _event.getCurrentItem();
+				if (Objects.isNull(clickedItem) || !clickedItem.hasItemMeta() || !clickedItem.getItemMeta().hasDisplayName())
+					return;
+
+				Player _player = (Player) _event.getWhoClicked();
+
+				Kit clickedKit = KitManager.getKit(clickedItem.getItemMeta().getDisplayName(), _player.getWorld().getName());
+				if (Objects.isNull(clickedKit)) {
+					sendMessage(_player, getMessage("kitNotFound"));
+					return;
+				}
+
+				_pageInventory.closeInventory();
+				Bukkit.dispatchCommand(_player, "kit delete " + clickedKit.getName());
+			});
+			return;
+		} else if (Objects.isNull(kit) && Objects.isNull(player)) {
+			sendMessage(sender, "Syntax: /kit delete <kitname>");
+			return;
+		}
+
+		String name = kit.getName();
+		if (Objects.nonNull(player)) {
+			NamedInventory namedInventory = new NamedInventory("AdvancedKits - Delete Kit", player);
+			PageLayout     pageLayout     = new PageLayout("XXOXXXOXX");
+
+			namedInventory.setPage(new Page("deleteKitPage", "AdvancedKits - Delete Kit"), pageLayout.generate(new ItemBuilder(Material.STAINED_GLASS_PANE).setDurability((short) 13).setName(getMessage("guiConfirm")).toItemStack(), new ItemBuilder(Material.STAINED_GLASS_PANE).setDurability((short) 14).setName(getMessage("guiCancel")).toItemStack()));
+			namedInventory.openInventory();
+
+			namedInventory.onNamedClickEvent((_namedInventory, _event) -> {
+				if (_event.getCurrentItem() == null) return;
+
+				ItemStack item = _event.getCurrentItem();
+				if (item.getDurability() == (short) 14) //Cancel
+				{
+					_namedInventory.closeInventory();
+				} else if (item.getDurability() == (short) 13) //Delete
+				{
+					_namedInventory.closeInventory();
+					instance.getKitManager().deleteKit(kit);
+					sendMessage(player, getMessage("successfullyDeleted", name));
+				}
+			});
+		} else {
+			instance.getKitManager().deleteKit(kit);
+			sendMessage(sender, getMessage("successfullyDeleted", name));
+		}
+	}
+
+	@Subcommand("flag")
+	@CommandPermission("advancedkits.flag")
+	@CommandCompletion("@kits @flags")
 	@Syntax("<kitname> <flag> <value> [world]")
 	public void onFlagCommand(Player player, Kit kit, Flag flag, String value, @Optional String world) {
 
@@ -429,7 +441,9 @@ public class MainCommand extends BaseCommand {
 		sendMessage(player, getMessage("flagSet", flag.getName(), value, kit.getDisplayName(world), world));
 	}
 
-	@Subcommand("give") @CommandPermission("advancedkits.give") @CommandCompletion("@kits @players true|false")
+	@Subcommand("give")
+	@CommandPermission("advancedkits.give")
+	@CommandCompletion("@kits @players true|false")
 	@Syntax("<kitname> <player> [forceuse]")
 	public void onGiveCommand(CommandSender sender, Kit kit, Player player, @Optional @Default("false") Boolean forceuse) {
 
@@ -454,7 +468,9 @@ public class MainCommand extends BaseCommand {
 		if (forceuse) Bukkit.dispatchCommand(player, "kit use " + kit.getName());
 	}
 
-	@Subcommand("reload") @CommandPermission("advancedkits.reload") public void onReloadCommand(CommandSender sender) {
+	@Subcommand("reload")
+	@CommandPermission("advancedkits.reload")
+	public void onReloadCommand(CommandSender sender) {
 		sendMessage(sender, "Starting to reload configuration.");
 		Config.loadConfigurationValues(instance);
 		sendMessage(sender, "Done reloading the configuration.");
@@ -464,79 +480,57 @@ public class MainCommand extends BaseCommand {
 		sendMessage(sender, "Done loading KitManager.");
 	}
 
-	@Subcommand("edit") @CommandPermission("advancedkits.edit") @CommandCompletion("@kits @worlds")
+	@Subcommand("edit")
+	@CommandPermission("advancedkits.edit")
+	@CommandCompletion("@kits @worlds")
 	@Syntax("[kitname] [world] [action]")
 	public void onEditCommand(Player player, @Optional Kit kit, @Optional @Default("global") World world, @Optional String action) {
-		if (Objects.isNull(kit)) {
-			Inventory inventory = Bukkit.createInventory(player, !inEdit.containsKey(player.getUniqueId()) ? ((int) (Math.ceil((double) KitManager.getKits().size() / 9)) * 9) : 9, "AdvancedKitsReborn - Edit kit");
-			Menu      menu      = new Menu(inventory);
-
-			MenuObject menuObject;
-			if (!inEdit.containsKey(player.getUniqueId())) {
-				for (Kit _kit : KitManager.getKits()) {
-					menuObject = new MenuObject(_kit.getFlag(ICON, player.getWorld().getName()), ChatColor.GREEN + _kit.getDisplayName(player.getWorld().getName()), Arrays.asList(ChatColor.BLACK + "", ChatColor.GREEN + "Click to edit"));
-					menuObject.setActionListener(editCommandListener);
-
-					menu.addMenuObject(menuObject);
-				}
-			} else {
-				menuObject = new MenuObject(Material.STAINED_GLASS, (byte) 14, ChatColor.RED + getMessage("cancelEdit"), Collections.emptyList());
-				menuObject.setActionListener(editCommandListener);
-				menu.setMenuObjectAt(new Coordinates(menu, 2), menuObject);
-
-				menuObject = new MenuObject(Material.STAINED_GLASS, (byte) 13, ChatColor.GREEN + getMessage("saveAndExitEdit"), Collections.emptyList());
-				menuObject.setActionListener(editCommandListener);
-				menu.setMenuObjectAt(new Coordinates(menu, 6), menuObject);
-			}
-			menu.openForPlayer(player);
-
-			return;
-		}
-
 		if (Objects.nonNull(action) && action.equalsIgnoreCase("cancel")) {
 			player.getEquipment().clear();
 			player.getInventory().clear();
 
 			player.getInventory().setContents(inEdit.get(player.getUniqueId()));
 			inEdit.remove(player.getUniqueId());
+			currentKit.remove(player.getUniqueId());
 
 			sendMessage(player, getMessage("inventoryRestored"));
 			sendMessage(player, getMessage("exitedEditMode"));
 			return;
 		}
 
-		currentKit.put(player.getUniqueId(), kit);
-
 		PlayerInventory playerInventory = player.getInventory();
-		if (inEdit.containsKey(player.getUniqueId())) {
-			currentKit.get(player.getUniqueId()).setItems(Arrays.stream(playerInventory.getStorageContents()).filter(Objects::nonNull).collect(Collectors.toCollection(ArrayList::new)));
+		if (inEdit.containsKey(player.getUniqueId()) && currentKit.containsKey(player.getUniqueId()) && (kit == currentKit.get(player.getUniqueId()))) {
+			kit.setItems(Arrays.stream(playerInventory.getStorageContents()).filter(Objects::nonNull).collect(Collectors.toCollection(ArrayList::new)));
 			if (player.getInventory().getArmorContents().length != 0) {
-				currentKit.get(player.getUniqueId()).setArmors(Arrays.stream(playerInventory.getArmorContents()).filter(Objects::nonNull).collect(Collectors.toCollection(ArrayList::new)));
+				kit.setArmors(Arrays.stream(playerInventory.getArmorContents()).filter(Objects::nonNull).collect(Collectors.toCollection(ArrayList::new)));
 			}
 
-			currentKit.get(player.getUniqueId()).save();
+			kit.save();
 
 			player.getEquipment().clear();
 			playerInventory.clear();
 
 			playerInventory.setContents(inEdit.get(player.getUniqueId()));
 			inEdit.remove(player.getUniqueId());
+			currentKit.remove(player.getUniqueId());
 
-			sendMessage(player, getMessage("successfullyEdited", currentKit.get(player.getUniqueId()).getDisplayName(world.getName())));
+			sendMessage(player, getMessage("successfullyEdited", kit.getDisplayName(world.getName())));
 			sendMessage(player, getMessage("inventoryRestored"));
 			sendMessage(player, getMessage("exitedEditMode"));
 		} else {
+			inEdit.put(player.getUniqueId(), playerInventory.getContents());
+			currentKit.put(player.getUniqueId(), kit);
+
 			sendMessage(player, getMessage("enteredEditMode"));
-			sendMessage(player, getMessage("editModeHint", currentKit.get(player.getUniqueId()).getName()));
-			sendMessage(player, getMessage("editModeHint2", currentKit.get(player.getUniqueId()).getName()));
+			sendMessage(player, getMessage("editModeHint", kit.getName()));
+			sendMessage(player, getMessage("editModeHint2", kit.getName()));
 			sendMessage(player, getMessage("editModeHint3"));
 
-			inEdit.put(player.getUniqueId(), playerInventory.getContents());
 			player.getInventory().clear();
 			player.getEquipment().clear();
 
-			currentKit.get(player.getUniqueId()).getItems().forEach(playerInventory::addItem);
-			currentKit.get(player.getUniqueId()).getArmors().forEach(itemStack -> {
+			kit.getItems().forEach(playerInventory::addItem);
+			kit.getArmors().forEach(itemStack -> {
 				if (ItemStackUtil.isHelmet(itemStack)) {
 					playerInventory.setHelmet(itemStack);
 				} else if (ItemStackUtil.isChest(itemStack)) {
@@ -554,72 +548,81 @@ public class MainCommand extends BaseCommand {
 		}
 	}
 
-	@Subcommand("view") @CommandPermission("advancedkits.view") @CommandCompletion("@kits") @Syntax("[kitname]")
+	private Page viewPage = new Page("AdvancedKits - View Kit");
+
+	@Subcommand("view")
+	@CommandPermission("advancedkits.view")
+	@CommandCompletion("@kits")
+	@Syntax("[kitname]")
 	public void onViewCommand(Player player, @Optional Kit kit) {
 		User   user  = User.getUser(player.getUniqueId());
 		String world = player.getWorld().getName();
 
 
 		if (Objects.isNull(kit)) {
-			Inventory inventory = Bukkit.createInventory(player, ((int) (Math.ceil((double) KitManager.getKits().size() / 9)) * 9), "AdvancedKitsReborn - View kit");
-			Menu      menu      = new Menu(inventory);
+			PageInventory pageInventory = new PageInventory("AdvancedKits - View Kit", player);
+			pageInventory.setPages(KitManager.getKits().stream().filter(_kit -> _kit.getFlag(VISIBLE, world)).sorted(Comparator.comparing(Kit::getName)).map(_kit -> new ItemBuilder(_kit.getFlag(ICON, world)).setName(ChatColor.WHITE + _kit.getDisplayName(world)).setLore(KitManager.getKitDescription(player, _kit, world)).toItemStack()).collect(Collectors.toCollection(ArrayList::new)));
+			pageInventory.openInventory();
 
-			MenuObject menuObject;
-			for (Kit _kit : KitManager.getKits()) {
-				if (!_kit.getFlag(VISIBLE, world)) continue;
+			pageInventory.onPagesItemClickEvent((_pageInventory, _event) -> {
+				ItemStack clickedItem = _event.getCurrentItem();
+				if (Objects.isNull(clickedItem) || !clickedItem.hasItemMeta() || !clickedItem.getItemMeta().hasDisplayName())
+					return;
 
-				menuObject = new MenuObject(_kit.getFlag(ICON, world), ChatColor.WHITE + _kit.getDisplayName(player.getWorld().getName()), KitManager.getKitDescription(player, _kit, world));
-				menuObject.setActionListener((clickType, menuObject1, whoClicked) -> {
-					ItemStack clickedItem = menuObject1.toItemStack();
-					if (!clickedItem.hasItemMeta() || !clickedItem.getItemMeta().hasDisplayName()) return;
+				Player _player = (Player) _event.getWhoClicked();
 
-					Kit clickedKit = KitManager.getKit(clickedItem.getItemMeta().getDisplayName(), whoClicked.getWorld().getName());
-					if (Objects.isNull(clickedKit)) {
-						sendMessage(whoClicked, getMessage("kitNotFound"));
-						return;
-					}
+				Kit clickedKit = KitManager.getKit(clickedItem.getItemMeta().getDisplayName(), _player.getWorld().getName());
+				if (Objects.isNull(clickedKit)) {
+					sendMessage(_player, getMessage("kitNotFound"));
+					return;
+				}
 
-					menuObject1.getMenu().close(whoClicked);
-					Bukkit.dispatchCommand(whoClicked, "kit view " + ChatColor.stripColor(clickedItem.getItemMeta().getDisplayName()));
-				});
-
-				menu.addMenuObject(menuObject);
-			}
-			menu.openForPlayer(player);
-
+				_pageInventory.closeInventory();
+				Bukkit.dispatchCommand(_player, "kit view " + clickedKit.getName());
+			});
 			return;
 		}
 		currentKit.put(player.getUniqueId(), kit);
 
-		Inventory inventory = Bukkit.createInventory(player, 54, "AdvancedKitsReborn - View kit");
-		Menu      menu      = new Menu(inventory);
-
-		MenuObject menuObject;
-		for (ItemStack itemStack : currentKit.get(player.getUniqueId()).getItems()) {
-			menuObject = new MenuObject(itemStack);
-			menu.addMenuObject(menuObject);
+		NamedInventory       namedInventory = new NamedInventory("AdvancedKits - View Kit", player);
+		PageLayout           pageLayout     = new PageLayout("OOOOOOOOO", "OOOOOOOOO", "OOOOOOOOO", "OOOOOOOOO", "OOOOXXXXX", "XXXXOXXXO");
+		ArrayList<ItemStack> items          = new ArrayList<>(kit.getItems());
+		if (items.size() < 36) {
+			for (int i = items.size(); i < 36; i++) {
+				items.add(new ItemStack(Material.AIR));
+			}
 		}
 
-		int x = 1;
-		for (ItemStack itemStack : currentKit.get(player.getUniqueId()).getArmors()) {
-			menuObject = new MenuObject(itemStack);
-			menu.setMenuObjectAt(new Coordinates(menu, x, 5), menuObject);
-			x++;
+		if (kit.getArmors().size() < 4) {
+			for (int i = kit.getArmors().size(); i < 4; i++) {
+				items.add(new ItemStack(Material.AIR));
+			}
 		}
-		menuObject = new MenuObject(Material.PAPER, (byte) 0, getMessage("informations"), KitManager.getKitDescription(player, currentKit.get(player.getUniqueId()), world));
-		menu.setMenuObjectAt(new Coordinates(menu, 5, 6), menuObject);
+		items.addAll(kit.getArmors());
+		items.add(new ItemBuilder(Material.PAPER).setName(getMessage("informations")).setLore(KitManager.getKitDescription(player, kit, world)).toItemStack());
 
 		if (user.isUnlocked(currentKit.get(player.getUniqueId())) || currentKit.get(player.getUniqueId()).getFlag(FREE, world)) {
-			menuObject = new MenuObject(Material.STAINED_GLASS_PANE, (byte) 13, ChatColor.GREEN + "Use", Collections.emptyList());
-			menuObject.setActionListener(viewInventoryListener);
-			menu.setMenuObjectAt(new Coordinates(menu, 9, 6), menuObject);
+			items.add(new ItemBuilder(Material.STAINED_GLASS_PANE).setDurability((short) 13).setName(ChatColor.GREEN + getMessage("guiUse")).toItemStack());
 		} else if (currentKit.get(player.getUniqueId()).getFlag(COST, world) > 0) {
-			menuObject = new MenuObject(Material.STAINED_GLASS_PANE, (byte) 14, ChatColor.GREEN + "Buy", Collections.emptyList());
-			menuObject.setActionListener(viewInventoryListener);
-			menu.setMenuObjectAt(new Coordinates(menu, 9, 6), menuObject);
+			items.add(new ItemBuilder(Material.STAINED_GLASS_PANE).setDurability((short) 14).setName(ChatColor.GREEN + getMessage("guiBuy")).toItemStack());
 		}
+		namedInventory.setPage(viewPage, pageLayout.generate(items));
+		namedInventory.openInventory();
 
-		menu.openForPlayer(player);
+		namedInventory.onNamedClickEvent((_namedInventory, _event) -> {
+			ItemStack clickedItem = _event.getCurrentItem();
+			if (Objects.isNull(clickedItem) || !clickedItem.hasItemMeta() || !clickedItem.getItemMeta().hasDisplayName())
+				return;
+
+			Player _player = (Player) _event.getWhoClicked();
+			if (clickedItem.getType() == Material.STAINED_GLASS_PANE) {
+				if (clickedItem.getDurability() == (short) 13) {
+					Bukkit.dispatchCommand(_player, "kit use " + currentKit.get(_player.getUniqueId()).getName());
+				} else if (clickedItem.getDurability() == (short) 14) {
+					Bukkit.dispatchCommand(_player, "kit buy " + currentKit.get(_player.getUniqueId()).getName());
+				}
+			}
+		});
 		sendMessage(player, getMessage("kitView", currentKit.get(player.getUniqueId()).getDisplayName(world)));
 	}
 

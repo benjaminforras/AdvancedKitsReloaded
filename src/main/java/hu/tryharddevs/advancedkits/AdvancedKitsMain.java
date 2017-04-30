@@ -9,8 +9,8 @@ import hu.tryharddevs.advancedkits.kits.flags.DefaultFlags;
 import hu.tryharddevs.advancedkits.kits.flags.Flag;
 import hu.tryharddevs.advancedkits.listeners.PlayerListener;
 import hu.tryharddevs.advancedkits.utils.VaultUtil;
+import hu.tryharddevs.advancedkits.utils.invapi.InventoryApi;
 import hu.tryharddevs.advancedkits.utils.localization.I18n;
-import hu.tryharddevs.advancedkits.utils.menuapi.core.MenuAPI;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -63,10 +63,10 @@ public final class AdvancedKitsMain extends JavaPlugin {
 		this.vaultUtil = new VaultUtil(this);
 		this.vaultUtil.hookVault();
 
-		// Loading MenuAPI
-		this.log("Loading MenuAPI by ColonelHedgehog.");
-		MenuAPI menuAPI = new MenuAPI();
-		menuAPI.onEnable();
+		// Loading InventoryAPI
+		this.log("Loading InventoryAPI by InventivetalentDev.");
+		InventoryApi invApi = new InventoryApi();
+		invApi.onEnable(this);
 
 		// Load KitManager and the kits
 		this.log("Loading KitManager.");

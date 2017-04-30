@@ -44,6 +44,16 @@ import static hu.tryharddevs.advancedkits.utils.localization.I18n.getMessage;
 		return kitArrayList.stream().filter(kit -> kit.getName().equalsIgnoreCase(name) || ChatColor.stripColor(kit.getDisplayName(world)).equalsIgnoreCase(ChatColor.stripColor(name))).findFirst().orElse(null);
 	}
 
+	public void deleteKit(Kit kit) {
+
+		File config = kit.getSaveFile();
+		if (config.delete())
+			instance.log(ChatColor.GREEN + kit.getName() + " has been deleted.");
+		else
+			instance.log(ChatColor.RED + kit.getName() + " could not be deleted.");
+		kitArrayList.remove(kit);
+	}
+
 	public static ArrayList<String> getKitDescription(Player player, Kit kit, String world) {
 		ArrayList<String> descriptions = new ArrayList<>();
 		User              user         = User.getUser(player.getUniqueId());
