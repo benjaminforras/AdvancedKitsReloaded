@@ -55,9 +55,9 @@ Feel free to fork the project and share your code.*
 </details>
 
 ## Credits:
-- [Stumblinbear](https://github.com/Stumblinbear/): For annotation-based command manager.
+- [Aikar](https://github.com/aikar): For his ACF: Aikar Command Framework.
 - [ColonelHedgehog](https://github.com/ColonelHedgehog/): For his MenuAPI.
-- [InventivetalentDev](https://github.com/InventivetalentDev/): For her ParticleAPI, PluginAnnotations and ReflectionHelper.
+- [InventivetalentDev](https://github.com/InventivetalentDev/): For her ParticleAPI and ReflectionHelper.
 
 ## Metrics
 This plugin utilizes bStats plugin metrics system, which means that the following information is collected and sent to bstats.org:
