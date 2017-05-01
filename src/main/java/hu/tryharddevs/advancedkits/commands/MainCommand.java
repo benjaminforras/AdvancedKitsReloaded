@@ -207,67 +207,74 @@ public class MainCommand extends BaseCommand {
 			}
 		}
 
-		PlayerInventory playerInventory = player.getInventory();
-
-		int freeSpace = getEmptySpaces(player);
-		int spaceneed = kit.getItems().size();
-
-		if (kit.getFlag(AUTOEQUIPARMOR, world)) {
-			spaceneed += player.getInventory().getArmorContents().length;
+		if(kit.getFlag(ITEMSINCONTAINER, world))
+		{
+			ItemStack chestItem = new ItemBuilder(Material.CHEST).setName(kit.getDisplayName(world)).setLore("Place it down to get your items.").toItemStack();
+			player.getInventory().addItem(chestItem);
 		}
-		if (!kit.getFlag(SPEWITEMS, world) && spaceneed > freeSpace) {
-			sendMessage(player, getMessage("notEnoughSpace", spaceneed));
-			return;
-		}
-		ItemStack[] equipment = playerInventory.getArmorContents();
+		else {
+			PlayerInventory playerInventory = player.getInventory();
 
-		if (kit.getFlag(CLEARINVENTORY, world)) {
-			player.getInventory().clear();
-			player.getEquipment().clear();
-		}
+			int freeSpace = getEmptySpaces(player);
+			int spaceneed = kit.getItems().size();
 
-		kit.getItems().forEach(itemStack -> {
-			if (hasInventorySpace(player, itemStack)) {
-				player.getInventory().addItem(itemStack);
-			} else if (kit.getFlag(SPEWITEMS, world)) {
-				player.getWorld().dropItemNaturally(player.getLocation(), itemStack);
+			if (kit.getFlag(AUTOEQUIPARMOR, world)) {
+				spaceneed += player.getInventory().getArmorContents().length;
 			}
-		});
+			if (!kit.getFlag(SPEWITEMS, world) && spaceneed > freeSpace) {
+				sendMessage(player, getMessage("notEnoughSpace", spaceneed));
+				return;
+			}
+			ItemStack[] equipment = playerInventory.getArmorContents();
 
-		// AutoEquip
-		if (kit.getFlag(AUTOEQUIPARMOR, world)) {
-			for (ItemStack armor : equipment) { //If player had prev armor on
-				if (Objects.isNull(armor)) continue;
+			if (kit.getFlag(CLEARINVENTORY, world)) {
+				player.getInventory().clear();
+				player.getEquipment().clear();
+			}
 
-				if (hasInventorySpace(player, armor)) {
-					playerInventory.addItem(armor); // add it to his inventory
+			kit.getItems().forEach(itemStack -> {
+				if (hasInventorySpace(player, itemStack)) {
+					player.getInventory().addItem(itemStack);
 				} else if (kit.getFlag(SPEWITEMS, world)) {
-					player.getWorld().dropItemNaturally(player.getLocation(), armor); // Or drop it
-				}
-			}
-
-			//Equip armor
-			kit.getArmors().forEach(itemStack -> {
-				if (ItemStackUtil.isHelmet(itemStack)) {
-					playerInventory.setHelmet(itemStack);
-				} else if (ItemStackUtil.isChest(itemStack)) {
-					playerInventory.setChestplate(itemStack);
-				} else if (ItemStackUtil.isLegs(itemStack)) {
-					playerInventory.setLeggings(itemStack);
-				} else if (ItemStackUtil.isBoots(itemStack)) {
-					playerInventory.setBoots(itemStack);
-				}
-
-				if (Minecraft.VERSION.newerThan(Minecraft.Version.v1_9_R1) && ItemStackUtil.isShield(itemStack)) {
-					playerInventory.setItemInOffHand(itemStack);
+					player.getWorld().dropItemNaturally(player.getLocation(), itemStack);
 				}
 			});
-		} else {
-			for (ItemStack armor : kit.getArmors()) { //Add items to the player's inventory.
-				if (hasInventorySpace(player, armor)) {
-					playerInventory.addItem(armor);
-				} else if (kit.getFlag(SPEWITEMS, world)) {
-					player.getWorld().dropItemNaturally(player.getLocation(), armor);
+
+			// AutoEquip
+			if (kit.getFlag(AUTOEQUIPARMOR, world)) {
+				for (ItemStack armor : equipment) { //If player had prev armor on
+					if (Objects.isNull(armor)) continue;
+
+					if (hasInventorySpace(player, armor)) {
+						playerInventory.addItem(armor); // add it to his inventory
+					} else if (kit.getFlag(SPEWITEMS, world)) {
+						player.getWorld().dropItemNaturally(player.getLocation(), armor); // Or drop it
+					}
+				}
+
+				//Equip armor
+				kit.getArmors().forEach(itemStack -> {
+					if (ItemStackUtil.isHelmet(itemStack)) {
+						playerInventory.setHelmet(itemStack);
+					} else if (ItemStackUtil.isChest(itemStack)) {
+						playerInventory.setChestplate(itemStack);
+					} else if (ItemStackUtil.isLegs(itemStack)) {
+						playerInventory.setLeggings(itemStack);
+					} else if (ItemStackUtil.isBoots(itemStack)) {
+						playerInventory.setBoots(itemStack);
+					}
+
+					if (Minecraft.VERSION.newerThan(Minecraft.Version.v1_9_R1) && ItemStackUtil.isShield(itemStack)) {
+						playerInventory.setItemInOffHand(itemStack);
+					}
+				});
+			} else {
+				for (ItemStack armor : kit.getArmors()) { //Add items to the player's inventory.
+					if (hasInventorySpace(player, armor)) {
+						playerInventory.addItem(armor);
+					} else if (kit.getFlag(SPEWITEMS, world)) {
+						player.getWorld().dropItemNaturally(player.getLocation(), armor);
+					}
 				}
 			}
 		}
@@ -334,21 +341,21 @@ public class MainCommand extends BaseCommand {
 		CSimpleInventory cSimpleInventory = new CSimpleInventory("AdvancedKits - Create", player, 54);
 		cSimpleInventory.setModifiable(true);
 
-		cSimpleInventory.setItem(36, new ItemBuilder(Material.ARMOR_STAND).setName("Place here armor an piece").setLore("Type: " + "Helmet").toItemStack());
-		cSimpleInventory.setItem(37, new ItemBuilder(Material.ARMOR_STAND).setName("Place here armor an piece").setLore("Type: " + "Chestplate").toItemStack());
-		cSimpleInventory.setItem(38, new ItemBuilder(Material.ARMOR_STAND).setName("Place here armor an piece").setLore("Type: " + "Leggings").toItemStack());
-		cSimpleInventory.setItem(39, new ItemBuilder(Material.ARMOR_STAND).setName("Place here armor an piece").setLore("Type: " + "Boots").toItemStack());
+		cSimpleInventory.setItem(36, new ItemBuilder(Material.ARMOR_STAND).setName(getMessage("armorPieceHere")).setLore(getMessage("armorType") + " " + getMessage("armorHelmet")).toItemStack());
+		cSimpleInventory.setItem(37, new ItemBuilder(Material.ARMOR_STAND).setName(getMessage("armorPieceHere")).setLore(getMessage("armorType") + " " + getMessage("armorChestplate")).toItemStack());
+		cSimpleInventory.setItem(38, new ItemBuilder(Material.ARMOR_STAND).setName(getMessage("armorPieceHere")).setLore(getMessage("armorType") + " " + getMessage("armorLeggings")).toItemStack());
+		cSimpleInventory.setItem(39, new ItemBuilder(Material.ARMOR_STAND).setName(getMessage("armorPieceHere")).setLore(getMessage("armorType") + " " + getMessage("armorBoots")).toItemStack());
 
 		if (Minecraft.VERSION.newerThan(Minecraft.Version.v1_9_R1)) {
-			cSimpleInventory.setItem(40, new ItemBuilder(Material.ARMOR_STAND).setName("Place here armor an piece").setLore("Type: " + "Shield").toItemStack());
+			cSimpleInventory.setItem(40, new ItemBuilder(Material.ARMOR_STAND).setName(getMessage("armorPieceHere")).setLore(getMessage("armorType") + " " + getMessage("armorShield")).toItemStack());
 		}
 
-		cSimpleInventory.setItem(45, new ItemBuilder(Material.STAINED_GLASS_PANE).setDurability((short) 3).setName("Save to session").toItemStack());
+		cSimpleInventory.setItem(45, new ItemBuilder(Material.STAINED_GLASS_PANE).setDurability((short) 3).setName(getMessage("saveToSession")).toItemStack());
 		if (!session.getKitItems().isEmpty() || !session.getKitArmors().isEmpty()) {
-			cSimpleInventory.setItem(46, new ItemBuilder(Material.STAINED_GLASS_PANE).setDurability((short) 3).setName("Load from session").toItemStack());
+			cSimpleInventory.setItem(46, new ItemBuilder(Material.STAINED_GLASS_PANE).setDurability((short) 3).setName(getMessage("loadFromSession")).toItemStack());
 		}
 
-		cSimpleInventory.setItem(53, new ItemBuilder(Material.STAINED_GLASS_PANE).setDurability((short) 13).setName("Create kit: " + ChatColor.GRAY + kitName).toItemStack());
+		cSimpleInventory.setItem(53, new ItemBuilder(Material.STAINED_GLASS_PANE).setDurability((short) 13).setName(getMessage("guiCreateKit", kitName)).toItemStack());
 
 		cSimpleInventory.openInventory();
 
@@ -386,7 +393,7 @@ public class MainCommand extends BaseCommand {
 				// Helmet
 				case 36: {
 					if (Objects.isNull(itemOnCursor) || itemOnCursor.getType() == Material.AIR) {
-						event.getInventory().setItem(clickedSlot, new ItemBuilder(Material.ARMOR_STAND).setName("Place here armor an piece").setLore("Type: " + "Helmet").toItemStack());
+						event.getInventory().setItem(clickedSlot, new ItemBuilder(Material.ARMOR_STAND).setName(getMessage("armorPieceHere")).setLore(getMessage("armorType") + " " + getMessage("armorHelmet")).toItemStack());
 					} else if (ItemStackUtil.isHelmet(itemOnCursor)) {
 						event.getInventory().setItem(clickedSlot, itemOnCursor);
 						event.setCursor(null);
@@ -397,7 +404,7 @@ public class MainCommand extends BaseCommand {
 				// Chestplate
 				case 37: {
 					if (Objects.isNull(itemOnCursor) || itemOnCursor.getType() == Material.AIR) {
-						event.getInventory().setItem(clickedSlot, new ItemBuilder(Material.ARMOR_STAND).setName("Place here armor an piece").setLore("Type: " + "Chestplate").toItemStack());
+						event.getInventory().setItem(clickedSlot, new ItemBuilder(Material.ARMOR_STAND).setName(getMessage("armorPieceHere")).setLore(getMessage("armorType") + " " + getMessage("armorChestplate")).toItemStack());
 					} else if (ItemStackUtil.isChest(itemOnCursor)) {
 						event.getInventory().setItem(clickedSlot, itemOnCursor);
 						event.setCursor(null);
@@ -408,7 +415,7 @@ public class MainCommand extends BaseCommand {
 				// Leggings
 				case 38: {
 					if (Objects.isNull(itemOnCursor) || itemOnCursor.getType() == Material.AIR) {
-						event.getInventory().setItem(clickedSlot, new ItemBuilder(Material.ARMOR_STAND).setName("Place here armor an piece").setLore("Type: " + "Leggings").toItemStack());
+						event.getInventory().setItem(clickedSlot, new ItemBuilder(Material.ARMOR_STAND).setName(getMessage("armorPieceHere")).setLore(getMessage("armorType") + " " + getMessage("armorLeggings")).toItemStack());
 					} else if (ItemStackUtil.isLegs(itemOnCursor)) {
 						event.getInventory().setItem(clickedSlot, itemOnCursor);
 						event.setCursor(null);
@@ -419,7 +426,7 @@ public class MainCommand extends BaseCommand {
 				// Boots
 				case 39: {
 					if (Objects.isNull(itemOnCursor) || itemOnCursor.getType() == Material.AIR) {
-						event.getInventory().setItem(clickedSlot, new ItemBuilder(Material.ARMOR_STAND).setName("Place here armor an piece").setLore("Type: " + "Boots").toItemStack());
+						event.getInventory().setItem(clickedSlot, new ItemBuilder(Material.ARMOR_STAND).setName(getMessage("armorPieceHere")).setLore(getMessage("armorType") + " " + getMessage("armorBoots")).toItemStack());
 					} else if (ItemStackUtil.isBoots(itemOnCursor)) {
 						event.getInventory().setItem(clickedSlot, itemOnCursor);
 						event.setCursor(null);
@@ -432,7 +439,7 @@ public class MainCommand extends BaseCommand {
 					if (!Minecraft.VERSION.newerThan(Minecraft.Version.v1_9_R1)) break;
 
 					if (Objects.isNull(itemOnCursor) || itemOnCursor.getType() == Material.AIR) {
-						event.getInventory().setItem(clickedSlot, new ItemBuilder(Material.ARMOR_STAND).setName("Place here armor an piece").setLore("Type: " + "Boots").toItemStack());
+						event.getInventory().setItem(clickedSlot, new ItemBuilder(Material.ARMOR_STAND).setName(getMessage("armorPieceHere")).setLore(getMessage("armorType") + " " + getMessage("armorShield")).toItemStack());
 					} else if (ItemStackUtil.isShield(itemOnCursor)) {
 						event.getInventory().setItem(clickedSlot, itemOnCursor);
 						event.setCursor(null);
@@ -454,7 +461,7 @@ public class MainCommand extends BaseCommand {
 							session.addArmor(itemStack);
 					}
 
-					sendMessage(player, "Session saved.");
+					sendMessage(player, getMessage("sessionSaved"));
 					player.closeInventory();
 					break;
 				}
@@ -474,7 +481,7 @@ public class MainCommand extends BaseCommand {
 							event.getInventory().setItem(40, armor);
 					}
 
-					sendMessage(player, "Session loaded.");
+					sendMessage(player, getMessage("sessionLoaded"));
 					event.getInventory().setItem(46, null);
 					break;
 				}
@@ -730,27 +737,27 @@ public class MainCommand extends BaseCommand {
 			else if (Minecraft.VERSION.newerThan(Minecraft.Version.v1_9_R1) && ItemStackUtil.isShield(armor)) cSimpleInventory.setItem(40, armor);
 		}
 
-		cSimpleInventory.setItem(45, new ItemBuilder(Material.STAINED_GLASS_PANE).setDurability((short) 3).setName("Save to session").toItemStack());
+		cSimpleInventory.setItem(45, new ItemBuilder(Material.STAINED_GLASS_PANE).setDurability((short) 3).setName(getMessage("saveToSession")).toItemStack());
 		if (!session.getKitItems().isEmpty() || !session.getKitArmors().isEmpty()) {
-			cSimpleInventory.setItem(46, new ItemBuilder(Material.STAINED_GLASS_PANE).setDurability((short) 3).setName("Load from session").setLore("Warning: This will clear the current items.").toItemStack());
+			cSimpleInventory.setItem(46, new ItemBuilder(Material.STAINED_GLASS_PANE).setDurability((short) 3).setName(getMessage("loadFromSession")).setLore(getMessage("loadFromSessionWarning")).toItemStack());
 		}
 
-		cSimpleInventory.setItem(53, new ItemBuilder(Material.STAINED_GLASS_PANE).setDurability((short) 13).setName("Edit kit: " + ChatColor.GRAY + kit.getName()).toItemStack());
+		cSimpleInventory.setItem(53, new ItemBuilder(Material.STAINED_GLASS_PANE).setDurability((short) 13).setName(getMessage("guiEditKit", kit.getName())).toItemStack());
 		cSimpleInventory.openInventory();
 
 		//Check if there's a missing armor piece from the gui. If so replace it with the holder
 		if (Objects.isNull(cSimpleInventory.getItem(36)))
-			cSimpleInventory.setItem(36, new ItemBuilder(Material.ARMOR_STAND).setName("Place here armor an piece").setLore("Type: " + "Helmet").toItemStack());
+			cSimpleInventory.setItem(36, new ItemBuilder(Material.ARMOR_STAND).setName(getMessage("armorPieceHere")).setLore(getMessage("armorType") + " " + getMessage("armorHelmet")).toItemStack());
 		if (Objects.isNull(cSimpleInventory.getItem(37)))
-			cSimpleInventory.setItem(37, new ItemBuilder(Material.ARMOR_STAND).setName("Place here armor an piece").setLore("Type: " + "Chestplate").toItemStack());
+			cSimpleInventory.setItem(37, new ItemBuilder(Material.ARMOR_STAND).setName(getMessage("armorPieceHere")).setLore(getMessage("armorType") + " " + getMessage("armorChestplate")).toItemStack());
 		if (Objects.isNull(cSimpleInventory.getItem(38)))
-			cSimpleInventory.setItem(38, new ItemBuilder(Material.ARMOR_STAND).setName("Place here armor an piece").setLore("Type: " + "Leggings").toItemStack());
+			cSimpleInventory.setItem(38, new ItemBuilder(Material.ARMOR_STAND).setName(getMessage("armorPieceHere")).setLore(getMessage("armorType") + " " + getMessage("armorLeggings")).toItemStack());
 		if (Objects.isNull(cSimpleInventory.getItem(39)))
-			cSimpleInventory.setItem(39, new ItemBuilder(Material.ARMOR_STAND).setName("Place here armor an piece").setLore("Type: " + "Boots").toItemStack());
+			cSimpleInventory.setItem(39, new ItemBuilder(Material.ARMOR_STAND).setName(getMessage("armorPieceHere")).setLore(getMessage("armorType") + " " + getMessage("armorBoots")).toItemStack());
 
 		if (Minecraft.VERSION.newerThan(Minecraft.Version.v1_9_R1)) {
 			if (Objects.isNull(cSimpleInventory.getItem(40)))
-				cSimpleInventory.setItem(40, new ItemBuilder(Material.ARMOR_STAND).setName("Place here armor an piece").setLore("Type: " + "Shield").toItemStack());
+				cSimpleInventory.setItem(40, new ItemBuilder(Material.ARMOR_STAND).setName(getMessage("armorPieceHere")).setLore(getMessage("armorType") + " " + getMessage("armorShield")).toItemStack());
 		}
 
 		cSimpleInventory.onInventoryDragEvent(event -> {
@@ -759,7 +766,7 @@ public class MainCommand extends BaseCommand {
 					36, 37, 38, 39, 40,
 					// Other space slots:
 					41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52,
-					// Create kit button slot
+					// Edit kit button slot
 					53).filter(event.getInventorySlots()::contains).collect(Collectors.toList()).isEmpty()) {
 
 				event.setCancelled(true);
@@ -773,7 +780,7 @@ public class MainCommand extends BaseCommand {
 					36, 37, 38, 39, 40,
 					// Other space slots:
 					41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52,
-					// Create kit button slot
+					// Edit kit button slot
 					53).contains(event.getSlot())) {
 
 				event.setCancelled(true);
@@ -787,7 +794,7 @@ public class MainCommand extends BaseCommand {
 				// Helmet
 				case 36: {
 					if (Objects.isNull(itemOnCursor) || itemOnCursor.getType() == Material.AIR) {
-						event.getInventory().setItem(clickedSlot, new ItemBuilder(Material.ARMOR_STAND).setName("Place here armor an piece").setLore("Type: " + "Helmet").toItemStack());
+						event.getInventory().setItem(clickedSlot, new ItemBuilder(Material.ARMOR_STAND).setName(getMessage("armorPieceHere")).setLore(getMessage("armorType") + " " + getMessage("armorHelmet")).toItemStack());
 					} else if (ItemStackUtil.isHelmet(itemOnCursor)) {
 						event.getInventory().setItem(clickedSlot, itemOnCursor);
 						event.setCursor(null);
@@ -798,7 +805,7 @@ public class MainCommand extends BaseCommand {
 				// Chestplate
 				case 37: {
 					if (Objects.isNull(itemOnCursor) || itemOnCursor.getType() == Material.AIR) {
-						event.getInventory().setItem(clickedSlot, new ItemBuilder(Material.ARMOR_STAND).setName("Place here armor an piece").setLore("Type: " + "Chestplate").toItemStack());
+						event.getInventory().setItem(clickedSlot, new ItemBuilder(Material.ARMOR_STAND).setName(getMessage("armorPieceHere")).setLore(getMessage("armorType") + " " + getMessage("armorChestplate")).toItemStack());
 					} else if (ItemStackUtil.isChest(itemOnCursor)) {
 						event.getInventory().setItem(clickedSlot, itemOnCursor);
 						event.setCursor(null);
@@ -809,7 +816,7 @@ public class MainCommand extends BaseCommand {
 				// Leggings
 				case 38: {
 					if (Objects.isNull(itemOnCursor) || itemOnCursor.getType() == Material.AIR) {
-						event.getInventory().setItem(clickedSlot, new ItemBuilder(Material.ARMOR_STAND).setName("Place here armor an piece").setLore("Type: " + "Leggings").toItemStack());
+						event.getInventory().setItem(clickedSlot, new ItemBuilder(Material.ARMOR_STAND).setName(getMessage("armorPieceHere")).setLore(getMessage("armorType") + " " + getMessage("armorLeggings")).toItemStack());
 					} else if (ItemStackUtil.isLegs(itemOnCursor)) {
 						event.getInventory().setItem(clickedSlot, itemOnCursor);
 						event.setCursor(null);
@@ -820,7 +827,7 @@ public class MainCommand extends BaseCommand {
 				// Boots
 				case 39: {
 					if (Objects.isNull(itemOnCursor) || itemOnCursor.getType() == Material.AIR) {
-						event.getInventory().setItem(clickedSlot, new ItemBuilder(Material.ARMOR_STAND).setName("Place here armor an piece").setLore("Type: " + "Boots").toItemStack());
+						event.getInventory().setItem(clickedSlot, new ItemBuilder(Material.ARMOR_STAND).setName(getMessage("armorPieceHere")).setLore(getMessage("armorType") + " " + getMessage("armorBoots")).toItemStack());
 					} else if (ItemStackUtil.isBoots(itemOnCursor)) {
 						event.getInventory().setItem(clickedSlot, itemOnCursor);
 						event.setCursor(null);
@@ -833,7 +840,7 @@ public class MainCommand extends BaseCommand {
 					if (!Minecraft.VERSION.newerThan(Minecraft.Version.v1_9_R1)) break;
 
 					if (Objects.isNull(itemOnCursor) || itemOnCursor.getType() == Material.AIR) {
-						event.getInventory().setItem(clickedSlot, new ItemBuilder(Material.ARMOR_STAND).setName("Place here armor an piece").setLore("Type: " + "Boots").toItemStack());
+						event.getInventory().setItem(clickedSlot, new ItemBuilder(Material.ARMOR_STAND).setName(getMessage("armorPieceHere")).setLore(getMessage("armorType") + " " + getMessage("armorShield")).toItemStack());
 					} else if (ItemStackUtil.isShield(itemOnCursor)) {
 						event.getInventory().setItem(clickedSlot, itemOnCursor);
 						event.setCursor(null);
@@ -855,7 +862,7 @@ public class MainCommand extends BaseCommand {
 							session.addArmor(itemStack);
 					}
 
-					sendMessage(player, "Session saved.");
+					sendMessage(player, getMessage("sessionSaved"));
 					player.closeInventory();
 					break;
 				}
@@ -881,12 +888,12 @@ public class MainCommand extends BaseCommand {
 							event.getInventory().setItem(40, armor);
 					}
 
-					sendMessage(player, "Session loaded.");
+					sendMessage(player, getMessage("sessionLoaded"));
 					event.getInventory().setItem(46, null);
 					break;
 				}
 
-				// Create kit button.
+				// Edit kit button.
 				case 53: {
 					ItemStack            itemStack;
 					ArrayList<ItemStack> itemStacks = new ArrayList<>();
