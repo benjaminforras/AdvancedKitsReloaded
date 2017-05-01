@@ -15,6 +15,7 @@ permissions:
      advancedkits.buy: true
      advancedkits.view: true
      advancedkits.create: true
+     advancedkits.delete: true
      advancedkits.edit: true
      advancedkits.flag: true
      advancedkits.skipdelay.*: true

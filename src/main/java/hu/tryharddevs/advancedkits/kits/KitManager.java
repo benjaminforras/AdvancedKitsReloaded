@@ -47,10 +47,8 @@ import static hu.tryharddevs.advancedkits.utils.localization.I18n.getMessage;
 	public void deleteKit(Kit kit) {
 
 		File config = kit.getSaveFile();
-		if (config.delete())
-			instance.log(ChatColor.GREEN + kit.getName() + " has been deleted.");
-		else
-			instance.log(ChatColor.RED + kit.getName() + " could not be deleted.");
+		if (config.delete()) this.instance.log(ChatColor.GREEN + kit.getName() + " has been deleted.");
+		else this.instance.log(ChatColor.RED + kit.getName() + " could not be deleted.");
 		kitArrayList.remove(kit);
 	}
 
@@ -175,10 +173,10 @@ import static hu.tryharddevs.advancedkits.utils.localization.I18n.getMessage;
 	}
 
 	public void loadKits() {
-		final File folder = new File(instance.getDataFolder(), "kits");
+		final File folder = new File(this.instance.getDataFolder(), "kits");
 
 		if (!folder.isDirectory()) {
-			instance.log(ChatColor.GOLD + "- kits folder not found. Creating...");
+			this.instance.log(ChatColor.GOLD + "- kits folder not found. Creating...");
 			folder.mkdirs();
 			return;
 		}
@@ -196,8 +194,8 @@ import static hu.tryharddevs.advancedkits.utils.localization.I18n.getMessage;
 
 				fileName = Files.getNameWithoutExtension(child.getName());
 				if (FILE_PATTERN.matcher(fileName).find()) {
-					instance.log(ChatColor.RED + "Error when trying to load " + fileName);
-					instance.log(ChatColor.RED + "- The name contains special characters.");
+					this.instance.log(ChatColor.RED + "Error when trying to load " + fileName);
+					this.instance.log(ChatColor.RED + "- The name contains special characters.");
 					continue;
 				}
 				kit = new Kit(fileName);
@@ -210,8 +208,8 @@ import static hu.tryharddevs.advancedkits.utils.localization.I18n.getMessage;
 						try {
 							kit.setItems(itemsList.stream().map(item -> ItemStackUtil.itemFromString(String.valueOf(item))).collect(Collectors.toCollection(ArrayList::new)));
 						} catch (NullPointerException | JsonSyntaxException e) {
-							instance.log(ChatColor.RED + "Failed to parse items.");
-							instance.log(ChatColor.RED + "Trying to load items using the old methods.");
+							this.instance.log(ChatColor.RED + "Failed to parse items.");
+							this.instance.log(ChatColor.RED + "Trying to load items using the old methods.");
 							kit.setItems(itemsList.stream().map(object -> ItemStack.deserialize((Map<String, Object>) object)).collect(Collectors.toCollection(ArrayList::new)));
 						}
 					}
@@ -227,8 +225,8 @@ import static hu.tryharddevs.advancedkits.utils.localization.I18n.getMessage;
 					List<?> armorsList = kitConfig.getList("Armor");
 
 					if (!armorsList.isEmpty()) {
-						instance.log(ChatColor.GOLD + "Failed to parse armors.");
-						instance.log(ChatColor.GOLD + "Trying to load items using the old methods.");
+						this.instance.log(ChatColor.GOLD + "Failed to parse armors.");
+						this.instance.log(ChatColor.GOLD + "Trying to load items using the old methods.");
 						kit.setArmors(armorsList.stream().map(object -> ItemStack.deserialize((Map<String, Object>) object)).collect(Collectors.toCollection(ArrayList::new)));
 					}
 
@@ -259,7 +257,7 @@ import static hu.tryharddevs.advancedkits.utils.localization.I18n.getMessage;
 			}
 		}
 
-		instance.log(ChatColor.GREEN + "Loaded " + kitArrayList.size() + " kit(s).");
+		this.instance.log(ChatColor.GREEN + "Loaded " + kitArrayList.size() + " kit(s).");
 	}
 
 	private Map<Flag<?>, Object> unmarshalFlags(Map<String, Object> rawValues) {
@@ -274,8 +272,8 @@ import static hu.tryharddevs.advancedkits.utils.localization.I18n.getMessage;
 				try {
 					values.put(flag, flag.unmarshal(entry.getValue()));
 				} catch (Exception e) {
-					instance.log(ChatColor.RED + "Error: " + e.getMessage());
-					instance.log(ChatColor.RED + "Failed to unmarshal flag value for " + flag);
+					this.instance.log(ChatColor.RED + "Error: " + e.getMessage());
+					this.instance.log(ChatColor.RED + "Failed to unmarshal flag value for " + flag);
 				}
 			}
 		}
@@ -290,8 +288,8 @@ import static hu.tryharddevs.advancedkits.utils.localization.I18n.getMessage;
 			try {
 				rawValues.put(entry.getKey().getName(), marshal(entry.getKey(), entry.getValue()));
 			} catch (Exception e) {
-				instance.log(ChatColor.RED + "Error: " + e.getMessage());
-				instance.log(ChatColor.RED + "Failed to marshal flag value for " + entry.getKey() + "; value is " + entry.getValue());
+				this.instance.log(ChatColor.RED + "Error: " + e.getMessage());
+				this.instance.log(ChatColor.RED + "Failed to marshal flag value for " + entry.getKey() + "; value is " + entry.getValue());
 			}
 		}
 

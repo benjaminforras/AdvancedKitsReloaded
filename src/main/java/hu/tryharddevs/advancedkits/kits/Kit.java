@@ -43,13 +43,12 @@ public class Kit {
 
 	public static ContextResolver<Kit> getContextResolver() {
 		return (c) -> {
-			Player player;
+			Player senderPlayer = c.getSender() instanceof Player ? (Player) c.getSender() : null;
 			String world   = "global";
 			String kitName = c.popFirstArg();
 
-			if (c.getSender() instanceof Player) {
-				player = (Player) c.getSender();
-				world = player.getWorld().getName();
+			if (Objects.nonNull(senderPlayer)) {
+				world = senderPlayer.getWorld().getName();
 			}
 
 			Kit kit = KitManager.getKit(kitName, world);
@@ -61,76 +60,76 @@ public class Kit {
 	}
 
 	public final String getName() {
-		return name;
+		return this.name;
 	}
 
 	public HashMap<String, ConcurrentHashMap<Flag<?>, Object>> getFlags() {
-		return flags;
+		return this.flags;
 	}
 
 	public String getDisplayName(String world) {
-		if (!flags.containsKey(world)) world = "global";
-		if (Objects.isNull(getFlag(DISPLAYNAME, world))) setFlag(DISPLAYNAME, world, name);
+		if (!this.flags.containsKey(world)) world = "global";
+		if (Objects.isNull(getFlag(DISPLAYNAME, world))) setFlag(DISPLAYNAME, world, this.name);
 
 		return ChatColor.translateAlternateColorCodes('&', getFlag(DISPLAYNAME, world));
 	}
 
 	public String getPermission() {
-		return "advancedkits.use." + name;
+		return "advancedkits.use." + this.name;
 	}
 
 	public String getDelayPermission() {
-		return "advancedkits.skipdelay." + name;
+		return "advancedkits.skipdelay." + this.name;
 	}
 
 	public void save() {
 		// Serialize items in the ArrayLists. This way we don't lose any custom data, including books.
-		kitConfig.set("Items", itemsArrayList.stream().map(ItemStackUtil::itemToString).collect(Collectors.toCollection(ArrayList::new)));
-		kitConfig.set("Armors", armorsArrayList.stream().map(ItemStackUtil::itemToString).collect(Collectors.toCollection(ArrayList::new)));
+		this.kitConfig.set("Items", this.itemsArrayList.stream().map(ItemStackUtil::itemToString).collect(Collectors.toCollection(ArrayList::new)));
+		this.kitConfig.set("Armors", this.armorsArrayList.stream().map(ItemStackUtil::itemToString).collect(Collectors.toCollection(ArrayList::new)));
 
-		if (flags.isEmpty()) {
+		if (this.flags.isEmpty()) {
 			ConcurrentHashMap<Flag<?>, Object> flagObjects = new ConcurrentHashMap<>();
 			for (Flag<?> flag : DefaultFlags.getDefaultFlags()) {
 				if (Objects.nonNull(flag.getDefault())) flagObjects.put(flag, flag.getDefault());
-				if (flag.getName().equalsIgnoreCase("displayname")) flagObjects.put(flag, name);
+				if (flag.getName().equalsIgnoreCase("displayname")) flagObjects.put(flag, this.name);
 
 			}
-			flags.put("global", flagObjects);
+			this.flags.put("global", flagObjects);
 		}
 
 		for (String world : flags.keySet()) {
-			kitConfig.set("Flags." + world, instance.getKitManager().marshal(flags.get(world)));
+			this.kitConfig.set("Flags." + world, this.instance.getKitManager().marshal(this.flags.get(world)));
 		}
 
 		try {
-			kitConfig.save(getSaveFile());
+			this.kitConfig.save(getSaveFile());
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		instance.log("Saved " + name);
+		this.instance.log("Saved " + this.name);
 	}
 
 	public File getSaveFile() {
-		File file = new File(instance.getDataFolder() + File.separator + "kits", name + ".yml");
+		File file = new File(this.instance.getDataFolder() + File.separator + "kits", this.name + ".yml");
 		if (!file.exists()) {
 			try {
 				file.createNewFile();
 			} catch (IOException e) {
-				instance.log(ChatColor.GOLD + "Please send this to the author of this plugin:");
-				instance.log(" -- StackTrace --");
+				this.instance.log(ChatColor.GOLD + "Please send this to the author of this plugin:");
+				this.instance.log(" -- StackTrace --");
 				e.printStackTrace();
-				instance.log(" -- End of StackTrace --");
+				this.instance.log(" -- End of StackTrace --");
 			}
 		}
 		return file;
 	}
 
 	YamlConfiguration getConfig() {
-		return kitConfig;
+		return this.kitConfig;
 	}
 
 	public ArrayList<ItemStack> getItems() {
-		return itemsArrayList;
+		return this.itemsArrayList;
 	}
 
 	public void setItems(ArrayList<ItemStack> itemsArrayList) {
@@ -138,7 +137,7 @@ public class Kit {
 	}
 
 	public ArrayList<ItemStack> getArmors() {
-		return armorsArrayList;
+		return this.armorsArrayList;
 	}
 
 	public void setArmors(ArrayList<ItemStack> armorsArrayList) {
@@ -148,10 +147,10 @@ public class Kit {
 
 	@SuppressWarnings("unchecked") @Nullable public <T extends Flag<V>, V> V getFlag(T flag, String world) {
 		checkNotNull(flag);
-		if (!flags.containsKey(world)) world = "global";
-		if (!flags.get(world).containsKey(flag)) world = "global";
+		if (!this.flags.containsKey(world)) world = "global";
+		if (!this.flags.get(world).containsKey(flag)) world = "global";
 
-		Object obj = flags.get(world).get(flag);
+		Object obj = this.flags.get(world).get(flag);
 		V      val;
 
 		if (obj != null) {
@@ -164,8 +163,8 @@ public class Kit {
 	}
 
 	public boolean hasFlag(Flag flag, String world) {
-		if (flags.containsKey(world)) {
-			if (flags.get(world).containsKey(flag)) {
+		if (this.flags.containsKey(world)) {
+			if (this.flags.get(world).containsKey(flag)) {
 				return true;
 			}
 		}
@@ -174,13 +173,13 @@ public class Kit {
 
 	public <T extends Flag<V>, V> void setFlag(T flag, String world, @Nullable V val) {
 		checkNotNull(flag);
-		if (!flags.containsKey(world)) world = "global";
-		if (!flags.get(world).containsKey(flag)) world = "global";
+		if (!this.flags.containsKey(world)) world = "global";
+		if (!this.flags.get(world).containsKey(flag)) world = "global";
 
 		if (val == null) {
-			flags.get(world).remove(flag);
+			this.flags.get(world).remove(flag);
 		} else {
-			flags.get(world).put(flag, val);
+			this.flags.get(world).put(flag, val);
 		}
 		save();
 	}

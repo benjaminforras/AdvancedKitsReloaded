@@ -19,17 +19,17 @@ public class VaultUtil {
 
 	public void hookVault() {
 		if (!setupEconomy()) {
-			instance.log(ChatColor.RED + String.format("[%s] - Disabled due to no Vault dependency found!", instance.getDescription().getName()));
-			instance.getServer().getPluginManager().disablePlugin(instance);
+			this.instance.log(ChatColor.RED + String.format("[%s] - Disabled due to no Vault dependency found!", instance.getDescription().getName()));
+			this.instance.getServer().getPluginManager().disablePlugin(instance);
 			return;
 		}
 	}
 
 	private boolean setupEconomy() {
-		if (instance.getServer().getPluginManager().getPlugin("Vault") == null) {
+		if (this.instance.getServer().getPluginManager().getPlugin("Vault") == null) {
 			return false;
 		}
-		RegisteredServiceProvider<Economy> rsp = instance.getServer().getServicesManager().getRegistration(Economy.class);
+		RegisteredServiceProvider<Economy> rsp = this.instance.getServer().getServicesManager().getRegistration(Economy.class);
 		if (rsp == null) {
 			return false;
 		}

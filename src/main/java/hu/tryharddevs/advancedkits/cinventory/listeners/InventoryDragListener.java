@@ -1,4 +1,4 @@
-package hu.tryharddevs.advancedkits.utils.invapi.listeners;
+package hu.tryharddevs.advancedkits.cinventory.listeners;
 
 import org.bukkit.event.inventory.InventoryDragEvent;
 

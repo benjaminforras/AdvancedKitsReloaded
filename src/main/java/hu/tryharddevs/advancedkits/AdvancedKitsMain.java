@@ -2,6 +2,7 @@ package hu.tryharddevs.advancedkits;
 
 import co.aikar.commands.ACF;
 import co.aikar.commands.CommandManager;
+import hu.tryharddevs.advancedkits.cinventory.CInventoryMain;
 import hu.tryharddevs.advancedkits.commands.MainCommand;
 import hu.tryharddevs.advancedkits.kits.Kit;
 import hu.tryharddevs.advancedkits.kits.KitManager;
@@ -9,7 +10,6 @@ import hu.tryharddevs.advancedkits.kits.flags.DefaultFlags;
 import hu.tryharddevs.advancedkits.kits.flags.Flag;
 import hu.tryharddevs.advancedkits.listeners.PlayerListener;
 import hu.tryharddevs.advancedkits.utils.VaultUtil;
-import hu.tryharddevs.advancedkits.utils.invapi.InventoryApi;
 import hu.tryharddevs.advancedkits.utils.localization.I18n;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -35,7 +35,8 @@ public final class AdvancedKitsMain extends JavaPlugin {
 		return advancedKits;
 	}
 
-	@Override public void onEnable() {
+	@Override
+	public void onEnable() {
 		this.log(ChatColor.GREEN + "Starting " + this.getDescription().getName() + " " + this.getDescription().getVersion());
 
 		if (Minecraft.VERSION.olderThan(Minecraft.Version.v1_8_R1)) {
@@ -63,11 +64,6 @@ public final class AdvancedKitsMain extends JavaPlugin {
 		this.vaultUtil = new VaultUtil(this);
 		this.vaultUtil.hookVault();
 
-		// Loading InventoryAPI
-		this.log("Loading InventoryAPI by InventivetalentDev.");
-		InventoryApi invApi = new InventoryApi();
-		invApi.onEnable(this);
-
 		// Load KitManager and the kits
 		this.log("Loading KitManager.");
 		this.kitManager = new KitManager(this);
@@ -76,6 +72,7 @@ public final class AdvancedKitsMain extends JavaPlugin {
 		// Register events
 		this.log("Registering events");
 		this.getServer().getPluginManager().registerEvents(new PlayerListener(this), this);
+		this.getServer().getPluginManager().registerEvents(new CInventoryMain(this), this);
 
 		// Register CommandManager and the Commands.
 		this.log("Registering commands.");
@@ -90,8 +87,10 @@ public final class AdvancedKitsMain extends JavaPlugin {
 		this.commandManager.registerCommand(new MainCommand(this));
 
 		// Check for update
-		this.log("Checking for updates.");
-		new Updater(this, 91129, this.getFile(), Updater.UpdateType.DEFAULT, true);
+		if (Config.AUTOUPDATE_ENABLED) {
+			this.log("Checking for updates.");
+			new Updater(this, 91129, this.getFile(), Updater.UpdateType.DEFAULT, true);
+		}
 
 		// Check if metrics is enabled
 		if (Config.METRICS_ENABLED) {
@@ -102,7 +101,8 @@ public final class AdvancedKitsMain extends JavaPlugin {
 		this.log(ChatColor.GREEN + "Finished loading " + this.getDescription().getName() + " " + this.getDescription().getVersion() + " by " + this.getDescription().getAuthors().stream().collect(Collectors.joining(",")));
 	}
 
-	@Override public void onDisable() {
+	@Override
+	public void onDisable() {
 		this.log(ChatColor.GOLD + "Stopping " + this.getDescription().getName() + " " + this.getDescription().getVersion());
 		if (this.i18n != null) {
 			this.i18n.onDisable();

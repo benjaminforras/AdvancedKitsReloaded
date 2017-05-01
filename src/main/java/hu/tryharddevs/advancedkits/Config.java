@@ -12,6 +12,7 @@ public class Config {
 	public static String  LOCALE             = "en";
 	public static Boolean COLORED_LOG        = true;
 	public static Boolean METRICS_ENABLED    = true;
+	public static Boolean AUTOUPDATE_ENABLED = true;
 	public static Boolean TITLES_ENABLED     = true;
 	public static Boolean ACTIONBARS_ENABLED = true;
 
@@ -21,47 +22,45 @@ public class Config {
 		boolean oldConfig = false;
 
 
-		if(!config.contains("Chat.Prefix"))
-		{
+		if (!config.contains("Chat.Prefix")) {
 			config.addDefault("Chat.Prefix", "&7[&6AdvancedKits&7]");
 			//config.addDefault("Chat.Prefix2", "&7[&6AdvancedKits&7]"); //Don't ask why. Idk
 			oldConfig = true;
 		}
 
-		if(!config.contains("Locale"))
-		{
+		if (!config.contains("Locale")) {
 			config.addDefault("Locale", "en");
 			oldConfig = true;
 		}
 
-		if(!config.contains("Log.ColoredLog"))
-		{
+		if (!config.contains("Log.ColoredLog")) {
 			config.addDefault("Log.ColoredLog", true);
 			//config.addDefault("Log.ColoredLog2", true); //Don't ask why. Idk
 			oldConfig = true;
 		}
 
-		if(!config.contains("MetricsEnabled"))
-		{
+		if (!config.contains("MetricsEnabled")) {
 			config.addDefault("MetricsEnabled", true);
 			oldConfig = true;
 		}
 
-		if(!config.contains("Messages.TitlesEnabled"))
-		{
+		if (!config.contains("AutoUpdateEnabled")) {
+			config.addDefault("AutoUpdateEnabled", true);
+			oldConfig = true;
+		}
+
+		if (!config.contains("Messages.TitlesEnabled")) {
 			config.addDefault("Messages.TitlesEnabled", true);
 			oldConfig = true;
 		}
 
-		if(!config.contains("Messages.ActionbarsEnabled"))
-		{
+		if (!config.contains("Messages.ActionbarsEnabled")) {
 			config.addDefault("Messages.ActionbarsEnabled", true);
 			oldConfig = true;
 		}
 
-		if(oldConfig)
-		{
-			instance.log("Old configuration file found.. Replacing with the newer one.");
+		if (oldConfig) {
+			instance.log("Old configuration file found.. Updating config file.");
 
 			config.set("use-economy", null);
 			config.set("use-on-buy", null);
@@ -77,6 +76,7 @@ public class Config {
 
 		COLORED_LOG = config.getBoolean("Log.ColoredLog");
 		METRICS_ENABLED = config.getBoolean("MetricsEnabled");
+		AUTOUPDATE_ENABLED = config.getBoolean("AutoUpdateEnabled");
 
 		TITLES_ENABLED = config.getBoolean("Messages.TitlesEnabled", true);
 		ACTIONBARS_ENABLED = config.getBoolean("Messages.ActionbarsEnabled", true);

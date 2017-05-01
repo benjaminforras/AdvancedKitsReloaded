@@ -1,12 +1,11 @@
-package hu.tryharddevs.advancedkits.utils.invapi.listeners;
-
+package hu.tryharddevs.advancedkits.cinventory.listeners;
 
 import org.bukkit.event.inventory.InventoryClickEvent;
 
-public interface PagesTurnListener
+public interface InventoryClickListener
 {
 	/**
-	 * Called when a player turns page
+	 * Called when a player clicks the inventory
 	 *
 	 * @param event {@link InventoryClickEvent}
 	 */

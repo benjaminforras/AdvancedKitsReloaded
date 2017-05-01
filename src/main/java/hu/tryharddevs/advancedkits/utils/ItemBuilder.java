@@ -1,4 +1,4 @@
-package hu.tryharddevs.advancedkits.utils.invapi;
+package hu.tryharddevs.advancedkits.utils;
 
 import org.bukkit.Color;
 import org.bukkit.DyeColor;

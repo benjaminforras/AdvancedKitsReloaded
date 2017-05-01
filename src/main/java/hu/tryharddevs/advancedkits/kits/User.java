@@ -28,24 +28,24 @@ public class User {
 		this.uuid = uuid;
 		this.userConfig = YamlConfiguration.loadConfiguration(getSaveFile());
 
-		if (userConfig.contains("UnlockedKits")) this.unlockedList = userConfig.getStringList("UnlockedKits");
+		if (this.userConfig.contains("UnlockedKits")) this.unlockedList = this.userConfig.getStringList("UnlockedKits");
 
 		Map<String, Object>  tempMap;
 		Map<String, Double>  tempMapDouble;
 		Map<String, Integer> tempMapInteger;
-		if (userConfig.contains("LastUseTime")) {
-			for (String kit : userConfig.getConfigurationSection("LastUseTime").getKeys(false)) {
-				tempMap = userConfig.getConfigurationSection("LastUseTime." + kit).getValues(false);
+		if (this.userConfig.contains("LastUseTime")) {
+			for (String kit : this.userConfig.getConfigurationSection("LastUseTime").getKeys(false)) {
+				tempMap = this.userConfig.getConfigurationSection("LastUseTime." + kit).getValues(false);
 				tempMapDouble = tempMap.entrySet().stream().collect(Collectors.toMap(Map.Entry::getKey, me -> Double.valueOf(me.getValue().toString())));
 				this.delaysList.put(kit, tempMapDouble);
 			}
 		}
 
-		if (userConfig.contains("TimesUsed")) {
-			for (String kit : userConfig.getConfigurationSection("TimesUsed").getKeys(false)) {
-				tempMap = userConfig.getConfigurationSection("TimesUsed." + kit).getValues(false);
+		if (this.userConfig.contains("TimesUsed")) {
+			for (String kit : this.userConfig.getConfigurationSection("TimesUsed").getKeys(false)) {
+				tempMap = this.userConfig.getConfigurationSection("TimesUsed." + kit).getValues(false);
 				tempMapInteger = tempMap.entrySet().stream().collect(Collectors.toMap(Map.Entry::getKey, me -> Integer.valueOf(me.getValue().toString())));
-				usedList.put(kit, tempMapInteger);
+				this.usedList.put(kit, tempMapInteger);
 			}
 		}
 	}
@@ -60,7 +60,7 @@ public class User {
 	}
 
 	public void addToUnlocked(Kit kit) {
-		unlockedList.add(kit.getName());
+		this.unlockedList.add(kit.getName());
 	}
 
 	public boolean isUnlocked(Kit kit) {
@@ -68,91 +68,91 @@ public class User {
 	}
 
 	public boolean isUnlocked(String name) {
-		return unlockedList.contains(name);
+		return this.unlockedList.contains(name);
 	}
 
 	public int getTimesUsed(Kit kit, String world) {
-		if (usedList.containsKey(kit.getName()) && usedList.get(kit.getName()).containsKey(world)) {
-			return usedList.get(kit.getName()).get(world);
+		if (this.usedList.containsKey(kit.getName()) && this.usedList.get(kit.getName()).containsKey(world)) {
+			return this.usedList.get(kit.getName()).get(world);
 		}
 		return 0;
 	}
 
 	public void addUse(Kit kit, String world) {
-		if (!usedList.containsKey(kit.getName())) usedList.put(kit.getName(), Maps.newHashMap());
+		if (!this.usedList.containsKey(kit.getName())) this.usedList.put(kit.getName(), Maps.newHashMap());
 
 		int prevVal = 1;
-		if (usedList.containsKey(kit.getName()) && usedList.get(kit.getName()).containsKey(world)) {
-			prevVal += usedList.get(kit.getName()).get(world);
+		if (this.usedList.containsKey(kit.getName()) && this.usedList.get(kit.getName()).containsKey(world)) {
+			prevVal += this.usedList.get(kit.getName()).get(world);
 		}
-		usedList.get(kit.getName()).put(world, prevVal);
+		this.usedList.get(kit.getName()).put(world, prevVal);
 	}
 
 	public void setDelay(Kit kit, String world, double delay) {
-		if (!delaysList.containsKey(kit.getName())) delaysList.put(kit.getName(), Maps.newHashMap());
+		if (!this.delaysList.containsKey(kit.getName())) this.delaysList.put(kit.getName(), Maps.newHashMap());
 
-		delaysList.get(kit.getName()).put(world, System.currentTimeMillis() + (delay * 1000));
+		this.delaysList.get(kit.getName()).put(world, System.currentTimeMillis() + (delay * 1000));
 	}
 
 	public String getDelay(Kit kit, String world) {
-		if (checkDelay(kit, world) || !delaysList.containsKey(kit.getName()) || !delaysList.get(kit.getName()).containsKey(world)) {
+		if (checkDelay(kit, world) || !this.delaysList.containsKey(kit.getName()) || !this.delaysList.get(kit.getName()).containsKey(world)) {
 			return "None";
 		}
 
-		Long delay = delaysList.get(kit.getName()).get(world).longValue();
+		Long delay = this.delaysList.get(kit.getName()).get(world).longValue();
 		Date date  = new Date(delay);
 		return getDifferenceText(new Date(System.currentTimeMillis()), date);
 	}
 
 	public boolean checkDelay(Kit kit, String world) {
-		if (!delaysList.containsKey(kit.getName())) {
+		if (!this.delaysList.containsKey(kit.getName())) {
 			return true;
 		}
-		if (!delaysList.get(kit.getName()).containsKey(world)) {
+		if (!this.delaysList.get(kit.getName()).containsKey(world)) {
 			return true;
 		}
 
-		Long delay = delaysList.get(kit.getName()).get(world).longValue();
+		Long delay = this.delaysList.get(kit.getName()).get(world).longValue();
 		return System.currentTimeMillis() >= delay;
 	}
 
 
 	public UUID getUuid() {
-		return uuid;
+		return this.uuid;
 	}
 
 	public void save() {
 		try {
-			userConfig.set("UnlockedKits", unlockedList);
-			userConfig.set("LastUseTime", delaysList);
-			userConfig.set("TimesUsed", usedList);
-			userConfig.save(getSaveFile());
+			this.userConfig.set("UnlockedKits", this.unlockedList);
+			this.userConfig.set("LastUseTime", this.delaysList);
+			this.userConfig.set("TimesUsed", this.usedList);
+			this.userConfig.save(getSaveFile());
 		} catch (IOException e) {
-			instance.log(ChatColor.RED + "Please send this to the author of this plugin:");
-			instance.log(" -- StackTrace --");
+			this.instance.log(ChatColor.RED + "Please send this to the author of this plugin:");
+			this.instance.log(" -- StackTrace --");
 			e.printStackTrace();
-			instance.log(" -- End of StackTrace --");
+			this.instance.log(" -- End of StackTrace --");
 		}
 	}
 
 	private File getSaveFile() {
-		if (!instance.getDataFolder().exists()) {
-			instance.getDataFolder().mkdir();
+		if (!this.instance.getDataFolder().exists()) {
+			this.instance.getDataFolder().mkdir();
 		}
-		final File folder = new File(instance.getDataFolder(), "userfiles");
+		final File folder = new File(this.instance.getDataFolder(), "userfiles");
 		if (!folder.isDirectory()) {
 			folder.mkdirs();
 		}
 
-		File file = new File(instance.getDataFolder() + File.separator + "userfiles", uuid.toString() + ".yml");
+		File file = new File(this.instance.getDataFolder() + File.separator + "userfiles", this.uuid.toString() + ".yml");
 		if (!file.exists()) {
 			try {
 				file.createNewFile();
 			} catch (IOException e) {
-				instance.getLogger().info("Couldn't create the savefile for " + uuid.toString());
-				instance.getLogger().info(" -- StackTrace --");
+				this.instance.getLogger().info("Couldn't create the savefile for " + this.uuid.toString());
+				this.instance.getLogger().info(" -- StackTrace --");
 				e.printStackTrace();
-				instance.getLogger().info(" -- End of StackTrace --");
+				this.instance.getLogger().info(" -- End of StackTrace --");
 			}
 		}
 		return file;
