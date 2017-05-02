@@ -104,40 +104,23 @@ public class PlayerListener implements Listener {
 	@EventHandler
 	public void onPlayerClickSignEvent(PlayerInteractEvent event) {
 		Action action = event.getAction();
-		if (action == Action.RIGHT_CLICK_AIR || action == Action.RIGHT_CLICK_BLOCK) {
-			if (action == Action.RIGHT_CLICK_BLOCK) {
-				if (event.getClickedBlock().getState() instanceof Sign) {
-					Player player = event.getPlayer();
-					Sign   sign   = (Sign) event.getClickedBlock().getState();
+		if (action == Action.RIGHT_CLICK_BLOCK) {
+			if (event.getClickedBlock().getState() instanceof Sign) {
+				Player player = event.getPlayer();
+				Sign   sign   = (Sign) event.getClickedBlock().getState();
 
-					if (sign.getLine(0).equalsIgnoreCase(ChatColor.GRAY + "[" + ChatColor.DARK_BLUE + "Kits" + ChatColor.GRAY + "]")) {
-						Kit kit = KitManager.getKit(ChatColor.stripColor(sign.getLine(1)), player.getWorld().getName());
-						if (kit == null) {
-							this.instance.log(ChatColor.RED + "Error: Kit doesn't exists. Sign location: " + sign.getLocation().toString());
-							event.setCancelled(true);
-							return;
-						}
-
-						Bukkit.dispatchCommand(player, "akit use " + kit.getName());
+				if (sign.getLine(0).equalsIgnoreCase(ChatColor.GRAY + "[" + ChatColor.DARK_BLUE + "Kits" + ChatColor.GRAY + "]")) {
+					Kit kit = KitManager.getKit(ChatColor.stripColor(sign.getLine(1)), player.getWorld().getName());
+					if (kit == null) {
+						this.instance.log(ChatColor.RED + "Error: Kit doesn't exists. Sign location: " + sign.getLocation().toString());
 						event.setCancelled(true);
 						return;
 					}
+
+					Bukkit.dispatchCommand(player, "akit use " + kit.getName());
+					event.setCancelled(true);
 				}
 			}
-/*
-			ItemStack itemStack = event.getPlayer().getInventory().getItemInMainHand();
-			if (Objects.isNull(itemStack) || itemStack.getType().equals(Material.CHEST) || !itemStack.hasItemMeta() || !itemStack.getItemMeta().hasDisplayName())return;
-
-			Player player = event.getPlayer();
-			Kit kit = KitManager.getKit(itemStack.getItemMeta().getDisplayName(), player.getName());
-			if(Objects.isNull(kit))return;
-
-			ArrayList<ItemStack> items = new ArrayList<>(kit.getItems());
-			items.addAll(kit.getArmors());
-
-			Inventory inventory = Bukkit.createInventory(null, Math.min(54, (int) (Math.ceil((double) items.size() / 9)) * 9), kit.getDisplayName(player.getWorld().getName()));
-			player.openInventory(inventory);
-			*/
 		}
 	}
 

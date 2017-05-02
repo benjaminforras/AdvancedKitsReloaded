@@ -111,36 +111,6 @@ public class MainCommand extends BaseCommand {
 		}
 	}
 
-	@Subcommand("test")
-	public void onTestCommand(Player player) {
-		CPageInventory       cPageInventory = new CPageInventory("AdvancedKits - Test", player);
-		ArrayList<ItemStack> itemStacks     = new ArrayList<>();
-		for (int i = 0; i < 90; i++) {
-			itemStacks.add(new ItemBuilder(Material.SIGN).setName(ChatColor.YELLOW + "#" + i).toItemStack());
-		}
-		cPageInventory.setPages(itemStacks);
-		cPageInventory.openInventory();
-		cPageInventory.onInventoryClickEvent(event -> {
-			event.getWhoClicked().sendMessage(event.getCurrentItem().toString());
-		});
-	}
-
-	@Subcommand("test2")
-	public void onTest2Command(Player player) {
-		CSimpleInventory     cSimpleInventory = new CSimpleInventory("AdvancedKits - Test2", player, 54);
-		ArrayList<ItemStack> itemStacks       = new ArrayList<>();
-		for (int i = 0; i < 25; i++) {
-			itemStacks.add(new ItemBuilder(Material.SIGN).setName(ChatColor.YELLOW + "#" + i).toItemStack());
-		}
-		cSimpleInventory.addItems(itemStacks);
-		cSimpleInventory.setItem(53, new ItemBuilder(Material.STAINED_GLASS_PANE).setDurability((short) 14).setName("Test").toItemStack());
-		cSimpleInventory.openInventory();
-
-		cSimpleInventory.onInventoryClickEvent(event -> {
-			event.getWhoClicked().sendMessage(event.getCurrentItem().toString());
-		});
-	}
-
 	@Subcommand("use")
 	@CommandPermission("advancedkits.use")
 	@CommandCompletion("@kits")
@@ -667,6 +637,7 @@ public class MainCommand extends BaseCommand {
 		User user = User.getUser(player.getUniqueId());
 		if (!user.isUnlocked(kit)) {
 			user.addToUnlocked(kit);
+			user.save();
 			sendMessage(sender, getMessage("successfullyGiven", kit.getName(), player.getName()));
 		} else {
 			sendMessage(sender, getMessage("giveAlreadyUnlocked", kit.getName()));
