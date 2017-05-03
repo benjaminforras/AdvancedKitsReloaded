@@ -12,6 +12,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.util.io.BukkitObjectInputStream;
 import org.bukkit.util.io.BukkitObjectOutputStream;
+import org.inventivetalent.reflection.minecraft.Minecraft;
 import org.yaml.snakeyaml.external.biz.base64Coder.Base64Coder;
 
 import java.io.ByteArrayInputStream;
@@ -120,7 +121,7 @@ public class ItemStackUtil {
 	}
 
 	public static boolean isChest(Material material) {
-		return material.name().endsWith("CHESTPLATE");
+		return material.name().endsWith("CHESTPLATE") || Minecraft.VERSION.newerThan(Minecraft.Version.v1_9_R1) && material.name().endsWith("ELYTRA");
 	}
 
 	public static boolean isHelmet(ItemStack item) {
