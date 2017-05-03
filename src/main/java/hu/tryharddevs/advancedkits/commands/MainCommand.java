@@ -1,8 +1,8 @@
 package hu.tryharddevs.advancedkits.commands;
 
-import co.aikar.commands.BaseCommand;
-import co.aikar.commands.annotation.*;
-import co.aikar.commands.annotation.Optional;
+import hu.tryharddevs.advancedkits.utils.afc.BaseCommand;
+import hu.tryharddevs.advancedkits.utils.afc.annotation.*;
+import hu.tryharddevs.advancedkits.utils.afc.annotation.Optional;
 import hu.tryharddevs.advancedkits.AdvancedKitsMain;
 import hu.tryharddevs.advancedkits.Config;
 import hu.tryharddevs.advancedkits.cinventory.inventories.CPageInventory;

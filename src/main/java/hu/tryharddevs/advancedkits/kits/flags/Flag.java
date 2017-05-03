@@ -1,7 +1,7 @@
 package hu.tryharddevs.advancedkits.kits.flags;
 
-import co.aikar.commands.InvalidCommandArgument;
-import co.aikar.commands.contexts.ContextResolver;
+import hu.tryharddevs.advancedkits.utils.afc.InvalidCommandArgument;
+import hu.tryharddevs.advancedkits.utils.afc.contexts.ContextResolver;
 import com.google.common.collect.Iterators;
 import hu.tryharddevs.advancedkits.Config;
 import org.bukkit.entity.Player;

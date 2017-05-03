@@ -54,7 +54,8 @@ dependencies {
     compile 'me.clip:placeholderapi:2.7.1'
     compile 'net.milkbowl.vault:VaultAPI:1.6'
 
-    compile 'co.aikar:acf-core:0.4.0-SNAPSHOT'
+    //compile 'co.aikar:acf-core:0.4.0-SNAPSHOT'
+    //compile 'co.aikar:minecraft-timings:1.0.2'
     compile 'com.github.InventivetalentDev:ReflectionHelper:395cfea950'
     compile 'com.github.InventivetalentDev:ParticleAPI:65b701708a'
 }
@@ -64,12 +65,14 @@ shadowJar {
     archiveName = "${baseName}.${extension}"
 
     dependencies {
-        include(dependency('co.aikar:acf-core'))
+        //include(dependency('co.aikar:timings'))
+        //include(dependency('co.aikar:acf-core'))
         include(dependency('com.github.InventivetalentDev:ReflectionHelper'))
         include(dependency('com.github.InventivetalentDev:ParticleAPI'))
     }
 
-    relocate 'co.aikar.commands', 'hu.tryharddevs.advancedkits.utils.afc'
+    //relocate 'co.aikar.commands', 'hu.tryharddevs.advancedkits.utils.afc'
+    //relocate 'co.aikar.timings', 'hu.tryharddevs.advancedkits.utils.timings'
     relocate 'org.inventivetalent.reflection', 'hu.tryharddevs.advancedkits.utils.reflection'
     relocate 'org.inventivetalent.particle', 'hu.tryharddevs.advancedkits.utils.particle'
 }

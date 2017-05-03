@@ -1,7 +1,7 @@
 package hu.tryharddevs.advancedkits;
 
-import co.aikar.commands.ACF;
-import co.aikar.commands.CommandManager;
+import hu.tryharddevs.advancedkits.utils.afc.ACF;
+import hu.tryharddevs.advancedkits.utils.afc.CommandManager;
 import hu.tryharddevs.advancedkits.cinventory.CInventoryMain;
 import hu.tryharddevs.advancedkits.commands.MainCommand;
 import hu.tryharddevs.advancedkits.kits.Kit;

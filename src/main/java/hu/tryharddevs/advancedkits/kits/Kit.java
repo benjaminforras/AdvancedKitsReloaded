@@ -1,7 +1,7 @@
 package hu.tryharddevs.advancedkits.kits;
 
-import co.aikar.commands.InvalidCommandArgument;
-import co.aikar.commands.contexts.ContextResolver;
+import hu.tryharddevs.advancedkits.utils.afc.InvalidCommandArgument;
+import hu.tryharddevs.advancedkits.utils.afc.contexts.ContextResolver;
 import hu.tryharddevs.advancedkits.AdvancedKitsMain;
 import hu.tryharddevs.advancedkits.kits.flags.DefaultFlags;
 import hu.tryharddevs.advancedkits.kits.flags.Flag;
