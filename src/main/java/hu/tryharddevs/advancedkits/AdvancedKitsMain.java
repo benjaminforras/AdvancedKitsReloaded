@@ -1,7 +1,7 @@
 package hu.tryharddevs.advancedkits;
 
-import hu.tryharddevs.advancedkits.utils.afc.ACF;
-import hu.tryharddevs.advancedkits.utils.afc.CommandManager;
+import co.aikar.commands.ACF;
+import co.aikar.commands.CommandManager;
 import hu.tryharddevs.advancedkits.cinventory.CInventoryMain;
 import hu.tryharddevs.advancedkits.commands.MainCommand;
 import hu.tryharddevs.advancedkits.kits.Kit;
@@ -39,7 +39,7 @@ public final class AdvancedKitsMain extends JavaPlugin {
 	public void onEnable() {
 		this.log(ChatColor.GREEN + "Starting " + this.getDescription().getName() + " " + this.getDescription().getVersion());
 
-		if (Minecraft.VERSION.olderThan(Minecraft.Version.v1_8_R1)) {
+		if (Minecraft.VERSION.olderThan(Minecraft.Version.v1_9_R1)) {
 			this.log(ChatColor.RED + "ERROR: Unsupported Minecraft version. (" + Minecraft.VERSION.toString() + ")");
 			this.setEnabled(false);
 			return;
