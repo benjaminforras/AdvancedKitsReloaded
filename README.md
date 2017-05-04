@@ -2,7 +2,7 @@
 ===================
 
 - **Status:** ![Progress](http://progressed.io/bar/100)
-- **Latest version:** [v1.1.1](https://github.com/TryHardDood/AdvancedKitsReloaded/releases/tag/v1.1.1)
+- **Latest version:** [v1.1.3](https://github.com/TryHardDood/AdvancedKitsReloaded/releases/tag/v1.1.3)
 
 ## Links
 - [SpigotMC](https://www.spigotmc.org/resources/advancedkits-reloaded.11193/) 
@@ -11,7 +11,8 @@
 - [Wiki](https://github.com/TryHardDood/AdvancedKitsReloaded/wiki/) *- (In progress)*
 
 ## Requirements:
--   **Bukkit**, **Craftbukkit**, **Spigot** or **Paper** server. (**Supported 1.8 and up.**)
+-   **Bukkit**, **Craftbukkit**, **Spigot** or **Paper** server. (**Supported 1.9 and up.**)
+- Java 8
 - [**Vault**](https://dev.bukkit.org/projects/vault/)
 
 ## Supports:
