@@ -557,7 +557,10 @@ public class Updater {
 	 * @return true if Updater should consider the remote version an update, false if not.
 	 */
 	public boolean shouldUpdate(String localVersion, String remoteVersion) {
-		return !localVersion.equalsIgnoreCase(remoteVersion);
+		Integer iLocal = Integer.valueOf(localVersion.replace(".", ""));
+		Integer iRemote = Integer.valueOf(remoteVersion.replace(".", ""));
+		return (iRemote > iLocal);
+		//return !localVersion.equalsIgnoreCase(remoteVersion);
 	}
 
 	/**
@@ -665,7 +668,8 @@ public class Updater {
 
 		if (this.callback != null) {
 			new BukkitRunnable() {
-				@Override public void run() {
+				@Override
+				public void run() {
 					runCallback();
 				}
 			}.runTask(this.plugin);
@@ -683,28 +687,36 @@ public class Updater {
 		/**
 		 * The updater found an update, and has readied it to be loaded the next time the server restarts/reloads.
 		 */
-		SUCCESS, /**
+		SUCCESS,
+		/**
 		 * The updater did not find an update, and nothing was downloaded.
 		 */
-		NO_UPDATE, /**
+		NO_UPDATE,
+		/**
 		 * The server administrator has disabled the updating system.
 		 */
-		DISABLED, /**
+		DISABLED,
+		/**
 		 * The updater found an update, but was unable to download it.
 		 */
-		FAIL_DOWNLOAD, /**
+		FAIL_DOWNLOAD,
+		/**
 		 * For some reason, the updater was unable to contact dev.bukkit.org to download the file.
 		 */
-		FAIL_DBO, /**
+		FAIL_DBO,
+		/**
 		 * When running the version check, the file on DBO did not contain a recognizable version.
 		 */
-		FAIL_NOVERSION, /**
+		FAIL_NOVERSION,
+		/**
 		 * The id provided by the plugin running the updater was invalid and doesn't exist on DBO.
 		 */
-		FAIL_BADID, /**
+		FAIL_BADID,
+		/**
 		 * The server administrator has improperly configured their API key in the configuration.
 		 */
-		FAIL_APIKEY, /**
+		FAIL_APIKEY,
+		/**
 		 * The updater found an update, but because of the UpdateType being set to NO_DOWNLOAD, it wasn't downloaded.
 		 */
 		UPDATE_AVAILABLE
@@ -717,10 +729,12 @@ public class Updater {
 		/**
 		 * Run a version check, and then if the file is out of date, download the newest version.
 		 */
-		DEFAULT, /**
+		DEFAULT,
+		/**
 		 * Don't run a version check, just find the latest update and download it.
 		 */
-		NO_VERSION_CHECK, /**
+		NO_VERSION_CHECK,
+		/**
 		 * Get information about the version and the download size, but don't actually download anything.
 		 */
 		NO_DOWNLOAD
@@ -733,10 +747,12 @@ public class Updater {
 		/**
 		 * An "alpha" file.
 		 */
-		ALPHA, /**
+		ALPHA,
+		/**
 		 * A "beta" file.
 		 */
-		BETA, /**
+		BETA,
+		/**
 		 * A "release" file.
 		 */
 		RELEASE
@@ -756,7 +772,8 @@ public class Updater {
 	}
 
 	private class UpdateRunnable implements Runnable {
-		@Override public void run() {
+		@Override
+		public void run() {
 			runUpdater();
 		}
 	}
