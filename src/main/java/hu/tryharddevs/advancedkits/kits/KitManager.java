@@ -7,7 +7,6 @@ import hu.tryharddevs.advancedkits.AdvancedKitsMain;
 import hu.tryharddevs.advancedkits.kits.flags.DefaultFlags;
 import hu.tryharddevs.advancedkits.kits.flags.Flag;
 import hu.tryharddevs.advancedkits.utils.ItemStackUtil;
-import hu.tryharddevs.advancedkits.utils.VaultUtil;
 import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -30,7 +29,7 @@ import static hu.tryharddevs.advancedkits.utils.localization.I18n.getMessage;
 @SuppressWarnings("ConstantConditions") public class KitManager {
 	private static final Pattern        FILE_PATTERN = Pattern.compile("[^A-Za-z0-9_]+", Pattern.CASE_INSENSITIVE);
 	private static       ArrayList<Kit> kitArrayList = new ArrayList<>();
-	private AdvancedKitsMain instance;
+	private static AdvancedKitsMain instance;
 
 	public KitManager(AdvancedKitsMain instance) {
 		this.instance = instance;
@@ -76,7 +75,7 @@ import static hu.tryharddevs.advancedkits.utils.localization.I18n.getMessage;
 		}
 
 		if (kit.getFlag(COST, world) > 0) {
-			descriptions.add(getMessage("flagCost", VaultUtil.getEconomy().format(kit.getFlag(COST, world))));
+			descriptions.add(getMessage("flagCost", instance.getEconomy().format(kit.getFlag(COST, world))));
 		} else if (kit.getFlag(FREE, world)) {
 			descriptions.add(getMessage("flagFree"));
 		}
@@ -92,7 +91,7 @@ import static hu.tryharddevs.advancedkits.utils.localization.I18n.getMessage;
 		}
 
 		if (kit.getFlag(PERUSECOST, world) != 0) {
-			descriptions.add(getMessage("flagPerUseCost", VaultUtil.getEconomy().format(kit.getFlag(PERUSECOST, world))));
+			descriptions.add(getMessage("flagPerUseCost", instance.getEconomy().format(kit.getFlag(PERUSECOST, world))));
 		}
 
 		if (!kit.getFlag(DISABLEDWORLDS, world).isEmpty()) {

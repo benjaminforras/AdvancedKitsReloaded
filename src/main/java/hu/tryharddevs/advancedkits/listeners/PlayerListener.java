@@ -26,6 +26,7 @@ import java.util.Arrays;
 import java.util.Objects;
 
 import static hu.tryharddevs.advancedkits.kits.flags.DefaultFlags.FIRSTJOIN;
+import static hu.tryharddevs.advancedkits.utils.MessagesApi.sendMessage;
 import static hu.tryharddevs.advancedkits.utils.localization.I18n.getMessage;
 
 public class PlayerListener implements Listener {
@@ -56,47 +57,50 @@ public class PlayerListener implements Listener {
 
 		final Block block = event.getBlock();
 		if (block.getType() == Material.CHEST) {
-			Kit   kit   = KitManager.getKit(itemStack.getItemMeta().getDisplayName(), event.getPlayer().getWorld().getName());
-			ArrayList<ItemStack> items = new ArrayList<>(kit.getItems());
-			items.addAll(kit.getArmors());
-
-			if ((items.size()) > 27) {
-				Block northBlock = block.getRelative(BlockFace.NORTH);
-				Block southBlock = block.getRelative(BlockFace.SOUTH);
-				Block westBlock  = block.getRelative(BlockFace.WEST);
-				Block eastBlock  = block.getRelative(BlockFace.EAST);
-				if (Objects.isNull(northBlock) || northBlock.getType().equals(Material.AIR)) {
-					northBlock.setType(Material.CHEST);
-				} else if (Objects.isNull(southBlock) || northBlock.getType().equals(Material.AIR)) {
-					southBlock.setType(Material.CHEST);
-
-				} else if (Objects.isNull(westBlock) || northBlock.getType().equals(Material.AIR)) {
-					westBlock.setType(Material.CHEST);
-
-				} else if (Objects.isNull(eastBlock) || northBlock.getType().equals(Material.AIR)) {
-					eastBlock.setType(Material.CHEST);
-				}
-				else
-				{
-					event.getPlayer().sendMessage(Config.CHAT_PREFIX + " " + getMessage("cantPlaceChest"));
+			Kit kit = KitManager.getKit(itemStack.getItemMeta().getDisplayName(), event.getPlayer().getWorld().getName());
+			if (Objects.nonNull(kit)) {
+				if (Config.DISABLED_WORLDS.contains(event.getPlayer().getWorld().getName())) {
+					sendMessage(event.getPlayer(), getMessage("kitUseDisabledInWorld"));
 					event.setCancelled(true);
 					return;
 				}
-			}
 
-			if(block.getState() instanceof DoubleChest)
-			{
-				DoubleChest chest = (DoubleChest) block.getState();
-				Inventory chestinv = chest.getInventory();
+				ArrayList<ItemStack> items = new ArrayList<>(kit.getItems());
+				items.addAll(kit.getArmors());
 
-				chestinv.addItem(items.toArray(new ItemStack[items.size()]));
-			}
-			else if(block.getState() instanceof Chest)
-			{
-				Chest chest = (Chest) block.getState();
-				Inventory chestinv = chest.getInventory();
+				if ((items.size()) > 27) {
+					Block northBlock = block.getRelative(BlockFace.NORTH);
+					Block southBlock = block.getRelative(BlockFace.SOUTH);
+					Block westBlock  = block.getRelative(BlockFace.WEST);
+					Block eastBlock  = block.getRelative(BlockFace.EAST);
+					if (Objects.isNull(northBlock) || northBlock.getType().equals(Material.AIR)) {
+						northBlock.setType(Material.CHEST);
+					} else if (Objects.isNull(southBlock) || northBlock.getType().equals(Material.AIR)) {
+						southBlock.setType(Material.CHEST);
 
-				chestinv.addItem(items.toArray(new ItemStack[items.size()]));
+					} else if (Objects.isNull(westBlock) || northBlock.getType().equals(Material.AIR)) {
+						westBlock.setType(Material.CHEST);
+
+					} else if (Objects.isNull(eastBlock) || northBlock.getType().equals(Material.AIR)) {
+						eastBlock.setType(Material.CHEST);
+					} else {
+						event.getPlayer().sendMessage(Config.CHAT_PREFIX + " " + getMessage("cantPlaceChest"));
+						event.setCancelled(true);
+						return;
+					}
+				}
+
+				if (block.getState() instanceof DoubleChest) {
+					DoubleChest chest    = (DoubleChest) block.getState();
+					Inventory   chestinv = chest.getInventory();
+
+					chestinv.addItem(items.toArray(new ItemStack[items.size()]));
+				} else if (block.getState() instanceof Chest) {
+					Chest     chest    = (Chest) block.getState();
+					Inventory chestinv = chest.getInventory();
+
+					chestinv.addItem(items.toArray(new ItemStack[items.size()]));
+				}
 			}
 		}
 	}
@@ -135,7 +139,7 @@ public class PlayerListener implements Listener {
 			return;
 		}
 
-		if (Arrays.asList("kit", "[kit]", "[kits]", "Kit", "[Kit]", "[Kits]").contains(event.getLine(0))) {
+		if (Arrays.asList("kit|akit|advancedkits|kits|akits", "[kit]", "[kits]", "kit|akit|advancedkits|kits|akits", "[Kit]", "[Kits]").contains(event.getLine(0))) {
 			event.setLine(0, ChatColor.GRAY + "[" + ChatColor.DARK_BLUE + "Kits" + ChatColor.GRAY + "]");
 			if (event.getLine(1) == null) {
 				this.instance.log(ChatColor.RED + "Error: Kit doesn't exists. Sign location: " + event.getBlock().getLocation().toString());

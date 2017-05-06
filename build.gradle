@@ -39,6 +39,10 @@ repositories {
         url = 'http://ci.emc.gs/nexus/content/groups/aikar/'
     }
     maven {
+        name = 'inventivetalent-repo'
+        url = 'https://repo.inventivetalent.org/content/groups/public/'
+    }
+    maven {
         name = 'jitpack.io'
         url = 'https://jitpack.io/'
     }
@@ -49,13 +53,13 @@ dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.11'
 
     compile 'com.google.code.findbugs:jsr305:2.0.1'
-    compile 'org.bukkit:bukkit:1.11-R0.1-SNAPSHOT'
+    compile 'org.bukkit:bukkit:1.11.2-R0.1-SNAPSHOT'
 
     compile 'me.clip:placeholderapi:2.7.1'
     compile 'net.milkbowl.vault:VaultAPI:1.6'
 
     compile 'co.aikar:acf-core:0.4.0-SNAPSHOT'
-    compile 'co.aikar:minecraft-timings:1.0.2'
+    compile 'co.aikar:minecraft-timings:1.0.3'
     compile 'com.github.InventivetalentDev:ReflectionHelper:395cfea950'
     compile 'com.github.InventivetalentDev:ParticleAPI:65b701708a'
 }

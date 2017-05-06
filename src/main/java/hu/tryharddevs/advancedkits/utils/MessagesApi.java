@@ -1,8 +1,10 @@
 package hu.tryharddevs.advancedkits.utils;
 
 import hu.tryharddevs.advancedkits.AdvancedKitsMain;
+import hu.tryharddevs.advancedkits.Config;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.inventivetalent.reflection.minecraft.Minecraft;
@@ -15,6 +17,7 @@ import org.inventivetalent.reflection.resolver.minecraft.OBCClassResolver;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.util.Arrays;
 
 /*****************************************************
  *
@@ -198,5 +201,9 @@ public class MessagesApi {
 		for (Player p : Bukkit.getOnlinePlayers()) {
 			sendActionBar(p, message, duration);
 		}
+	}
+
+	public static void sendMessage(CommandSender sender, String... messages) {
+		Arrays.stream(messages).forEach(message -> sender.sendMessage(Config.CHAT_PREFIX + " " + message));
 	}
 }

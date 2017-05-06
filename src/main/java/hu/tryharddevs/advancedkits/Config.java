@@ -5,16 +5,19 @@ import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 public class Config {
-	public static String  CHAT_PREFIX        = ChatColor.translateAlternateColorCodes('&', "&7[&6AdvancedKits&7]");
-	public static String  LOCALE             = "en";
-	public static Boolean COLORED_LOG        = true;
-	public static Boolean METRICS_ENABLED    = true;
-	public static Boolean AUTOUPDATE_ENABLED = true;
-	public static Boolean TITLES_ENABLED     = true;
-	public static Boolean ACTIONBARS_ENABLED = true;
+	public static String       CHAT_PREFIX        = ChatColor.translateAlternateColorCodes('&', "&7[&6AdvancedKits&7]");
+	public static String       LOCALE             = "en";
+	public static Boolean      COLORED_LOG        = true;
+	public static Boolean      METRICS_ENABLED    = true;
+	public static Boolean      AUTOUPDATE_ENABLED = true;
+	public static Boolean      TITLES_ENABLED     = true;
+	public static Boolean      ACTIONBARS_ENABLED = true;
+	public static List<String> DISABLED_WORLDS    = new ArrayList<>();
 
 	public static void loadConfigurationValues(AdvancedKitsMain instance) {
 		FileConfiguration config = instance.getConfig();
@@ -59,6 +62,11 @@ public class Config {
 			oldConfig = true;
 		}
 
+		if (!config.contains("DisabledInWorlds")) {
+			config.addDefault("DisabledInWorlds", new ArrayList<>());
+			oldConfig = true;
+		}
+
 		if (oldConfig) {
 			instance.log("Old configuration file found.. Updating config file.");
 
@@ -81,6 +89,8 @@ public class Config {
 		TITLES_ENABLED = config.getBoolean("Messages.TitlesEnabled", true);
 		ACTIONBARS_ENABLED = config.getBoolean("Messages.ActionbarsEnabled", true);
 
+		DISABLED_WORLDS = config.getStringList("DisabledInWorlds");
+
 		// Copy translations.
 		String localeFile = "messages_" + LOCALE + ".properties";
 		if (Objects.isNull(instance.getResource(localeFile))) {
@@ -94,6 +104,7 @@ public class Config {
 			instance.saveResource(localeFile, false);
 		}
 
+		// Update locales
 		instance.i18n = new I18n(instance);
 		instance.i18n.onEnable();
 		instance.i18n.updateLocale(LOCALE);

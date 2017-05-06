@@ -3,16 +3,16 @@ package hu.tryharddevs.advancedkits;
 import co.aikar.commands.ACF;
 import co.aikar.commands.CommandManager;
 import hu.tryharddevs.advancedkits.cinventory.CInventoryMain;
-import hu.tryharddevs.advancedkits.commands.MainCommand;
+import hu.tryharddevs.advancedkits.commands.*;
 import hu.tryharddevs.advancedkits.kits.Kit;
 import hu.tryharddevs.advancedkits.kits.KitManager;
 import hu.tryharddevs.advancedkits.kits.flags.DefaultFlags;
 import hu.tryharddevs.advancedkits.kits.flags.Flag;
 import hu.tryharddevs.advancedkits.listeners.PlayerListener;
-import hu.tryharddevs.advancedkits.utils.VaultUtil;
 import hu.tryharddevs.advancedkits.utils.localization.I18n;
-import org.bukkit.Bukkit;
+import net.milkbowl.vault.economy.Economy;
 import org.bukkit.ChatColor;
+import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.inventivetalent.reflection.minecraft.Minecraft;
 
@@ -25,11 +25,12 @@ public final class AdvancedKitsMain extends JavaPlugin {
 
 	public I18n i18n;
 
-	private VaultUtil      vaultUtil;
+	private Economy        economy;
 	private KitManager     kitManager;
 	private CommandManager commandManager;
 
 	private Boolean usePlaceholderAPI = false;
+	private Boolean vaultFound        = false;
 
 	public static AdvancedKitsMain getPlugin() {
 		return advancedKits;
@@ -38,6 +39,7 @@ public final class AdvancedKitsMain extends JavaPlugin {
 	@Override
 	public void onEnable() {
 		this.log(ChatColor.GREEN + "Starting " + this.getDescription().getName() + " " + this.getDescription().getVersion());
+		advancedKits = this;
 
 		if (Minecraft.VERSION.olderThan(Minecraft.Version.v1_9_R1)) {
 			this.log(ChatColor.RED + "ERROR: Unsupported Minecraft version. (" + Minecraft.VERSION.toString() + ")");
@@ -45,24 +47,29 @@ public final class AdvancedKitsMain extends JavaPlugin {
 			return;
 		}
 
-		if (this.getServer().getPluginManager().getPlugin("Vault") == null) {
-			this.log(ChatColor.RED + "ERROR: Couldn't find necessary dependency: " + "Vault");
-			this.setEnabled(false);
+		// Hooking vault
+		this.log("Hooking to Vault.");
+		this.vaultFound = this.getServer().getPluginManager().getPlugin("Vault") != null;
+		if (!vaultFound) {
+			this.log(ChatColor.RED + "- Disabled due to no Vault dependency found!");
+			this.getServer().getPluginManager().disablePlugin(this);
 			return;
 		}
-		advancedKits = this;
+		RegisteredServiceProvider<Economy> rsp = this.getServer().getServicesManager().getRegistration(Economy.class);
+		if (rsp == null || rsp.getProvider() == null) {
+			this.log(ChatColor.RED + "- Disabled due to no Economy plugin found!");
+			this.getServer().getPluginManager().disablePlugin(this);
+			return;
+		}
+		this.economy = rsp.getProvider();
 
-		this.usePlaceholderAPI = Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null;
+		// Checking for PlaceholderAPI
+		this.usePlaceholderAPI = this.getServer().getPluginManager().getPlugin("PlaceholderAPI") != null;
 
 		// Loading configuration
 		this.log("Loading configuration.");
 		this.saveDefaultConfig();
 		Config.loadConfigurationValues(this);
-
-		// Hooking vault
-		this.log("Hooking to Vault.");
-		this.vaultUtil = new VaultUtil(this);
-		this.vaultUtil.hookVault();
 
 		// Load KitManager and the kits
 		this.log("Loading KitManager.");
@@ -85,6 +92,15 @@ public final class AdvancedKitsMain extends JavaPlugin {
 		this.commandManager.getCommandCompletions().registerCompletion("kits", (sender, config, input, c) -> (KitManager.getKits().stream().map(Kit::getName).sorted(String::compareToIgnoreCase).collect(Collectors.toCollection(ArrayList::new))));
 
 		this.commandManager.registerCommand(new MainCommand(this));
+		this.commandManager.registerCommand(new BuyCommand(this));
+		this.commandManager.registerCommand(new CreateCommand(this));
+		this.commandManager.registerCommand(new DeleteCommand(this));
+		this.commandManager.registerCommand(new EditCommand(this));
+		this.commandManager.registerCommand(new FlagCommand(this));
+		this.commandManager.registerCommand(new GiveCommand(this));
+		this.commandManager.registerCommand(new ReloadCommand(this));
+		this.commandManager.registerCommand(new UseCommand(this));
+		this.commandManager.registerCommand(new ViewCommand(this));
 
 		// Check for update
 		if (Config.AUTOUPDATE_ENABLED) {
@@ -94,7 +110,7 @@ public final class AdvancedKitsMain extends JavaPlugin {
 
 		// Check if metrics is enabled
 		if (Config.METRICS_ENABLED) {
-			log("Enabling Plugin Metrics.");
+			this.log("Enabling Plugin Metrics.");
 			new MetricsLite(this);
 		}
 
@@ -119,5 +135,9 @@ public final class AdvancedKitsMain extends JavaPlugin {
 
 	public KitManager getKitManager() {
 		return this.kitManager;
+	}
+
+	public Economy getEconomy() {
+		return economy;
 	}
 }
