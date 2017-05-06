@@ -41,7 +41,7 @@ public class PlayerListener implements Listener {
 	public void onPlayerJoin(PlayerLoginEvent event) {
 		final Player player = event.getPlayer();
 		this.instance.getServer().getScheduler().scheduleSyncDelayedTask(instance, () -> KitManager.getKits().stream().filter(kit -> kit.getFlag(FIRSTJOIN, player.getWorld().getName())).forEach(kit -> {
-			Bukkit.dispatchCommand(player, "kit use " + kit.getName());
+			Bukkit.dispatchCommand(player, "advancedkitsreloaded:kit use " + kit.getName());
 		}), 2L);
 	}
 
@@ -121,7 +121,7 @@ public class PlayerListener implements Listener {
 						return;
 					}
 
-					Bukkit.dispatchCommand(player, "akit use " + kit.getName());
+					Bukkit.dispatchCommand(player, "advancedkitsreloaded:kit use " + kit.getName());
 					event.setCancelled(true);
 				}
 			}

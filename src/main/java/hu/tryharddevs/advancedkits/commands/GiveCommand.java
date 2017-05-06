@@ -48,7 +48,7 @@ public class GiveCommand extends BaseCommand {
 		}
 
 		if (forceuse) {
-			Bukkit.dispatchCommand(player, "akit use " + kit.getName());
+			Bukkit.dispatchCommand(player, "advancedkitsreloaded:kit use " + kit.getName());
 		}
 	}
 }

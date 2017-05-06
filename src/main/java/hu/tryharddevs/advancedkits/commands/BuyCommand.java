@@ -49,7 +49,7 @@ public class BuyCommand extends BaseCommand {
 		if (Objects.isNull(kit)) {
 
 			CPageInventory cPageInventory = new CPageInventory("AdvancedKits - Buy Kit", player);
-			cPageInventory.setPages(KitManager.getKits().stream().filter(_kit -> _kit.getFlag(VISIBLE, world) && (!_kit.getFlag(FREE, world) && !user.isUnlocked(_kit))).sorted(Comparator.comparing(Kit::getName)).map(_kit -> new ItemBuilder(_kit.getFlag(ICON, world)).setName(ChatColor.WHITE + _kit.getDisplayName(world)).setLore(KitManager.getKitDescription(player, _kit, world)).toItemStack()).collect(Collectors.toCollection(ArrayList::new)));
+			cPageInventory.setPages(KitManager.getKits().stream().filter(_kit -> _kit.getFlag(VISIBLE, world) && (!_kit.getFlag(FREE, world) && !user.isUnlocked(_kit))).sorted(Comparator.comparing(Kit::getName)).map(_kit -> new ItemBuilder(_kit.getFlag(ICON, world)).setName(ChatColor.WHITE + _kit.getDisplayName(world)).setLore(KitManager.getKitDescription(player, _kit, world)).hideAttributes().toItemStack()).collect(Collectors.toCollection(ArrayList::new)));
 			cPageInventory.openInventory();
 
 			cPageInventory.onInventoryClickEvent((_event) -> {
@@ -66,7 +66,7 @@ public class BuyCommand extends BaseCommand {
 				}
 
 				_player.closeInventory();
-				Bukkit.dispatchCommand(_player, "akit buy " + clickedKit.getName());
+				Bukkit.dispatchCommand(_player, "advancedkitsreloaded:kit buy " + clickedKit.getName());
 			});
 			return;
 		}
@@ -89,7 +89,7 @@ public class BuyCommand extends BaseCommand {
 			user.addToUnlocked(kit);
 			user.save();
 
-			if (kit.getFlag(USEONBUY, world)) Bukkit.dispatchCommand(player, "akit use " + kit.getName());
+			if (kit.getFlag(USEONBUY, world)) Bukkit.dispatchCommand(player, "advancedkitsreloaded:kit use " + kit.getName());
 		} else {
 			sendMessage(player, getMessage("notEnoughMoney", r.amount));
 		}

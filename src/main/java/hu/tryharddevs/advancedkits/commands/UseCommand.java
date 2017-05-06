@@ -59,7 +59,7 @@ public class UseCommand extends BaseCommand {
 
 		if (Objects.isNull(kit)) {
 			CPageInventory cPageInventory = new CPageInventory("AdvancedKits - Use Kit", player);
-			cPageInventory.setPages(KitManager.getKits().stream().filter(_kit -> _kit.getFlag(VISIBLE, world) && (_kit.getFlag(FREE, world) || user.isUnlocked(_kit))).sorted(Comparator.comparing(Kit::getName)).map(_kit -> new ItemBuilder(_kit.getFlag(ICON, world)).setName(ChatColor.WHITE + _kit.getDisplayName(world)).setLore(KitManager.getKitDescription(player, _kit, world)).toItemStack()).collect(Collectors.toCollection(ArrayList::new)));
+			cPageInventory.setPages(KitManager.getKits().stream().filter(_kit -> _kit.getFlag(VISIBLE, world) && (_kit.getFlag(FREE, world) || user.isUnlocked(_kit))).sorted(Comparator.comparing(Kit::getName)).map(_kit -> new ItemBuilder(_kit.getFlag(ICON, world)).setName(ChatColor.WHITE + _kit.getDisplayName(world)).setLore(KitManager.getKitDescription(player, _kit, world)).hideAttributes().toItemStack()).collect(Collectors.toCollection(ArrayList::new)));
 			cPageInventory.openInventory();
 
 			cPageInventory.onInventoryClickEvent((_event) -> {
@@ -76,7 +76,7 @@ public class UseCommand extends BaseCommand {
 				}
 
 				_player.closeInventory();
-				Bukkit.dispatchCommand(_player, "akit use " + clickedKit.getName());
+				Bukkit.dispatchCommand(_player, "advancedkitsreloaded:kit use " + clickedKit.getName());
 			});
 			return;
 		}

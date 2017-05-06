@@ -46,7 +46,7 @@ public class DeleteCommand extends BaseCommand {
 			String world = player.getWorld().getName();
 
 			CPageInventory cPageInventory = new CPageInventory("AdvancedKits - View Kit", (Player) sender);
-			cPageInventory.setPages(KitManager.getKits().stream().filter(_kit -> _kit.getFlag(VISIBLE, world)).sorted(Comparator.comparing(Kit::getName)).map(_kit -> new ItemBuilder(_kit.getFlag(ICON, world)).setName(ChatColor.WHITE + _kit.getDisplayName(world)).setLore(KitManager.getKitDescription(player, _kit, world)).toItemStack()).collect(Collectors.toCollection(ArrayList::new)));
+			cPageInventory.setPages(KitManager.getKits().stream().filter(_kit -> _kit.getFlag(VISIBLE, world)).sorted(Comparator.comparing(Kit::getName)).map(_kit -> new ItemBuilder(_kit.getFlag(ICON, world)).setName(ChatColor.WHITE + _kit.getDisplayName(world)).setLore(KitManager.getKitDescription(player, _kit, world)).hideAttributes().toItemStack()).collect(Collectors.toCollection(ArrayList::new)));
 			cPageInventory.openInventory();
 
 			cPageInventory.onInventoryClickEvent((_event) -> {
@@ -63,7 +63,7 @@ public class DeleteCommand extends BaseCommand {
 				}
 
 				_player.closeInventory();
-				Bukkit.dispatchCommand(_player, "akit delete " + clickedKit.getName());
+				Bukkit.dispatchCommand(_player, "advancedkitsreloaded:kit delete " + clickedKit.getName());
 			});
 			return;
 		} else if (Objects.isNull(kit) && Objects.isNull(player)) {

@@ -48,7 +48,7 @@ public class ViewCommand extends BaseCommand {
 
 		if (Objects.isNull(kit)) {
 			CPageInventory cPageInventory = new CPageInventory("AdvancedKits - View Kit", player);
-			cPageInventory.setPages(KitManager.getKits().stream().filter(_kit -> _kit.getFlag(VISIBLE, world)).sorted(Comparator.comparing(Kit::getName)).map(_kit -> new ItemBuilder(_kit.getFlag(ICON, world)).setName(ChatColor.WHITE + _kit.getDisplayName(world)).setLore(KitManager.getKitDescription(player, _kit, world)).toItemStack()).collect(Collectors.toCollection(ArrayList::new)));
+			cPageInventory.setPages(KitManager.getKits().stream().filter(_kit -> _kit.getFlag(VISIBLE, world)).sorted(Comparator.comparing(Kit::getName)).map(_kit -> new ItemBuilder(_kit.getFlag(ICON, world)).setName(ChatColor.WHITE + _kit.getDisplayName(world)).setLore(KitManager.getKitDescription(player, _kit, world)).hideAttributes().toItemStack()).collect(Collectors.toCollection(ArrayList::new)));
 			cPageInventory.openInventory();
 
 			cPageInventory.onInventoryClickEvent((_event) -> {
@@ -65,7 +65,7 @@ public class ViewCommand extends BaseCommand {
 				}
 
 				_player.closeInventory();
-				Bukkit.dispatchCommand(_player, "akit view " + clickedKit.getName());
+				Bukkit.dispatchCommand(_player, "advancedkitsreloaded:kit view " + clickedKit.getName());
 			});
 			return;
 		}
@@ -82,12 +82,12 @@ public class ViewCommand extends BaseCommand {
 		cSimpleInventory.setItem(49, new ItemBuilder(Material.PAPER).setName(getMessage("informations")).setLore(KitManager.getKitDescription(player, kit, world)).toItemStack());
 
 		if (user.isUnlocked(kit) || kit.getFlag(FREE, world)) {
-			cSimpleInventory.setItem(53, new ItemBuilder(Material.STAINED_GLASS_PANE).setDurability((short) 13).setName(ChatColor.GREEN + getMessage("guiUse")).toItemStack());
+			cSimpleInventory.setItem(53, new ItemBuilder(Material.STAINED_GLASS_PANE).setDurability((short) 13).setName(ChatColor.GREEN + getMessage("guiUse")).hideAttributes().toItemStack());
 		} else if (kit.getFlag(COST, world) > 0) {
-			cSimpleInventory.setItem(53, new ItemBuilder(Material.STAINED_GLASS_PANE).setDurability((short) 14).setName(ChatColor.GREEN + getMessage("guiBuy")).toItemStack());
+			cSimpleInventory.setItem(53, new ItemBuilder(Material.STAINED_GLASS_PANE).setDurability((short) 14).setName(ChatColor.GREEN + getMessage("guiBuy")).hideAttributes().toItemStack());
 		}
 
-		cSimpleInventory.setItem(45, new ItemBuilder(Material.STAINED_GLASS_PANE).setDurability((short)0).setName(ChatColor.GREEN + getMessage("guiBackToMenu")).toItemStack());
+		cSimpleInventory.setItem(45, new ItemBuilder(Material.STAINED_GLASS_PANE).setDurability((short)0).setName(ChatColor.GREEN + getMessage("guiBackToMenu")).hideAttributes().toItemStack());
 		cSimpleInventory.openInventory();
 
 		cSimpleInventory.onInventoryClickEvent((_event) -> {
@@ -98,11 +98,11 @@ public class ViewCommand extends BaseCommand {
 			Player _player = (Player) _event.getWhoClicked();
 			if (clickedItem.getType() == Material.STAINED_GLASS_PANE) {
 				if (clickedItem.getDurability() == (short) 13) {
-					Bukkit.dispatchCommand(_player, "akit use " + kit.getName());
+					Bukkit.dispatchCommand(_player, "advancedkitsreloaded:kit use " + kit.getName());
 				} else if (clickedItem.getDurability() == (short) 14) {
-					Bukkit.dispatchCommand(_player, "akit buy " + kit.getName());
+					Bukkit.dispatchCommand(_player, "advancedkitsreloaded:kit buy " + kit.getName());
 				} else if (clickedItem.getDurability() == (short) 0) {
-					Bukkit.dispatchCommand(_player, "akit view");
+					Bukkit.dispatchCommand(_player, "advancedkitsreloaded:kit view");
 				}
 			}
 		});
