@@ -9,6 +9,7 @@ import hu.tryharddevs.advancedkits.kits.flags.InvalidFlagValueException;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import java.util.Arrays;
@@ -30,7 +31,7 @@ public class FlagCommand extends BaseCommand {
 	@CommandPermission("advancedkits.flag")
 	@CommandCompletion("@kits @flags")
 	@Syntax("<kitname> <flag> <value> [world]")
-	public void onFlagCommand(Player player, Kit kit, Flag flag, String value, @Optional String world) {
+	public void onFlagCommand(CommandSender sender, Kit kit, Flag flag, String value, @Optional String world) {
 
 		String   tempValue     = String.join(" ", value, Objects.isNull(world) ? "" : world);
 		String[] splittedValue = tempValue.split(" ");
@@ -44,6 +45,13 @@ public class FlagCommand extends BaseCommand {
 		}
 
 		if (value.equalsIgnoreCase("hand")) {
+			Player player = sender instanceof Player ? (Player)sender : null;
+			if(Objects.isNull(player))
+			{
+				sendMessage(sender, getMessage("playerOnly"));
+				return;
+			}
+
 			if (flag.getName().equalsIgnoreCase("firework")) {
 				if (Objects.isNull(player.getInventory().getItemInMainHand()) || !player.getInventory().getItemInMainHand().getType().equals(Material.FIREWORK)) {
 					sendMessage(player, getMessage("notFirework"));
@@ -77,17 +85,17 @@ public class FlagCommand extends BaseCommand {
 		}
 
 		if (flag.getName().equalsIgnoreCase("firework") || flag.getName().equalsIgnoreCase("icon")) {
-			sendMessage(player, ChatColor.GRAY + "Usage: /kit flag <kitname> <flag> hand");
+			sendMessage(sender, ChatColor.GRAY + "Usage: /kit flag <kitname> <flag> hand");
 			return;
 		}
 
 		try {
 			kit.setFlag(flag, world, flag.parseInput(value));
 		} catch (InvalidFlagValueException e) {
-			player.sendMessage(e.getMessages());
+			sender.sendMessage(e.getMessages());
 			return;
 		}
 
-		sendMessage(player, getMessage("flagSet", flag.getName(), value, kit.getDisplayName(world), world));
+		sendMessage(sender, getMessage("flagSet", flag.getName(), value, kit.getDisplayName(world), world));
 	}
 }
