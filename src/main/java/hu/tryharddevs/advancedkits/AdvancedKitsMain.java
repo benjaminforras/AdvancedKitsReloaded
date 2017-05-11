@@ -91,7 +91,6 @@ public final class AdvancedKitsMain extends JavaPlugin {
 		this.commandManager.getCommandCompletions().registerCompletion("flags", (sender, config, input, c) -> (Arrays.stream(DefaultFlags.getFlags()).map(Flag::getName).sorted(String::compareToIgnoreCase).collect(Collectors.toCollection(ArrayList::new))));
 		this.commandManager.getCommandCompletions().registerCompletion("kits", (sender, config, input, c) -> (KitManager.getKits().stream().map(Kit::getName).sorted(String::compareToIgnoreCase).collect(Collectors.toCollection(ArrayList::new))));
 
-		this.commandManager.registerCommand(new MainCommand(this));
 		this.commandManager.registerCommand(new BuyCommand(this));
 		this.commandManager.registerCommand(new CreateCommand(this));
 		this.commandManager.registerCommand(new DeleteCommand(this));
@@ -101,6 +100,7 @@ public final class AdvancedKitsMain extends JavaPlugin {
 		this.commandManager.registerCommand(new ReloadCommand(this));
 		this.commandManager.registerCommand(new UseCommand(this));
 		this.commandManager.registerCommand(new ViewCommand(this));
+		this.commandManager.registerCommand(new MainCommand(this));
 
 		// Check for update
 		if (Config.AUTOUPDATE_ENABLED) {
