@@ -5,24 +5,29 @@ import hu.tryharddevs.advancedkits.Config;
 import hu.tryharddevs.advancedkits.kits.Kit;
 import hu.tryharddevs.advancedkits.kits.KitManager;
 import hu.tryharddevs.advancedkits.kits.User;
+import hu.tryharddevs.advancedkits.utils.ItemBuilder;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.block.*;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerLoginEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Objects;
 
 import static hu.tryharddevs.advancedkits.kits.flags.DefaultFlags.FIRSTJOIN;
@@ -50,10 +55,12 @@ public class PlayerListener implements Listener {
 		User.getUser(event.getPlayer().getUniqueId()).save();
 	}
 
-	@EventHandler
+	@EventHandler(priority = EventPriority.MONITOR)
 	public void onBlockPlace(BlockPlaceEvent event) {
 		ItemStack itemStack = event.getItemInHand();
 		if (Objects.isNull(itemStack) || !itemStack.hasItemMeta() || !itemStack.getItemMeta().hasDisplayName()) return;
+
+		if (event.isCancelled()) return;
 
 		final Block block = event.getBlock();
 		if (block.getType() == Material.CHEST) {
@@ -64,11 +71,10 @@ public class PlayerListener implements Listener {
 					event.setCancelled(true);
 					return;
 				}
-
 				ArrayList<ItemStack> items = new ArrayList<>(kit.getItems());
 				items.addAll(kit.getArmors());
 
-				if ((items.size()) > 27) {
+				if ((items.size()) > 27 && event.canBuild()) {
 					Block northBlock = block.getRelative(BlockFace.NORTH);
 					Block southBlock = block.getRelative(BlockFace.SOUTH);
 					Block westBlock  = block.getRelative(BlockFace.WEST);
@@ -89,20 +95,34 @@ public class PlayerListener implements Listener {
 						return;
 					}
 				}
-
-				if (block.getState() instanceof DoubleChest) {
-					DoubleChest chest    = (DoubleChest) block.getState();
-					Inventory   chestinv = chest.getInventory();
-
-					chestinv.addItem(items.toArray(new ItemStack[items.size()]));
-				} else if (block.getState() instanceof Chest) {
-					Chest     chest    = (Chest) block.getState();
-					Inventory chestinv = chest.getInventory();
-
-					chestinv.addItem(items.toArray(new ItemStack[items.size()]));
-				}
+				InventoryHolder chestBlock = (block.getState() instanceof DoubleChest ? (DoubleChest) block.getState() : (block.getState() instanceof Chest ? (Chest) block.getState() : null));
+				Inventory       chestinv   = chestBlock.getInventory();
+				if (Objects.nonNull(chestinv)) chestinv.addItem(items.toArray(new ItemStack[items.size()]));
 			}
 		}
+	}
+
+	@EventHandler(priority = EventPriority.MONITOR)
+	public void onBlockBreakEvent(BlockBreakEvent event) {
+		if (event.isCancelled()) return;
+
+		if (!event.getBlock().getType().equals(Material.CHEST) || event.getBlock().getDrops().isEmpty()) return;
+
+		event.setCancelled(true);
+		event.getBlock().setType(Material.AIR);
+
+		Collection<ItemStack> drops = event.getBlock().getDrops();
+		drops.add(new ItemStack(Material.CHEST));
+		drops.forEach(drop -> {
+			if (drop.getType().equals(Material.CHEST)) {
+				if (drop.hasItemMeta() && drop.getItemMeta().hasDisplayName()) {
+					if (Objects.nonNull(KitManager.getKit(drop.getItemMeta().getDisplayName(), event.getPlayer().getWorld().getName()))) {
+						drop = new ItemBuilder(drop).setName("Chest").toItemStack();
+					}
+				}
+			}
+			event.getPlayer().getWorld().dropItemNaturally(event.getBlock().getLocation(), drop);
+		});
 	}
 
 	@EventHandler
