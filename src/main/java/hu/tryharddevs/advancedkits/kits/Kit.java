@@ -145,7 +145,9 @@ public class Kit {
 	}
 
 
-	@SuppressWarnings("unchecked") @Nullable public <T extends Flag<V>, V> V getFlag(T flag, String world) {
+	@SuppressWarnings("unchecked")
+	@Nullable
+	public <T extends Flag<V>, V> V getFlag(T flag, String world) {
 		checkNotNull(flag);
 		if (!this.flags.containsKey(world)) world = "global";
 		if (!this.flags.get(world).containsKey(flag)) world = "global";
@@ -173,8 +175,7 @@ public class Kit {
 
 	public <T extends Flag<V>, V> void setFlag(T flag, String world, @Nullable V val) {
 		checkNotNull(flag);
-		if (!this.flags.containsKey(world)) world = "global";
-		if (!this.flags.get(world).containsKey(flag)) world = "global";
+		if (!this.flags.containsKey(world)) this.flags.put(world, new ConcurrentHashMap<>());
 
 		if (val == null) {
 			this.flags.get(world).remove(flag);

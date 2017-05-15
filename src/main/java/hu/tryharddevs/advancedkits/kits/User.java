@@ -2,6 +2,7 @@ package hu.tryharddevs.advancedkits.kits;
 
 import com.google.common.collect.Maps;
 import hu.tryharddevs.advancedkits.AdvancedKitsMain;
+import hu.tryharddevs.advancedkits.kits.flags.DefaultFlags;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.YamlConfiguration;
 
@@ -17,6 +18,7 @@ public class User {
 	private final UUID uuid;
 
 	private List<String>                      unlockedList = new ArrayList<>();
+	private Map<String, Map<String, Boolean>> firstUseList = new HashMap<>();
 	private Map<String, Map<String, Double>>  delaysList   = new HashMap<>();
 	private Map<String, Map<String, Integer>> usedList     = new HashMap<>();
 
@@ -33,6 +35,7 @@ public class User {
 		Map<String, Object>  tempMap;
 		Map<String, Double>  tempMapDouble;
 		Map<String, Integer> tempMapInteger;
+		Map<String, Boolean> tempMapBoolean;
 		if (this.userConfig.contains("LastUseTime")) {
 			for (String kit : this.userConfig.getConfigurationSection("LastUseTime").getKeys(false)) {
 				tempMap = this.userConfig.getConfigurationSection("LastUseTime." + kit).getValues(false);
@@ -46,6 +49,14 @@ public class User {
 				tempMap = this.userConfig.getConfigurationSection("TimesUsed." + kit).getValues(false);
 				tempMapInteger = tempMap.entrySet().stream().collect(Collectors.toMap(Map.Entry::getKey, me -> Integer.valueOf(me.getValue().toString())));
 				this.usedList.put(kit, tempMapInteger);
+			}
+		}
+
+		if (this.userConfig.contains("FirstUse")) {
+			for (String kit : this.userConfig.getConfigurationSection("FirstUse").getKeys(false)) {
+				tempMap = this.userConfig.getConfigurationSection("FirstUse." + kit).getValues(false);
+				tempMapBoolean = tempMap.entrySet().stream().collect(Collectors.toMap(Map.Entry::getKey, me -> Boolean.valueOf(me.getValue().toString())));
+				this.firstUseList.put(kit, tempMapBoolean);
 			}
 		}
 	}
@@ -72,14 +83,30 @@ public class User {
 	}
 
 	public int getTimesUsed(Kit kit, String world) {
-		if (this.usedList.containsKey(kit.getName()) && this.usedList.get(kit.getName()).containsKey(world)) {
-			return this.usedList.get(kit.getName()).get(world);
+		if (this.usedList.containsKey(kit.getName())) {
+			if (!kit.hasFlag(DefaultFlags.MAXUSES, world)) world = "global";
+			return this.usedList.get(kit.getName()).getOrDefault(world, 0);
 		}
 		return 0;
 	}
 
+	public boolean isFirstTime(Kit kit, String world) {
+		if (this.firstUseList.containsKey(kit.getName())) {
+			if (!kit.hasFlag(DefaultFlags.FIRSTJOIN, world)) world = "global";
+			return this.firstUseList.get(kit.getName()).getOrDefault(world, true);
+		}
+		return true;
+	}
+
+	public void setFirstTime(Kit kit, String world) {
+		if (!this.firstUseList.containsKey(kit.getName())) this.firstUseList.put(kit.getName(), Maps.newHashMap());
+
+		this.firstUseList.get(kit.getName()).put(world, true);
+	}
+
 	public void addUse(Kit kit, String world) {
 		if (!this.usedList.containsKey(kit.getName())) this.usedList.put(kit.getName(), Maps.newHashMap());
+		if (!kit.hasFlag(DefaultFlags.MAXUSES, world)) world = "global";
 
 		int prevVal = 1;
 		if (this.usedList.containsKey(kit.getName()) && this.usedList.get(kit.getName()).containsKey(world)) {

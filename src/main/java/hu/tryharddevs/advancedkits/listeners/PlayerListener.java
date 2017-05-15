@@ -45,8 +45,10 @@ public class PlayerListener implements Listener {
 	@EventHandler
 	public void onPlayerJoin(PlayerLoginEvent event) {
 		final Player player = event.getPlayer();
-		this.instance.getServer().getScheduler().scheduleSyncDelayedTask(instance, () -> KitManager.getKits().stream().filter(kit -> kit.getFlag(FIRSTJOIN, player.getWorld().getName())).forEach(kit -> {
+		User         user   = User.getUser(player.getUniqueId());
+		this.instance.getServer().getScheduler().scheduleSyncDelayedTask(instance, () -> KitManager.getKits().stream().filter(kit -> kit.getFlag(FIRSTJOIN, player.getWorld().getName()) && user.isFirstTime(kit, player.getWorld().getName())).forEach(kit -> {
 			Bukkit.dispatchCommand(player, "advancedkitsreloaded:kit use " + kit.getName());
+			user.setFirstTime(kit, player.getWorld().getName());
 		}), 2L);
 	}
 
