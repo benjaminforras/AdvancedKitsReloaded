@@ -57,7 +57,8 @@ Feel free to fork the project and share your code.*
 
 ## Credits:
 - [Aikar](https://github.com/aikar): For his ACF: Aikar Command Framework.
-- [InventivetalentDev](https://github.com/InventivetalentDev/): For her ParticleAPI, ReflectionHelper and InventoryAPI.
+- [InventivetalentDev](https://github.com/InventivetalentDev/): For her ParticleAPI, ReflectionHelper.
+- [libraryaddict](https://github.com/libraryaddict): For his InventoryAPI.
 
 ## Metrics
 This plugin utilizes bStats plugin metrics system, which means that the following information is collected and sent to bstats.org:
