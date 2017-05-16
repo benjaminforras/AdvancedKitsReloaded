@@ -75,8 +75,8 @@ shadowJar {
         include(dependency('com.github.InventivetalentDev:ParticleAPI'))
     }
 
-    relocate 'co.aikar.commands', 'hu.tryharddevs.advancedkits.utils.afc'
-    relocate 'co.aikar.timings', 'hu.tryharddevs.advancedkits.utils.timings'
+    relocate 'co.aikar.commands', 'hu.tryharddevs.advancedkits.utils.acf'
+    relocate 'co.aikar.timings.lib', 'hu.tryharddevs.advancedkits.utils.timings'
     relocate 'org.inventivetalent.reflection', 'hu.tryharddevs.advancedkits.utils.reflection'
     relocate 'org.inventivetalent.particle', 'hu.tryharddevs.advancedkits.utils.particle'
 }

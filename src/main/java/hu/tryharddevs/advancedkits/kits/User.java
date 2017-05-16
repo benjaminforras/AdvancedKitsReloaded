@@ -100,8 +100,9 @@ public class User {
 
 	public void setFirstTime(Kit kit, String world) {
 		if (!this.firstUseList.containsKey(kit.getName())) this.firstUseList.put(kit.getName(), Maps.newHashMap());
+		if (!kit.hasFlag(DefaultFlags.FIRSTJOIN, world)) world = "global";
 
-		this.firstUseList.get(kit.getName()).put(world, true);
+		this.firstUseList.get(kit.getName()).put(world, false);
 	}
 
 	public void addUse(Kit kit, String world) {
@@ -117,11 +118,13 @@ public class User {
 
 	public void setDelay(Kit kit, String world, double delay) {
 		if (!this.delaysList.containsKey(kit.getName())) this.delaysList.put(kit.getName(), Maps.newHashMap());
+		if (!kit.hasFlag(DefaultFlags.DELAY, world)) world = "global";
 
 		this.delaysList.get(kit.getName()).put(world, System.currentTimeMillis() + (delay * 1000));
 	}
 
 	public String getDelay(Kit kit, String world) {
+		if (!kit.hasFlag(DefaultFlags.DELAY, world)) world = "global";
 		if (checkDelay(kit, world) || !this.delaysList.containsKey(kit.getName()) || !this.delaysList.get(kit.getName()).containsKey(world)) {
 			return "None";
 		}
@@ -135,6 +138,7 @@ public class User {
 		if (!this.delaysList.containsKey(kit.getName())) {
 			return true;
 		}
+		if (!kit.hasFlag(DefaultFlags.DELAY, world)) world = "global";
 		if (!this.delaysList.get(kit.getName()).containsKey(world)) {
 			return true;
 		}
