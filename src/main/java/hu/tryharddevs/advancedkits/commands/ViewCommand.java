@@ -41,14 +41,14 @@ public class ViewCommand extends BaseCommand {
 		User   user  = User.getUser(player.getUniqueId());
 		String world = player.getWorld().getName();
 
-		if(Config.DISABLED_WORLDS.contains(world)) {
+		if (Config.DISABLED_WORLDS.contains(world)) {
 			sendMessage(player, getMessage("kitUseDisabledInWorld"));
 			return;
 		}
 
 		if (Objects.isNull(kit)) {
 			CPageInventory cPageInventory = new CPageInventory("AdvancedKits - View Kit", player);
-			cPageInventory.setPages(KitManager.getKits().stream().filter(_kit -> _kit.getFlag(VISIBLE, world)).sorted(Comparator.comparing(Kit::getName)).map(_kit -> new ItemBuilder(_kit.getFlag(ICON, world)).setName(ChatColor.WHITE + _kit.getDisplayName(world)).setLore(KitManager.getKitDescription(player, _kit, world)).hideAttributes().toItemStack()).collect(Collectors.toCollection(ArrayList::new)));
+			cPageInventory.setPages(KitManager.getKits().stream().filter(_kit -> _kit.getFlag(VISIBLE, world)).sorted(Comparator.comparing(Kit::getName)).map(_kit -> new ItemBuilder(_kit.getFlag(ICON, world).clone().clone()).setName(ChatColor.WHITE + _kit.getDisplayName(world)).setLore(KitManager.getKitDescription(player, _kit, world)).hideAttributes().toItemStack()).collect(Collectors.toCollection(ArrayList::new)));
 			cPageInventory.openInventory();
 
 			cPageInventory.onInventoryClickEvent((_event) -> {
@@ -60,7 +60,6 @@ public class ViewCommand extends BaseCommand {
 
 				Kit clickedKit = KitManager.getKit(clickedItem.getItemMeta().getDisplayName(), _player.getWorld().getName());
 				if (Objects.isNull(clickedKit)) {
-					sendMessage(_player, getMessage("kitNotFound"));
 					return;
 				}
 
@@ -87,7 +86,7 @@ public class ViewCommand extends BaseCommand {
 			cSimpleInventory.setItem(53, new ItemBuilder(Material.STAINED_GLASS_PANE).setDurability((short) 14).setName(ChatColor.GREEN + getMessage("guiBuy")).hideAttributes().toItemStack());
 		}
 
-		cSimpleInventory.setItem(45, new ItemBuilder(Material.STAINED_GLASS_PANE).setDurability((short)0).setName(ChatColor.GREEN + getMessage("guiBackToMenu")).hideAttributes().toItemStack());
+		cSimpleInventory.setItem(45, new ItemBuilder(Material.STAINED_GLASS_PANE).setDurability((short) 0).setName(ChatColor.GREEN + getMessage("guiBackToMenu")).hideAttributes().toItemStack());
 		cSimpleInventory.openInventory();
 
 		cSimpleInventory.onInventoryClickEvent((_event) -> {

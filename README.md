@@ -2,7 +2,7 @@
 ===================
 
 - **Status:** ![Progress](http://progressed.io/bar/100)
-- **Latest version:** [v1.1.9](https://github.com/TryHardDood/AdvancedKitsReloaded/releases/latest)
+- **Latest version:** [v1.1.10](https://github.com/TryHardDood/AdvancedKitsReloaded/releases/latest)
 
 ## Links
 - [SpigotMC](https://www.spigotmc.org/resources/advancedkits-reloaded.11193/) 
