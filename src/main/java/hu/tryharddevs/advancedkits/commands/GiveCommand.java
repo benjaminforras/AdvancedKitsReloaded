@@ -38,17 +38,20 @@ public class GiveCommand extends BaseCommand {
 		}
 
 		User user = User.getUser(player.getUniqueId());
-		if (!user.isUnlocked(kit)) {
+
+		if (forceuse) {
+			if (!user.isUnlocked(kit)) {
+				user.addToUnlocked(kit);
+				user.save();
+			}
+			Bukkit.dispatchCommand(player, "advancedkitsreloaded:kit use " + kit.getName());
+			sendMessage(sender, getMessage("successfullyGiven", kit.getName(), player.getName()));
+		} else if (!user.isUnlocked(kit)) {
 			user.addToUnlocked(kit);
 			user.save();
 			sendMessage(sender, getMessage("successfullyGiven", kit.getName(), player.getName()));
 		} else {
 			sendMessage(sender, getMessage("giveAlreadyUnlocked", kit.getName()));
-			return;
-		}
-
-		if (forceuse) {
-			Bukkit.dispatchCommand(player, "advancedkitsreloaded:kit use " + kit.getName());
 		}
 	}
 }
