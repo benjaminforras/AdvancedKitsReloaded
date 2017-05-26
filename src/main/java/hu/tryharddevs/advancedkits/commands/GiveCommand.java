@@ -2,12 +2,12 @@ package hu.tryharddevs.advancedkits.commands;
 
 import co.aikar.commands.BaseCommand;
 import co.aikar.commands.annotation.*;
+import co.aikar.commands.contexts.OnlinePlayer;
 import hu.tryharddevs.advancedkits.AdvancedKitsMain;
 import hu.tryharddevs.advancedkits.kits.Kit;
 import hu.tryharddevs.advancedkits.kits.User;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 
 import java.util.Objects;
 
@@ -26,30 +26,30 @@ public class GiveCommand extends BaseCommand {
 	@CommandPermission("advancedkits.give")
 	@CommandCompletion("@kits @players true|false")
 	@Syntax("<kitname> <player> [forceuse]")
-	public void onGiveCommand(CommandSender sender, Kit kit, Player player, @Optional @Default("false") Boolean forceuse) {
+	public void onGiveCommand(CommandSender sender, Kit kit, OnlinePlayer player, @Default("false") Boolean forceuse) {
 
 		if (Objects.isNull(player)) {
 			sendMessage(sender, getMessage("playerNotFound"));
 			return;
 		}
-		if (player.isDead()) {
+		if (player.getPlayer().isDead()) {
 			sendMessage(sender, getMessage("playerIsDead"));
 			return;
 		}
 
-		User user = User.getUser(player.getUniqueId());
+		User user = User.getUser(player.getPlayer().getUniqueId());
 
 		if (forceuse) {
 			if (!user.isUnlocked(kit)) {
 				user.addToUnlocked(kit);
 				user.save();
 			}
-			Bukkit.dispatchCommand(player, "advancedkitsreloaded:kit use " + kit.getName());
-			sendMessage(sender, getMessage("successfullyGiven", kit.getName(), player.getName()));
+			Bukkit.dispatchCommand(player.getPlayer(), "advancedkitsreloaded:kit use " + kit.getName());
+			sendMessage(sender, getMessage("successfullyGiven", kit.getName(), player.getPlayer().getName()));
 		} else if (!user.isUnlocked(kit)) {
 			user.addToUnlocked(kit);
 			user.save();
-			sendMessage(sender, getMessage("successfullyGiven", kit.getName(), player.getName()));
+			sendMessage(sender, getMessage("successfullyGiven", kit.getName(), player.getPlayer().getName()));
 		} else {
 			sendMessage(sender, getMessage("giveAlreadyUnlocked", kit.getName()));
 		}
