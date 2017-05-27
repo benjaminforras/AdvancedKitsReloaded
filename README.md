@@ -7,7 +7,7 @@
 - [SpigotMC](https://www.spigotmc.org/resources/advancedkits-reloaded.11193/) 
 - [BukkitDev](https://dev.bukkit.org/projects/advancedkits-reloaded/)
 - [Github](https://github.com/TryHardDood/AdvancedKitsReloaded)
-- [Wiki](https://github.com/TryHardDood/AdvancedKitsReloaded/wiki/) *- (In progress)*
+- [Wiki](https://github.com/TryHardDood/AdvancedKitsReloaded/wiki/)
 
 ## Requirements:
 -   **Bukkit**, **Craftbukkit**, **Spigot** or **Paper** server. (**Supported 1.9 and up.**)
