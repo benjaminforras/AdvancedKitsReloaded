@@ -1,0 +1,14 @@
+language: java
+
+jdk:
+  - oraclejdk8
+  
+cache:
+ directories:
+   - $HOME/.m2
+
+before_install:
+  - rm ~/.m2/settings.xml
+
+script: 
+ - mvn clean package -U
