@@ -53,6 +53,14 @@ Feel free to fork the project and share your code.*
   <summary>5. Kit using</summary>
    <img src="http://i.imgur.com/wi8sahC.png"/>
 </details>
+<details> 
+  <summary>6. Kit creating</summary>
+   <img src="http://i.imgur.com/O2jg4Ou.png"/>
+</details>
+<details> 
+  <summary>7. Kit editing</summary>
+   <img src="http://i.imgur.com/hGe4efH.png"/>
+</details>
 
 ## Credits:
 - [Aikar](https://github.com/aikar): For his ACF: Aikar Command Framework.
