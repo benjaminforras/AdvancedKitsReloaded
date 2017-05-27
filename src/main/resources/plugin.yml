@@ -1,5 +1,5 @@
 name: AdvancedKitsReloaded
-version: @version@
+version: ${project.version}
 main: hu.tryharddevs.advancedkits.AdvancedKitsMain
 prefix: AdvancedKits
 authors: [TryHardDood]
