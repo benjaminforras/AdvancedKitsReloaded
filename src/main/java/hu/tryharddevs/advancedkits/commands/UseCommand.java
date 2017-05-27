@@ -37,10 +37,10 @@ import static hu.tryharddevs.advancedkits.utils.localization.I18n.getMessage;
 @CommandAlias("%rootcommand")
 public class UseCommand extends BaseCommand {
 
-	private final AdvancedKitsMain instance;
+	private static AdvancedKitsMain instance;
 
 	public UseCommand(AdvancedKitsMain instance) {
-		this.instance = instance;
+		UseCommand.instance = instance;
 	}
 
 	@Subcommand("use")
@@ -113,6 +113,29 @@ public class UseCommand extends BaseCommand {
 				return;
 			}
 		}
+
+		giveKitToPlayer(player, kit);
+		sendMessage(player, getMessage("successfullyUsed", kit.getName()));
+	}
+
+	private static boolean hasInventorySpace(Player player, ItemStack item) {
+		int free = 0;
+		for (ItemStack itemStack : player.getInventory().getStorageContents()) {
+			if (itemStack == null || itemStack.getType() == Material.AIR) {
+				free += item.getMaxStackSize();
+			} else if (itemStack.isSimilar(item)) {
+				free += item.getMaxStackSize() - itemStack.getAmount();
+			}
+		}
+		return free >= item.getAmount();
+	}
+
+	private static int getEmptySpaces(Player player) {
+		return (int) Arrays.stream(player.getInventory().getStorageContents()).filter(item -> Objects.isNull(item) || item.getType() == Material.AIR).count();
+	}
+
+	public static void giveKitToPlayer(Player player, Kit kit) {
+		String world = player.getWorld().getName();
 
 		if (kit.getFlag(ITEMSINCONTAINER, world)) {
 			ItemStack chestItem = new ItemBuilder(Material.CHEST).setName(kit.getDisplayName(world)).setLore("Place it down to get your items.").toItemStack();
@@ -222,29 +245,5 @@ public class UseCommand extends BaseCommand {
 			FireworkMeta data           = (FireworkMeta) firework.getItemMeta();
 			if (data != null) fireworkEntity.setFireworkMeta(data);
 		}
-
-		if (kit.getFlag(DELAY, world) > 0 && !player.hasPermission(kit.getDelayPermission())) {
-			user.setDelay(kit, world, kit.getFlag(DELAY, world));
-		}
-
-		if (kit.getFlag(MAXUSES, world) > 0) user.addUse(kit, world);
-
-		sendMessage(player, getMessage("successfullyUsed", kit.getName()));
-	}
-
-	private boolean hasInventorySpace(Player player, ItemStack item) {
-		int free = 0;
-		for (ItemStack itemStack : player.getInventory().getStorageContents()) {
-			if (itemStack == null || itemStack.getType() == Material.AIR) {
-				free += item.getMaxStackSize();
-			} else if (itemStack.isSimilar(item)) {
-				free += item.getMaxStackSize() - itemStack.getAmount();
-			}
-		}
-		return free >= item.getAmount();
-	}
-
-	private int getEmptySpaces(Player player) {
-		return (int) Arrays.stream(player.getInventory().getStorageContents()).filter(item -> Objects.isNull(item) || item.getType() == Material.AIR).count();
 	}
 }

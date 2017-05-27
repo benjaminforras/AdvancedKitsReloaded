@@ -29,12 +29,12 @@ public class Kit {
 	private final String name;
 	private final AdvancedKitsMain instance = AdvancedKitsMain.getPlugin();
 
-	private final HashMap<String, ConcurrentHashMap<Flag<?>, Object>> flags = new HashMap<>();
+	private HashMap<String, ConcurrentHashMap<Flag<?>, Object>> flags = new HashMap<>();
 
 	private ArrayList<ItemStack> itemsArrayList  = new ArrayList<>();
 	private ArrayList<ItemStack> armorsArrayList = new ArrayList<>();
 
-	private final YamlConfiguration kitConfig;
+	private YamlConfiguration kitConfig;
 
 	public Kit(String name) {
 		this.name = name;

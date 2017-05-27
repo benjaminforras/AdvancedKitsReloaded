@@ -9,7 +9,7 @@ import java.util.UUID;
 
 public class Session {
 
-	private static final HashMap<UUID, Session> sessions = new HashMap<>();
+	private static HashMap<UUID, Session> sessions = new HashMap<>();
 
 	private UUID uuid;
 

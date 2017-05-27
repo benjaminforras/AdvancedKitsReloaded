@@ -150,7 +150,7 @@ public class MainCommand extends BaseCommand {
 		User   user  = User.getUser(player.getUniqueId());
 		String world = player.getWorld().getName();
 
-		if(Config.DISABLED_WORLDS.contains(world)) {
+		if (Config.DISABLED_WORLDS.contains(world)) {
 			sendMessage(player, getMessage("kitUseDisabledInWorld"));
 			return;
 		}
@@ -198,7 +198,8 @@ public class MainCommand extends BaseCommand {
 			user.addToUnlocked(kit);
 			user.save();
 
-			if (kit.getFlag(USEONBUY, world)) Bukkit.dispatchCommand(player, "advancedkitsreloaded:kit use " + kit.getName());
+			if (kit.getFlag(USEONBUY, world))
+				Bukkit.dispatchCommand(player, "advancedkitsreloaded:kit use " + kit.getName());
 		} else {
 			sendMessage(player, getMessage("notEnoughMoney", r.amount));
 		}
@@ -206,9 +207,9 @@ public class MainCommand extends BaseCommand {
 
 	@Subcommand("give")
 	@CommandPermission("advancedkits.give")
-	@CommandCompletion("@kits @players true|false")
-	@Syntax("<kitname> <player> [forceuse]")
-	public void onGiveCommand(CommandSender sender, Kit kit, OnlinePlayer player, @Default("false") Boolean forceuse) {
+	@CommandCompletion("@kits @players true|false true|false")
+	@Syntax("<kitname> <player> [forceuse, default=false] [unlock, default=false]")
+	public void onGiveCommand(CommandSender sender, Kit kit, OnlinePlayer player, @Default("false") Boolean forceUse, @Default("false") Boolean unlockKit) {
 
 		if (Objects.isNull(player)) {
 			sendMessage(sender, getMessage("playerNotFound"));
@@ -221,14 +222,18 @@ public class MainCommand extends BaseCommand {
 
 		User user = User.getUser(player.getPlayer().getUniqueId());
 
-		if (forceuse) {
-			if (!user.isUnlocked(kit)) {
+		sender.sendMessage(forceUse + " " + unlockKit);
+
+		// /kit give kit name true
+		if (forceUse) {
+			if (!user.isUnlocked(kit) && unlockKit) { // /kit give kit name true true
 				user.addToUnlocked(kit);
 				user.save();
 			}
-			Bukkit.dispatchCommand(player.getPlayer(), "advancedkitsreloaded:kit use " + kit.getName());
+			UseCommand.giveKitToPlayer(player.getPlayer(), kit);
 			sendMessage(sender, getMessage("successfullyGiven", kit.getName(), player.getPlayer().getName()));
-		} else if (!user.isUnlocked(kit)) {
+		}
+		else if (!user.isUnlocked(kit) && unlockKit) { // /kit give kit name false true
 			user.addToUnlocked(kit);
 			user.save();
 			sendMessage(sender, getMessage("successfullyGiven", kit.getName(), player.getPlayer().getName()));
@@ -330,9 +335,8 @@ public class MainCommand extends BaseCommand {
 		}
 
 		if (value.equalsIgnoreCase("hand")) {
-			Player player = sender instanceof Player ? (Player)sender : null;
-			if(Objects.isNull(player))
-			{
+			Player player = sender instanceof Player ? (Player) sender : null;
+			if (Objects.isNull(player)) {
 				sendMessage(sender, getMessage("playerOnly"));
 				return;
 			}
