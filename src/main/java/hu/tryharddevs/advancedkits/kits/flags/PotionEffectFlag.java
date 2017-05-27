@@ -5,7 +5,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 import java.util.Arrays;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -31,7 +31,7 @@ public class PotionEffectFlag extends Flag<PotionEffect> {
 		return getPotionEffectAsString(o);
 	}
 
-	public PotionEffect getPotionEffectFromString(String value) {
+	private PotionEffect getPotionEffectFromString(String value) {
 		if (value.split(";").length != 3) {
 			return null;
 		}

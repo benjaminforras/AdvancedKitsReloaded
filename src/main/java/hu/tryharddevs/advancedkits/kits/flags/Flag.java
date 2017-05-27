@@ -6,7 +6,7 @@ import com.google.common.collect.Iterators;
 import hu.tryharddevs.advancedkits.Config;
 import org.bukkit.entity.Player;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Objects;
@@ -27,7 +27,7 @@ public abstract class Flag<T> {
 		this.name = name;
 	}
 
-	public static boolean isValidName(String name) {
+	private static boolean isValidName(String name) {
 		checkNotNull(name, "name");
 		return VALID_NAME.matcher(name).matches();
 	}

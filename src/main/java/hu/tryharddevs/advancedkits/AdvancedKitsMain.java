@@ -27,10 +27,8 @@ public final class AdvancedKitsMain extends JavaPlugin {
 
 	private Economy        economy;
 	private KitManager     kitManager;
-	private CommandManager commandManager;
 
 	private Boolean usePlaceholderAPI = false;
-	private Boolean vaultFound        = false;
 
 	public static AdvancedKitsMain getPlugin() {
 		return advancedKits;
@@ -49,7 +47,7 @@ public final class AdvancedKitsMain extends JavaPlugin {
 
 		// Hooking vault
 		this.log("Hooking to Vault.");
-		this.vaultFound = this.getServer().getPluginManager().getPlugin("Vault") != null;
+		Boolean vaultFound = this.getServer().getPluginManager().getPlugin("Vault") != null;
 		if (!vaultFound) {
 			this.log(ChatColor.RED + "- Disabled due to no Vault dependency found!");
 			this.getServer().getPluginManager().disablePlugin(this);
@@ -83,24 +81,24 @@ public final class AdvancedKitsMain extends JavaPlugin {
 
 		// Register CommandManager and the Commands.
 		this.log("Registering commands.");
-		this.commandManager = ACF.createManager(this);
+		CommandManager commandManager = ACF.createManager(this);
 
-		this.commandManager.getCommandContexts().registerContext(Flag.class, Flag.getContextResolver());
-		this.commandManager.getCommandContexts().registerContext(Kit.class, Kit.getContextResolver());
+		commandManager.getCommandContexts().registerContext(Flag.class, Flag.getContextResolver());
+		commandManager.getCommandContexts().registerContext(Kit.class, Kit.getContextResolver());
 
-		this.commandManager.getCommandCompletions().registerCompletion("flags", (sender, config, input, c) -> (Arrays.stream(DefaultFlags.getFlags()).map(Flag::getName).sorted(String::compareToIgnoreCase).collect(Collectors.toCollection(ArrayList::new))));
-		this.commandManager.getCommandCompletions().registerCompletion("kits", (sender, config, input, c) -> (KitManager.getKits().stream().map(Kit::getName).sorted(String::compareToIgnoreCase).collect(Collectors.toCollection(ArrayList::new))));
+		commandManager.getCommandCompletions().registerCompletion("flags", (sender, config, input, c) -> (Arrays.stream(DefaultFlags.getFlags()).map(Flag::getName).sorted(String::compareToIgnoreCase).collect(Collectors.toCollection(ArrayList::new))));
+		commandManager.getCommandCompletions().registerCompletion("kits", (sender, config, input, c) -> (KitManager.getKits().stream().map(Kit::getName).sorted(String::compareToIgnoreCase).collect(Collectors.toCollection(ArrayList::new))));
 
-		this.commandManager.registerCommand(new BuyCommand(this));
-		this.commandManager.registerCommand(new CreateCommand(this));
-		this.commandManager.registerCommand(new DeleteCommand(this));
-		this.commandManager.registerCommand(new EditCommand(this));
-		this.commandManager.registerCommand(new FlagCommand(this));
-		this.commandManager.registerCommand(new GiveCommand(this));
-		this.commandManager.registerCommand(new ReloadCommand(this));
-		this.commandManager.registerCommand(new UseCommand(this));
-		this.commandManager.registerCommand(new ViewCommand(this));
-		this.commandManager.registerCommand(new MainCommand(this));
+		commandManager.registerCommand(new BuyCommand(this));
+		commandManager.registerCommand(new CreateCommand(this));
+		commandManager.registerCommand(new DeleteCommand(this));
+		commandManager.registerCommand(new EditCommand(this));
+		commandManager.registerCommand(new FlagCommand(this));
+		commandManager.registerCommand(new GiveCommand(this));
+		commandManager.registerCommand(new ReloadCommand(this));
+		commandManager.registerCommand(new UseCommand(this));
+		commandManager.registerCommand(new ViewCommand(this));
+		commandManager.registerCommand(new MainCommand(this));
 
 		// Check for update
 		if (Config.AUTOUPDATE_ENABLED) {

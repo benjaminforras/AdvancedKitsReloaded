@@ -3,7 +3,7 @@ package hu.tryharddevs.advancedkits.kits.flags;
 import hu.tryharddevs.advancedkits.Config;
 import org.bukkit.ChatColor;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 public class DoubleFlag extends Flag<Double> {
 
@@ -27,7 +27,7 @@ public class DoubleFlag extends Flag<Double> {
 		return getInputAsDouble(input);
 	}
 
-	public Double getInputAsDouble(String input) throws InvalidFlagValueException {
+	private Double getInputAsDouble(String input) throws InvalidFlagValueException {
 		try {
 			return Double.parseDouble(input);
 		} catch (NumberFormatException e) {

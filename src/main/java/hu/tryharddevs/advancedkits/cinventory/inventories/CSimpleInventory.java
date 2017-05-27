@@ -15,8 +15,8 @@ import java.util.Objects;
 public class CSimpleInventory extends CInventory {
 
 	private int inventorySize;
-	public  HashMap<Integer, ItemStack> itemStackHashMap   = new HashMap<>();
-	private ArrayList<ItemStack>        itemStackArrayList = new ArrayList<>();
+	private final HashMap<Integer, ItemStack> itemStackHashMap   = new HashMap<>();
+	private final ArrayList<ItemStack>        itemStackArrayList = new ArrayList<>();
 
 	public CSimpleInventory(String inventoryName, Player player) {
 		super(inventoryName, player);
@@ -35,7 +35,7 @@ public class CSimpleInventory extends CInventory {
 		addItems(itemStacks.toArray(new ItemStack[itemStacks.size()]));
 	}
 
-	public void addItems(ItemStack... itemStacks) {
+	private void addItems(ItemStack... itemStacks) {
 		Arrays.stream(itemStacks).forEach(itemStack -> {
 			if (Objects.isNull(itemStack)) this.itemStackArrayList.add(new ItemStack(Material.AIR));
 			else this.itemStackArrayList.add(itemStack);
@@ -69,7 +69,7 @@ public class CSimpleInventory extends CInventory {
 		return this.currentInventory.getItem(slot);
 	}
 
-	public int getDynamicSize(int items) {
+	private int getDynamicSize(int items) {
 		return Math.min(54, (int) (Math.ceil((double) items / 9)) * 9);
 	}
 }

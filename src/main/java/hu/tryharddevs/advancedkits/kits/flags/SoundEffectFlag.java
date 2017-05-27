@@ -4,7 +4,7 @@ import hu.tryharddevs.advancedkits.Config;
 import org.bukkit.ChatColor;
 import org.bukkit.Sound;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 import java.util.Objects;
 
 public class SoundEffectFlag extends Flag<Sound> {
@@ -24,7 +24,7 @@ public class SoundEffectFlag extends Flag<Sound> {
 		return o.name();
 	}
 
-	public Sound getSoundEffectFromString(String input) throws InvalidFlagValueException {
+	private Sound getSoundEffectFromString(String input) throws InvalidFlagValueException {
 		if (Objects.isNull(getSoundEffectByName(input))) {
 			throw new InvalidFlagValueException(Config.CHAT_PREFIX + " " + ChatColor.RED + "Invalid soundeffect name.", Config.CHAT_PREFIX + " " + ChatColor.RED + "Here are the available effects: ", ChatColor.GRAY + "https://hub.spigotmc.org/javadocs/spigot/org/bukkit/Sound.html");
 		}
@@ -32,7 +32,7 @@ public class SoundEffectFlag extends Flag<Sound> {
 		return getSoundEffectByName(input);
 	}
 
-	public Sound getSoundEffectByName(String input) {
+	private Sound getSoundEffectByName(String input) {
 		Sound lowMatch = null;
 
 		for (Sound sound : Sound.values()) {

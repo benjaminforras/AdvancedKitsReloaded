@@ -3,7 +3,7 @@ package hu.tryharddevs.advancedkits.kits.flags;
 import hu.tryharddevs.advancedkits.Config;
 import org.bukkit.ChatColor;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 public class BooleanFlag extends Flag<Boolean> {
 	private final boolean defaultValue;

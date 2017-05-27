@@ -11,7 +11,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -27,14 +27,14 @@ import static hu.tryharddevs.advancedkits.utils.localization.I18n.getMessage;
 
 public class Kit {
 	private final String name;
-	private AdvancedKitsMain instance = AdvancedKitsMain.getPlugin();
+	private final AdvancedKitsMain instance = AdvancedKitsMain.getPlugin();
 
-	private HashMap<String, ConcurrentHashMap<Flag<?>, Object>> flags = new HashMap<>();
+	private final HashMap<String, ConcurrentHashMap<Flag<?>, Object>> flags = new HashMap<>();
 
 	private ArrayList<ItemStack> itemsArrayList  = new ArrayList<>();
 	private ArrayList<ItemStack> armorsArrayList = new ArrayList<>();
 
-	private YamlConfiguration kitConfig;
+	private final YamlConfiguration kitConfig;
 
 	public Kit(String name) {
 		this.name = name;

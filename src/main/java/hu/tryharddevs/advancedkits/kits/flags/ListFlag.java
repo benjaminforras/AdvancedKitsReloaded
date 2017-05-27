@@ -5,7 +5,7 @@ import java.util.Collection;
 import java.util.List;
 
 public class ListFlag<T> extends Flag<ArrayList<T>> {
-	private Flag<T> subFlag;
+	private final Flag<T> subFlag;
 
 	public ListFlag(String name, Flag<T> subFlag) {
 		super(name);

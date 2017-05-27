@@ -104,7 +104,7 @@ public class CreateCommand extends BaseCommand {
 						event.getInventory().setItem(clickedSlot, new ItemBuilder(Material.ARMOR_STAND).setName(getMessage("armorPieceHere")).setLore(getMessage("armorType") + " " + getMessage("armorHelmet")).toItemStack());
 					} else if (ItemStackUtil.isHelmet(itemOnCursor)) {
 						event.getInventory().setItem(clickedSlot, itemOnCursor);
-						event.setCursor(null);
+						player.setItemOnCursor(null);
 					}
 					break;
 				}
@@ -115,7 +115,7 @@ public class CreateCommand extends BaseCommand {
 						event.getInventory().setItem(clickedSlot, new ItemBuilder(Material.ARMOR_STAND).setName(getMessage("armorPieceHere")).setLore(getMessage("armorType") + " " + getMessage("armorChestplate")).toItemStack());
 					} else if (ItemStackUtil.isChest(itemOnCursor)) {
 						event.getInventory().setItem(clickedSlot, itemOnCursor);
-						event.setCursor(null);
+						player.setItemOnCursor(null);
 					}
 					break;
 				}
@@ -126,7 +126,7 @@ public class CreateCommand extends BaseCommand {
 						event.getInventory().setItem(clickedSlot, new ItemBuilder(Material.ARMOR_STAND).setName(getMessage("armorPieceHere")).setLore(getMessage("armorType") + " " + getMessage("armorLeggings")).toItemStack());
 					} else if (ItemStackUtil.isLegs(itemOnCursor)) {
 						event.getInventory().setItem(clickedSlot, itemOnCursor);
-						event.setCursor(null);
+						player.setItemOnCursor(null);
 					}
 					break;
 				}
@@ -137,7 +137,7 @@ public class CreateCommand extends BaseCommand {
 						event.getInventory().setItem(clickedSlot, new ItemBuilder(Material.ARMOR_STAND).setName(getMessage("armorPieceHere")).setLore(getMessage("armorType") + " " + getMessage("armorBoots")).toItemStack());
 					} else if (ItemStackUtil.isBoots(itemOnCursor)) {
 						event.getInventory().setItem(clickedSlot, itemOnCursor);
-						event.setCursor(null);
+						player.setItemOnCursor(null);
 					}
 					break;
 				}
@@ -150,13 +150,16 @@ public class CreateCommand extends BaseCommand {
 						event.getInventory().setItem(clickedSlot, new ItemBuilder(Material.ARMOR_STAND).setName(getMessage("armorPieceHere")).setLore(getMessage("armorType") + " " + getMessage("armorShield")).toItemStack());
 					} else if (ItemStackUtil.isShield(itemOnCursor)) {
 						event.getInventory().setItem(clickedSlot, itemOnCursor);
-						event.setCursor(null);
+						player.setItemOnCursor(null);
 					}
 					break;
 				}
 
 				// Save session button.
 				case 45: {
+					session.getKitItems().clear();
+					session.getKitArmors().clear();
+
 					ItemStack itemStack;
 					for (int i = 0; i < 36; i++) {
 						itemStack = event.getInventory().getItem(i);

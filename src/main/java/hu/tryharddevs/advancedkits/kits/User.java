@@ -14,19 +14,19 @@ import java.util.stream.Collectors;
 import static hu.tryharddevs.advancedkits.kits.KitManager.getDifferenceText;
 
 public class User {
-	private static HashMap<UUID, User> userHashMap = new HashMap<>();
+	private static final HashMap<UUID, User> userHashMap = new HashMap<>();
 	private final UUID uuid;
 
-	private List<String>                      unlockedList = new ArrayList<>();
-	private Map<String, Map<String, Boolean>> firstUseList = new HashMap<>();
-	private Map<String, Map<String, Double>>  delaysList   = new HashMap<>();
-	private Map<String, Map<String, Integer>> usedList     = new HashMap<>();
+	private       List<String>                      unlockedList = new ArrayList<>();
+	private final Map<String, Map<String, Boolean>> firstUseList = new HashMap<>();
+	private final Map<String, Map<String, Double>>  delaysList   = new HashMap<>();
+	private final Map<String, Map<String, Integer>> usedList     = new HashMap<>();
 
-	private AdvancedKitsMain instance = AdvancedKitsMain.getPlugin();
+	private final AdvancedKitsMain instance = AdvancedKitsMain.getPlugin();
 
-	private YamlConfiguration userConfig;
+	private final YamlConfiguration userConfig;
 
-	public User(UUID uuid) {
+	private User(UUID uuid) {
 		this.uuid = uuid;
 		this.userConfig = YamlConfiguration.loadConfiguration(getSaveFile());
 
@@ -78,7 +78,7 @@ public class User {
 		return isUnlocked(kit.getName());
 	}
 
-	public boolean isUnlocked(String name) {
+	private boolean isUnlocked(String name) {
 		return this.unlockedList.contains(name);
 	}
 
@@ -147,10 +147,6 @@ public class User {
 		return System.currentTimeMillis() >= delay;
 	}
 
-
-	public UUID getUuid() {
-		return this.uuid;
-	}
 
 	public void save() {
 		try {

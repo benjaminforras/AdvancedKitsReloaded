@@ -18,6 +18,7 @@ import java.util.Objects;
 import static hu.tryharddevs.advancedkits.utils.MessagesApi.sendMessage;
 import static hu.tryharddevs.advancedkits.utils.localization.I18n.getMessage;
 
+@SuppressWarnings("ALL")
 @CommandAlias("kit|akit|advancedkits|kits|akits")
 public class FlagCommand extends BaseCommand {
 	private final AdvancedKitsMain instance;

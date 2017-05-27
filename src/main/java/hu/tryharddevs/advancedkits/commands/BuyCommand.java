@@ -21,7 +21,6 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 import static hu.tryharddevs.advancedkits.kits.flags.DefaultFlags.*;
-import static hu.tryharddevs.advancedkits.kits.flags.DefaultFlags.USEONBUY;
 import static hu.tryharddevs.advancedkits.utils.MessagesApi.sendMessage;
 import static hu.tryharddevs.advancedkits.utils.localization.I18n.getMessage;
 

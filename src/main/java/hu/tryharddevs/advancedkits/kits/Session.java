@@ -31,11 +31,7 @@ public class Session {
 		return sett;
 	}
 
-	public UUID getUUID() {
-		return uuid;
-	}
-
-	public void setUUID(UUID uuid) {
+	private void setUUID(UUID uuid) {
 		this.uuid = uuid;
 	}
 
@@ -55,7 +51,4 @@ public class Session {
 		return kitArmors;
 	}
 
-	public void setKitArmors(ArrayList<ItemStack> kitArmors) {
-		this.kitArmors = kitArmors;
-	}
 }

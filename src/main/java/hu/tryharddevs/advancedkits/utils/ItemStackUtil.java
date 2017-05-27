@@ -32,7 +32,7 @@ public class ItemStackUtil {
 	 * @param object The item to serialize.
 	 * @return A JsonObject with the serialized item.
 	 */
-	public static JsonObject serializeItem(Object object) {
+	private static JsonObject serializeItem(Object object) {
 		JsonObject values = new JsonObject();
 		if (object == null) return null;
 
@@ -72,7 +72,7 @@ public class ItemStackUtil {
 	 * @param data The Json to read.
 	 * @return The deserialized item stack.
 	 */
-	public static Object deserializeItem(JsonObject data) {
+	private static Object deserializeItem(JsonObject data) {
 		try (ByteArrayInputStream inputStream = new ByteArrayInputStream(Base64Coder.decodeLines(data.get("item").getAsString())); BukkitObjectInputStream dataInput = new BukkitObjectInputStream(inputStream)) {
 			return dataInput.readObject();
 		} catch (IOException | ClassNotFoundException ex) {
@@ -104,7 +104,7 @@ public class ItemStackUtil {
 		return isBoots(item.getType());
 	}
 
-	public static boolean isBoots(Material material) {
+	private static boolean isBoots(Material material) {
 		return material.name().endsWith("BOOTS");
 	}
 
@@ -112,7 +112,7 @@ public class ItemStackUtil {
 		return isLegs(item.getType());
 	}
 
-	public static boolean isLegs(Material material) {
+	private static boolean isLegs(Material material) {
 		return material.name().endsWith("LEGGINGS");
 	}
 
@@ -120,7 +120,7 @@ public class ItemStackUtil {
 		return isChest(item.getType());
 	}
 
-	public static boolean isChest(Material material) {
+	private static boolean isChest(Material material) {
 		return material.name().endsWith("CHESTPLATE") || Minecraft.VERSION.newerThan(Minecraft.Version.v1_9_R1) && material.name().endsWith("ELYTRA");
 	}
 
@@ -128,7 +128,7 @@ public class ItemStackUtil {
 		return isHelmet(item.getType());
 	}
 
-	public static boolean isHelmet(Material material) {
+	private static boolean isHelmet(Material material) {
 		return material.name().endsWith("HELMET");
 	}
 
@@ -136,7 +136,7 @@ public class ItemStackUtil {
 		return isArmor(item.getType());
 	}
 
-	public static boolean isArmor(Material type) {
+	private static boolean isArmor(Material type) {
 		return isBoots(type) || isLegs(type) || isChest(type) || isHelmet(type);
 	}
 

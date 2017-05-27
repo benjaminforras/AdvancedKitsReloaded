@@ -1,5 +1,6 @@
 ### Intellij Idea template
 .idea/
+target/
 AdvancedKitsReloaded.iml
 
 ### Java template

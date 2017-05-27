@@ -571,7 +571,7 @@ public class Updater {
 	 */
 	private boolean hasTag(String version) {
 		for (final String string : Updater.NO_UPDATE_TAG) {
-			if (version.contains(string)) {
+			if (version.toUpperCase().contains(string)) {
 				return true;
 			}
 		}

@@ -19,8 +19,8 @@ public class CPageInventory extends CInventory {
 	private ItemStack backAPage, forwardsAPage, exitInventory;
 	private int currentPage;
 	private int inventorySize;
-	private   boolean                       dynamicInventorySize = true;
-	protected HashMap<Integer, ItemStack[]> pagesHashMap = new HashMap<>();
+	private       boolean                       dynamicInventorySize = true;
+	private final HashMap<Integer, ItemStack[]> pagesHashMap         = new HashMap<>();
 
 	public CPageInventory(Player player) {
 		this(null, player);
@@ -38,12 +38,12 @@ public class CPageInventory extends CInventory {
 		super(inventoryName, player);
 	}
 
-	public CPageInventory(String inventoryName, Player player, boolean dymanicInventory) {
+	private CPageInventory(String inventoryName, Player player, boolean dymanicInventory) {
 		super(inventoryName, player);
 		this.dynamicInventorySize = dymanicInventory;
 	}
 
-	public CPageInventory(String inventoryName, Player player, int inventorySize) {
+	private CPageInventory(String inventoryName, Player player, int inventorySize) {
 		super(inventoryName, player);
 		this.inventorySize = Math.min(54, (int) (Math.ceil((double) inventorySize / 9)) * 9);
 		this.dynamicInventorySize = false;
@@ -54,7 +54,7 @@ public class CPageInventory extends CInventory {
 		setPages(allItems.toArray(new ItemStack[allItems.size()]));
 	}
 
-	public void setPages(ItemStack... allItems) {
+	private void setPages(ItemStack... allItems) {
 		if (this.inventorySize == 0)
 			this.inventorySize = Math.min(54, (int) (Math.ceil((double) allItems.length / 9)) * 9);
 
@@ -162,7 +162,7 @@ public class CPageInventory extends CInventory {
 		return pageItems;
 	}
 
-	public void setPage(int newPage) {
+	private void setPage(int newPage) {
 		if (this.pagesHashMap.containsKey(newPage)) {
 			this.currentPage = newPage;
 			if (isInventoryInUse()) {
@@ -172,12 +172,12 @@ public class CPageInventory extends CInventory {
 		}
 	}
 
-	public static ItemStack[] generateEmptyPage(int itemsSize) {
+	private static ItemStack[] generateEmptyPage(int itemsSize) {
 		itemsSize = (int) (Math.ceil((double) itemsSize / 9)) * 9;
 		return new ItemStack[Math.min(54, itemsSize)];
 	}
 
-	public ItemStack getExitInventory() {
+	private ItemStack getExitInventory() {
 		return this.exitInventory;
 	}
 
@@ -185,7 +185,7 @@ public class CPageInventory extends CInventory {
 		this.exitInventory = item;
 	}
 
-	public ItemStack getBackPage() {
+	private ItemStack getBackPage() {
 		if (this.backAPage == null) {
 			this.backAPage = new ItemBuilder(new ItemStack(Material.SIGN)).setName(getMessage("guiBackpage")).setLore(getMessage("guiBackpageLore")).toItemStack();
 		}
@@ -196,11 +196,11 @@ public class CPageInventory extends CInventory {
 		this.backAPage = newBack;
 	}
 
-	public int getCurrentPage() {
+	private int getCurrentPage() {
 		return this.currentPage;
 	}
 
-	public ItemStack getForwardsPage() {
+	private ItemStack getForwardsPage() {
 		if (this.forwardsAPage == null) {
 			this.forwardsAPage = new ItemBuilder(new ItemStack(Material.SIGN)).setName(getMessage("guiNextpage")).setLore(getMessage("guiNextpageLore")).toItemStack();
 		}

@@ -23,7 +23,7 @@ import java.util.Map;
  * @author NonameSL
  */
 public class ItemBuilder {
-	private ItemStack is;
+	private final ItemStack is;
 
 	/**
 	 * Create a new ItemBuilder from scratch.
@@ -49,7 +49,7 @@ public class ItemBuilder {
 	 * @param m      The material of the item.
 	 * @param amount The amount of the item.
 	 */
-	public ItemBuilder(Material m, int amount) {
+	private ItemBuilder(Material m, int amount) {
 		is = new ItemStack(m, amount);
 	}
 
@@ -126,7 +126,7 @@ public class ItemBuilder {
 			SkullMeta im = (SkullMeta) is.getItemMeta();
 			im.setOwner(owner);
 			is.setItemMeta(im);
-		} catch (ClassCastException expected) {
+		} catch (ClassCastException ignored) {
 		}
 		return this;
 	}
@@ -292,7 +292,7 @@ public class ItemBuilder {
 			LeatherArmorMeta im = (LeatherArmorMeta) is.getItemMeta();
 			im.setColor(color);
 			is.setItemMeta(im);
-		} catch (ClassCastException expected) {
+		} catch (ClassCastException ignored) {
 		}
 		return this;
 	}

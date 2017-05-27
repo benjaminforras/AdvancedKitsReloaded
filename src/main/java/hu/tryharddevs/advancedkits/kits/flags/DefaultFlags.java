@@ -38,7 +38,7 @@ public class DefaultFlags {
 	public static final ListFlag<ParticleEffect> PARTICLEEFFECTS   = new ListFlag<>("particleeffects", new ParticleEffectFlag(null));
 	public static final ListFlag<Sound>          SOUNDEFFECTS      = new ListFlag<>("soundeffects", new SoundEffectFlag(null));
 
-	public static final Flag<?>[] flagsList = new Flag<?>[]{VISIBLE, FIRSTJOIN, AUTOEQUIPARMOR, FREE, USEONBUY, CLEARINVENTORY, SPEWITEMS, ITEMSINCONTAINER, DISPLAYNAME, PERUSECOST, COST, MAXUSES, DELAY, FIREWORK, ICON, CUSTOMDESCRIPTION, COMMANDS, MESSAGES, DISABLEDWORLDS, POTIONEFFECTS, PARTICLEEFFECTS, SOUNDEFFECTS};
+	private static final Flag<?>[] flagsList = new Flag<?>[]{VISIBLE, FIRSTJOIN, AUTOEQUIPARMOR, FREE, USEONBUY, CLEARINVENTORY, SPEWITEMS, ITEMSINCONTAINER, DISPLAYNAME, PERUSECOST, COST, MAXUSES, DELAY, FIREWORK, ICON, CUSTOMDESCRIPTION, COMMANDS, MESSAGES, DISABLEDWORLDS, POTIONEFFECTS, PARTICLEEFFECTS, SOUNDEFFECTS};
 
 	public static Flag<?>[] getFlags() {
 		return flagsList;

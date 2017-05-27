@@ -17,11 +17,11 @@ public abstract class CInventory {
 
 	private boolean modifiable = false;
 
-	private Player  player;
-	private String  inventoryName;
-	private boolean inventoryInUse;
+	private final Player  player;
+	private final String  inventoryName;
+	private       boolean inventoryInUse;
 
-	public CInventory(String inventoryName, Player player) {
+	protected CInventory(String inventoryName, Player player) {
 		this.player = player;
 		if (inventoryName == null) {
 			inventoryName = getClass().getSimpleName();
@@ -82,7 +82,7 @@ public abstract class CInventory {
 		this.modifiable = modifiable;
 	}
 
-	public String getInventoryName() {
+	protected String getInventoryName() {
 		return inventoryName;
 	}
 

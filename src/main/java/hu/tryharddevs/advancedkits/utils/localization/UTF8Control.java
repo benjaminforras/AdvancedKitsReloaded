@@ -12,7 +12,7 @@ import java.util.ResourceBundle;
 /*****************************************************
  *              Created by TryHardDood on 2016. 12. 22..
  ****************************************************/
-public class UTF8Control extends ResourceBundle.Control {
+class UTF8Control extends ResourceBundle.Control {
 
 	public ResourceBundle newBundle(String baseName, Locale locale, String format, ClassLoader loader, boolean reload) throws IllegalAccessException, InstantiationException, IOException {
 

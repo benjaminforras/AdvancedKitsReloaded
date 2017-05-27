@@ -16,7 +16,7 @@ public class CInventoryMain implements Listener {
 
 	private final AdvancedKitsMain instance;
 
-	private static ArrayList<CInventory> cInventoryArrayList = new ArrayList<>();
+	private static final ArrayList<CInventory> cInventoryArrayList = new ArrayList<>();
 
 	public CInventoryMain(AdvancedKitsMain instance) {
 		this.instance = instance;

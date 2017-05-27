@@ -17,7 +17,7 @@ import java.util.Objects;
 @SuppressWarnings("ConstantConditions")
 @CommandAlias("kit|akit|advancedkits|kits|akits")
 public class MainCommand extends BaseCommand {
-	private AdvancedKitsMain instance;
+	private final AdvancedKitsMain instance;
 
 	public MainCommand(AdvancedKitsMain instance) {
 		this.instance = instance;

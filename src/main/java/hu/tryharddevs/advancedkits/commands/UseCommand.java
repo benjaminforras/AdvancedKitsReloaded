@@ -39,8 +39,7 @@ public class UseCommand extends BaseCommand {
 
 	private final AdvancedKitsMain instance;
 
-	public UseCommand(AdvancedKitsMain instance)
-	{
+	public UseCommand(AdvancedKitsMain instance) {
 		this.instance = instance;
 	}
 
@@ -52,7 +51,7 @@ public class UseCommand extends BaseCommand {
 		User   user  = User.getUser(player.getUniqueId());
 		String world = player.getWorld().getName();
 
-		if(Config.DISABLED_WORLDS.contains(world)) {
+		if (Config.DISABLED_WORLDS.contains(world)) {
 			sendMessage(player, getMessage("kitUseDisabledInWorld"));
 			return;
 		}
@@ -115,12 +114,10 @@ public class UseCommand extends BaseCommand {
 			}
 		}
 
-		if(kit.getFlag(ITEMSINCONTAINER, world))
-		{
+		if (kit.getFlag(ITEMSINCONTAINER, world)) {
 			ItemStack chestItem = new ItemBuilder(Material.CHEST).setName(kit.getDisplayName(world)).setLore("Place it down to get your items.").toItemStack();
 			player.getInventory().addItem(chestItem);
-		}
-		else {
+		} else {
 			PlayerInventory playerInventory = player.getInventory();
 
 			int freeSpace = getEmptySpaces(player);
@@ -196,11 +193,11 @@ public class UseCommand extends BaseCommand {
 		for (String message : kit.getFlag(MESSAGES, world)) {
 			temp = (instance.isPlaceholderAPIEnabled() ? PlaceholderAPI.setPlaceholders(player, message) : message.replace("%player_name%", player.getName()));
 
-			if (temp.contains("subtitle:")) {
+			if (temp.contains("subtitle:") && Config.TITLES_ENABLED) {
 				MessagesApi.sendTitle(player, "", temp.replace("subtitle:", ""));
-			} else if (temp.contains("title:")) {
+			} else if (temp.contains("title:") && Config.TITLES_ENABLED) {
 				MessagesApi.sendTitle(player, temp.replace("title:", ""), "");
-			} else if (temp.contains("actionbar:")) {
+			} else if (temp.contains("actionbar:") && Config.ACTIONBARS_ENABLED) {
 				MessagesApi.sendActionBar(player, ChatColor.translateAlternateColorCodes('&', temp.replace("actionbar:", "")));
 			} else {
 				player.sendMessage(ChatColor.translateAlternateColorCodes('&', temp));

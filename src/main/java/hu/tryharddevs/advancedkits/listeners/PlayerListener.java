@@ -35,7 +35,7 @@ import static hu.tryharddevs.advancedkits.utils.MessagesApi.sendMessage;
 import static hu.tryharddevs.advancedkits.utils.localization.I18n.getMessage;
 
 public class PlayerListener implements Listener {
-	private AdvancedKitsMain instance;
+	private final AdvancedKitsMain instance;
 
 	public PlayerListener(AdvancedKitsMain instance) {
 		this.instance = instance;

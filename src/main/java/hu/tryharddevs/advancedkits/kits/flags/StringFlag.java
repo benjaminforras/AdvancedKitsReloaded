@@ -1,6 +1,6 @@
 package hu.tryharddevs.advancedkits.kits.flags;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 public class StringFlag extends Flag<String> {
 	private final String defaultValue;
