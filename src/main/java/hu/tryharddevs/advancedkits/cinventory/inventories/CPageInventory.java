@@ -185,7 +185,7 @@ public class CPageInventory extends CInventory {
 		this.exitInventory = item;
 	}
 
-	private ItemStack getBackPage() {
+	public ItemStack getBackPage() {
 		if (this.backAPage == null) {
 			this.backAPage = new ItemBuilder(new ItemStack(Material.SIGN)).setName(getMessage("guiBackpage")).setLore(getMessage("guiBackpageLore")).toItemStack();
 		}
@@ -200,7 +200,7 @@ public class CPageInventory extends CInventory {
 		return this.currentPage;
 	}
 
-	private ItemStack getForwardsPage() {
+	public ItemStack getForwardsPage() {
 		if (this.forwardsAPage == null) {
 			this.forwardsAPage = new ItemBuilder(new ItemStack(Material.SIGN)).setName(getMessage("guiNextpage")).setLore(getMessage("guiNextpageLore")).toItemStack();
 		}

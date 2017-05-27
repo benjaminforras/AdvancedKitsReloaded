@@ -34,10 +34,10 @@ import static hu.tryharddevs.advancedkits.utils.localization.I18n.getMessage;
 public class EditCommand extends BaseCommand {
 	private final AdvancedKitsMain instance;
 
-	public EditCommand(AdvancedKitsMain instance)
-	{
+	public EditCommand(AdvancedKitsMain instance) {
 		this.instance = instance;
 	}
+
 	@Subcommand("edit")
 	@CommandPermission("advancedkits.edit")
 	@CommandCompletion("@kits @worlds")
@@ -54,6 +54,8 @@ public class EditCommand extends BaseCommand {
 			cPageInventory.onInventoryClickEvent((_event) -> {
 				ItemStack clickedItem = _event.getCurrentItem();
 				if (Objects.isNull(clickedItem) || !clickedItem.hasItemMeta() || !clickedItem.getItemMeta().hasDisplayName())
+					return;
+				if (Arrays.asList(cPageInventory.getBackPage(), cPageInventory.getForwardsPage()).contains(clickedItem))
 					return;
 
 				Player _player = (Player) _event.getWhoClicked();
@@ -84,7 +86,8 @@ public class EditCommand extends BaseCommand {
 			else if (ItemStackUtil.isChest(armor)) cSimpleInventory.setItem(37, armor);
 			else if (ItemStackUtil.isLegs(armor)) cSimpleInventory.setItem(38, armor);
 			else if (ItemStackUtil.isBoots(armor)) cSimpleInventory.setItem(39, armor);
-			else if (Minecraft.VERSION.newerThan(Minecraft.Version.v1_9_R1) && ItemStackUtil.isShield(armor)) cSimpleInventory.setItem(40, armor);
+			else if (Minecraft.VERSION.newerThan(Minecraft.Version.v1_9_R1) && ItemStackUtil.isShield(armor))
+				cSimpleInventory.setItem(40, armor);
 		}
 
 		cSimpleInventory.setItem(45, new ItemBuilder(Material.STAINED_GLASS_PANE).setDurability((short) 3).setName(getMessage("saveToSession")).toItemStack());

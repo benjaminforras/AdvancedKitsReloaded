@@ -95,6 +95,8 @@ public class MainCommand extends BaseCommand {
 				ItemStack clickedItem = _event.getCurrentItem();
 				if (Objects.isNull(clickedItem) || !clickedItem.hasItemMeta() || !clickedItem.getItemMeta().hasDisplayName())
 					return;
+				if (Arrays.asList(cPageInventory.getBackPage(), cPageInventory.getForwardsPage()).contains(clickedItem))
+					return;
 
 				Player _player = (Player) _event.getWhoClicked();
 
@@ -162,8 +164,12 @@ public class MainCommand extends BaseCommand {
 			cPageInventory.openInventory();
 
 			cPageInventory.onInventoryClickEvent((_event) -> {
+
 				ItemStack clickedItem = _event.getCurrentItem();
-				if (Objects.isNull(clickedItem) || !clickedItem.hasItemMeta() || !clickedItem.getItemMeta().hasDisplayName())
+				if (Objects.isNull(clickedItem) || !clickedItem.hasItemMeta() || !clickedItem.getItemMeta().hasDisplayName()) {
+					return;
+				}
+				if (Arrays.asList(cPageInventory.getBackPage(), cPageInventory.getForwardsPage()).contains(clickedItem))
 					return;
 
 				Player _player = (Player) _event.getWhoClicked();
@@ -232,8 +238,7 @@ public class MainCommand extends BaseCommand {
 			}
 			UseCommand.giveKitToPlayer(player.getPlayer(), kit);
 			sendMessage(sender, getMessage("successfullyGiven", kit.getName(), player.getPlayer().getName()));
-		}
-		else if (!user.isUnlocked(kit) && unlockKit) { // /kit give kit name false true
+		} else if (!user.isUnlocked(kit) && unlockKit) { // /kit give kit name false true
 			user.addToUnlocked(kit);
 			user.save();
 			sendMessage(sender, getMessage("successfullyGiven", kit.getName(), player.getPlayer().getName()));
@@ -263,6 +268,8 @@ public class MainCommand extends BaseCommand {
 			cPageInventory.onInventoryClickEvent((_event) -> {
 				ItemStack clickedItem = _event.getCurrentItem();
 				if (Objects.isNull(clickedItem) || !clickedItem.hasItemMeta() || !clickedItem.getItemMeta().hasDisplayName())
+					return;
+				if (Arrays.asList(cPageInventory.getBackPage(), cPageInventory.getForwardsPage()).contains(clickedItem))
 					return;
 
 				Player _player = (Player) _event.getWhoClicked();
