@@ -27,7 +27,7 @@ import java.util.stream.Stream;
 import static hu.tryharddevs.advancedkits.utils.MessagesApi.sendMessage;
 import static hu.tryharddevs.advancedkits.utils.localization.I18n.getMessage;
 
-@CommandAlias("kit|akit|advancedkits|kits|akits")
+@CommandAlias("%rootcommand")
 public class CreateCommand extends BaseCommand {
 	private final AdvancedKitsMain instance;
 

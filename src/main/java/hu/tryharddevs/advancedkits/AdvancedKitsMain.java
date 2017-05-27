@@ -2,8 +2,12 @@ package hu.tryharddevs.advancedkits;
 
 import co.aikar.commands.ACF;
 import co.aikar.commands.CommandManager;
+import co.aikar.commands.CommandReplacements;
 import hu.tryharddevs.advancedkits.cinventory.CInventoryMain;
-import hu.tryharddevs.advancedkits.commands.*;
+import hu.tryharddevs.advancedkits.commands.CreateCommand;
+import hu.tryharddevs.advancedkits.commands.EditCommand;
+import hu.tryharddevs.advancedkits.commands.MainCommand;
+import hu.tryharddevs.advancedkits.commands.UseCommand;
 import hu.tryharddevs.advancedkits.kits.Kit;
 import hu.tryharddevs.advancedkits.kits.KitManager;
 import hu.tryharddevs.advancedkits.kits.flags.DefaultFlags;
@@ -89,15 +93,12 @@ public final class AdvancedKitsMain extends JavaPlugin {
 		commandManager.getCommandCompletions().registerCompletion("flags", (sender, config, input, c) -> (Arrays.stream(DefaultFlags.getFlags()).map(Flag::getName).sorted(String::compareToIgnoreCase).collect(Collectors.toCollection(ArrayList::new))));
 		commandManager.getCommandCompletions().registerCompletion("kits", (sender, config, input, c) -> (KitManager.getKits().stream().map(Kit::getName).sorted(String::compareToIgnoreCase).collect(Collectors.toCollection(ArrayList::new))));
 
-		commandManager.registerCommand(new BuyCommand(this));
+		CommandReplacements replacements = commandManager.getCommandReplacements();
+		replacements.addReplacements("rootcommand", "kit|akit|advancedkits|kits|akits");
+
 		commandManager.registerCommand(new CreateCommand(this));
-		commandManager.registerCommand(new DeleteCommand(this));
 		commandManager.registerCommand(new EditCommand(this));
-		commandManager.registerCommand(new FlagCommand(this));
-		commandManager.registerCommand(new GiveCommand(this));
-		commandManager.registerCommand(new ReloadCommand(this));
 		commandManager.registerCommand(new UseCommand(this));
-		commandManager.registerCommand(new ViewCommand(this));
 		commandManager.registerCommand(new MainCommand(this));
 
 		// Check for update

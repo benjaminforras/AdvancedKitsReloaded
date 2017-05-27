@@ -30,7 +30,7 @@ import static hu.tryharddevs.advancedkits.kits.flags.DefaultFlags.VISIBLE;
 import static hu.tryharddevs.advancedkits.utils.MessagesApi.sendMessage;
 import static hu.tryharddevs.advancedkits.utils.localization.I18n.getMessage;
 
-@CommandAlias("kit|akit|advancedkits|kits|akits")
+@CommandAlias("%rootcommand")
 public class EditCommand extends BaseCommand {
 	private final AdvancedKitsMain instance;
 

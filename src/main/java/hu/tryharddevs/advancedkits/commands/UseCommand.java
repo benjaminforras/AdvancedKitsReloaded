@@ -34,7 +34,7 @@ import static hu.tryharddevs.advancedkits.kits.flags.DefaultFlags.*;
 import static hu.tryharddevs.advancedkits.utils.MessagesApi.sendMessage;
 import static hu.tryharddevs.advancedkits.utils.localization.I18n.getMessage;
 
-@CommandAlias("kit|akit|advancedkits|kits|akits")
+@CommandAlias("%rootcommand")
 public class UseCommand extends BaseCommand {
 
 	private final AdvancedKitsMain instance;
