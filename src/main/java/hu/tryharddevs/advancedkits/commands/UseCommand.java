@@ -116,7 +116,13 @@ public class UseCommand extends BaseCommand {
 			}
 		}
 
-		giveKitToPlayer(player, kit);
+		if (giveKitToPlayer(player, kit)) {
+			if (kit.getFlag(DELAY, world) > 0 && !player.hasPermission(kit.getDelayPermission())) {
+				user.setDelay(kit, world, kit.getFlag(DELAY, world));
+			}
+
+			if (kit.getFlag(MAXUSES, world) > 0) user.addUse(kit, world);
+		}
 		sendMessage(player, getMessage("successfullyUsed", kit.getName()));
 	}
 
@@ -136,7 +142,7 @@ public class UseCommand extends BaseCommand {
 		return (int) Arrays.stream(player.getInventory().getStorageContents()).filter(item -> Objects.isNull(item) || item.getType() == Material.AIR).count();
 	}
 
-	public static void giveKitToPlayer(Player player, Kit kit) {
+	public static boolean giveKitToPlayer(Player player, Kit kit) {
 		String world = player.getWorld().getName();
 
 		if (kit.getFlag(ITEMSINCONTAINER, world)) {
@@ -153,7 +159,7 @@ public class UseCommand extends BaseCommand {
 			}
 			if (!kit.getFlag(SPEWITEMS, world) && spaceneed > freeSpace) {
 				sendMessage(player, getMessage("notEnoughSpace", spaceneed));
-				return;
+				return false;
 			}
 			ItemStack[] equipment = playerInventory.getArmorContents();
 
@@ -247,5 +253,6 @@ public class UseCommand extends BaseCommand {
 			FireworkMeta data           = (FireworkMeta) firework.getItemMeta();
 			if (data != null) fireworkEntity.setFireworkMeta(data);
 		}
+		return true;
 	}
 }
