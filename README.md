@@ -1,7 +1,7 @@
 ![](https://tryharddood.github.io/custom/projects/advancedkits/img/advancedkits.png)
 ===================
 
-- **Latest version:** [v1.1.13](https://github.com/TryHardDood/AdvancedKitsReloaded/releases/latest)
+- **Latest version:** [v1.1.14](https://github.com/TryHardDood/AdvancedKitsReloaded/releases/latest)
 
 ## Links
 - [SpigotMC](https://www.spigotmc.org/resources/advancedkits-reloaded.11193/) 
