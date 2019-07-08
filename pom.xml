@@ -120,29 +120,6 @@
 					</execution>
 				</executions>
 			</plugin>
-			<plugin>
-				<artifactId>maven-antrun-plugin</artifactId>
-				<version>1.8</version>
-				<executions>
-					<execution>
-						<id>copy</id>
-						<phase>package</phase>
-						<configuration>
-							<target>
-								<echo>Copying AdvancedKitsReloaded.jar to localtest</echo>
-								<copy todir="C:\Users\rsnco\Desktop\Servers\Servers\plugins" overwrite="true" flatten="true">
-									<fileset dir="${basedir}">
-										<include name="target/AdvancedKitsReloaded.jar" />
-									</fileset>
-								</copy>
-							</target>
-						</configuration>
-						<goals>
-							<goal>run</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
 		</plugins>
 		<resources>
 			<resource>
@@ -156,7 +133,7 @@
 		<dependency>
 			<groupId>org.bukkit</groupId>
 			<artifactId>bukkit</artifactId>
-			<version>1.12.2-R0.1-SNAPSHOT</version>
+			<version>1.14.3-R0.1-SNAPSHOT</version>
 			<scope>provided</scope>
 		</dependency>
 
@@ -168,7 +145,7 @@
 		<dependency>
 			<groupId>net.milkbowl.vault</groupId>
 			<artifactId>VaultAPI</artifactId>
-			<version>1.6</version>
+			<version>1.7</version>
 		</dependency>
 
 		<dependency>

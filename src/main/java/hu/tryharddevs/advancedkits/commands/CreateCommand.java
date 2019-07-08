@@ -58,12 +58,12 @@ public class CreateCommand extends BaseCommand {
 			cSimpleInventory.setItem(40, new ItemBuilder(Material.ARMOR_STAND).setName(getMessage("armorPieceHere")).setLore(getMessage("armorType") + " " + getMessage("armorShield")).toItemStack());
 		}
 
-		cSimpleInventory.setItem(45, new ItemBuilder(Material.STAINED_GLASS_PANE).setDurability((short) 3).setName(getMessage("saveToSession")).toItemStack());
+		cSimpleInventory.setItem(45, new ItemBuilder(Material.GREEN_STAINED_GLASS_PANE).setName(getMessage("saveToSession")).toItemStack());
 		if (!session.getKitItems().isEmpty() || !session.getKitArmors().isEmpty()) {
-			cSimpleInventory.setItem(46, new ItemBuilder(Material.STAINED_GLASS_PANE).setDurability((short) 3).setName(getMessage("loadFromSession")).toItemStack());
+			cSimpleInventory.setItem(46, new ItemBuilder(Material.GREEN_STAINED_GLASS_PANE).setName(getMessage("loadFromSession")).toItemStack());
 		}
 
-		cSimpleInventory.setItem(53, new ItemBuilder(Material.STAINED_GLASS_PANE).setDurability((short) 13).setName(getMessage("guiCreateKit", kitName)).toItemStack());
+		cSimpleInventory.setItem(53, new ItemBuilder(Material.BLUE_STAINED_GLASS_PANE).setName(getMessage("guiCreateKit", kitName)).toItemStack());
 
 		cSimpleInventory.openInventory();
 

@@ -81,7 +81,7 @@ public final class AdvancedKitsMain extends JavaPlugin {
 		// Register events
 		this.log("Registering events");
 		this.getServer().getPluginManager().registerEvents(new PlayerListener(this), this);
-		this.getServer().getPluginManager().registerEvents(new CInventoryMain(this), this);
+		this.getServer().getPluginManager().registerEvents(new CInventoryMain(), this);
 
 		// Register CommandManager and the Commands.
 		this.log("Registering commands.");
@@ -100,18 +100,6 @@ public final class AdvancedKitsMain extends JavaPlugin {
 		commandManager.registerCommand(new EditCommand(this));
 		commandManager.registerCommand(new UseCommand(this));
 		commandManager.registerCommand(new MainCommand(this));
-
-		// Check for update
-		if (Config.AUTOUPDATE_ENABLED) {
-			this.log("Checking for updates.");
-			new Updater(this, 91129, this.getFile(), Updater.UpdateType.DEFAULT, true);
-		}
-
-		// Check if metrics is enabled
-		if (Config.METRICS_ENABLED) {
-			this.log("Enabling Plugin Metrics.");
-			new MetricsLite(this);
-		}
 
 		this.log(ChatColor.GREEN + "Finished loading " + this.getDescription().getName() + " " + this.getDescription().getVersion() + " by " + this.getDescription().getAuthors().stream().collect(Collectors.joining(",")));
 	}

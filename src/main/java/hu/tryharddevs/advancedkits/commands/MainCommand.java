@@ -1,7 +1,13 @@
 package hu.tryharddevs.advancedkits.commands;
 
 import co.aikar.commands.BaseCommand;
-import co.aikar.commands.annotation.*;
+import co.aikar.commands.annotation.CommandAlias;
+import co.aikar.commands.annotation.CommandCompletion;
+import co.aikar.commands.annotation.CommandPermission;
+import co.aikar.commands.annotation.Default;
+import co.aikar.commands.annotation.Optional;
+import co.aikar.commands.annotation.Subcommand;
+import co.aikar.commands.annotation.Syntax;
 import co.aikar.commands.contexts.OnlinePlayer;
 import hu.tryharddevs.advancedkits.AdvancedKitsMain;
 import hu.tryharddevs.advancedkits.Config;
@@ -120,18 +126,18 @@ public class MainCommand extends BaseCommand {
 
 			CSimpleInventory cSimpleInventory = new CSimpleInventory("AdvancedKits - Delete Kit", player);
 
-			cSimpleInventory.setItem(2, new ItemBuilder(Material.STAINED_GLASS_PANE).setDurability((short) 13).setName(getMessage("guiConfirm")).toItemStack());
-			cSimpleInventory.setItem(6, new ItemBuilder(Material.STAINED_GLASS_PANE).setDurability((short) 14).setName(getMessage("guiCancel")).toItemStack());
+			cSimpleInventory.setItem(2, new ItemBuilder(Material.GREEN_STAINED_GLASS_PANE).setName(getMessage("guiConfirm")).toItemStack());
+			cSimpleInventory.setItem(6, new ItemBuilder(Material.RED_STAINED_GLASS_PANE).setName(getMessage("guiCancel")).toItemStack());
 			cSimpleInventory.openInventory();
 
 			cSimpleInventory.onInventoryClickEvent((_event) -> {
 				if (_event.getCurrentItem() == null) return;
 
-				ItemStack item = _event.getCurrentItem();
-				if (item.getDurability() == (short) 14) //Cancel
+				Material item = _event.getCurrentItem().getType();
+				if (item == Material.RED_STAINED_GLASS_PANE) //Cancel
 				{
 					_event.getWhoClicked().closeInventory();
-				} else if (item.getDurability() == (short) 13) //Delete
+				} else if (item == Material.GREEN_STAINED_GLASS_PANE) //Delete
 				{
 					_event.getWhoClicked().closeInventory();
 					instance.getKitManager().deleteKit(kit);
@@ -297,12 +303,12 @@ public class MainCommand extends BaseCommand {
 		cSimpleInventory.setItem(49, new ItemBuilder(Material.PAPER).setName(getMessage("informations")).setLore(KitManager.getKitDescription(player, kit, world)).toItemStack());
 
 		if (user.isUnlocked(kit) || kit.getFlag(FREE, world)) {
-			cSimpleInventory.setItem(53, new ItemBuilder(Material.STAINED_GLASS_PANE).setDurability((short) 13).setName(ChatColor.GREEN + getMessage("guiUse")).hideAttributes().toItemStack());
+			cSimpleInventory.setItem(53, new ItemBuilder(Material.GREEN_STAINED_GLASS_PANE).setName(ChatColor.GREEN + getMessage("guiUse")).hideAttributes().toItemStack());
 		} else if (kit.getFlag(COST, world) > 0) {
-			cSimpleInventory.setItem(53, new ItemBuilder(Material.STAINED_GLASS_PANE).setDurability((short) 14).setName(ChatColor.GREEN + getMessage("guiBuy")).hideAttributes().toItemStack());
+			cSimpleInventory.setItem(53, new ItemBuilder(Material.RED_STAINED_GLASS_PANE).setName(ChatColor.GREEN + getMessage("guiBuy")).hideAttributes().toItemStack());
 		}
 
-		cSimpleInventory.setItem(45, new ItemBuilder(Material.STAINED_GLASS_PANE).setDurability((short) 0).setName(ChatColor.GREEN + getMessage("guiBackToMenu")).hideAttributes().toItemStack());
+		cSimpleInventory.setItem(45, new ItemBuilder(Material.WHITE_STAINED_GLASS_PANE).setName(ChatColor.GREEN + getMessage("guiBackToMenu")).hideAttributes().toItemStack());
 		cSimpleInventory.openInventory();
 
 		cSimpleInventory.onInventoryClickEvent((_event) -> {
@@ -311,12 +317,12 @@ public class MainCommand extends BaseCommand {
 				return;
 
 			Player _player = (Player) _event.getWhoClicked();
-			if (clickedItem.getType() == Material.STAINED_GLASS_PANE) {
-				if (clickedItem.getDurability() == (short) 13) {
+			if (clickedItem.getType() == Material.GREEN_STAINED_GLASS_PANE || clickedItem.getType() == Material.RED_STAINED_GLASS_PANE|| clickedItem.getType() == Material.WHITE_STAINED_GLASS_PANE) {
+				if (clickedItem.getType() == Material.GREEN_STAINED_GLASS_PANE) {
 					Bukkit.dispatchCommand(_player, "advancedkitsreloaded:kit use " + kit.getName());
-				} else if (clickedItem.getDurability() == (short) 14) {
+				} else if (clickedItem.getType() == Material.RED_STAINED_GLASS_PANE) {
 					Bukkit.dispatchCommand(_player, "advancedkitsreloaded:kit buy " + kit.getName());
-				} else if (clickedItem.getDurability() == (short) 0) {
+				} else if (clickedItem.getType() == Material.WHITE_STAINED_GLASS_PANE) {
 					Bukkit.dispatchCommand(_player, "advancedkitsreloaded:kit view");
 				}
 			}
@@ -349,7 +355,7 @@ public class MainCommand extends BaseCommand {
 			}
 
 			if (flag.getName().equalsIgnoreCase("firework")) {
-				if (Objects.isNull(player.getInventory().getItemInMainHand()) || !player.getInventory().getItemInMainHand().getType().equals(Material.FIREWORK)) {
+				if (Objects.isNull(player.getInventory().getItemInMainHand()) || !player.getInventory().getItemInMainHand().getType().equals(Material.FIREWORK_ROCKET)) {
 					sendMessage(player, getMessage("notFirework"));
 					return;
 				}

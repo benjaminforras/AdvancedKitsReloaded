@@ -86,16 +86,16 @@ public class EditCommand extends BaseCommand {
 			else if (ItemStackUtil.isChest(armor)) cSimpleInventory.setItem(37, armor);
 			else if (ItemStackUtil.isLegs(armor)) cSimpleInventory.setItem(38, armor);
 			else if (ItemStackUtil.isBoots(armor)) cSimpleInventory.setItem(39, armor);
-			else if (Minecraft.VERSION.newerThan(Minecraft.Version.v1_9_R1) && ItemStackUtil.isShield(armor))
+			else if (ItemStackUtil.isShield(armor))
 				cSimpleInventory.setItem(40, armor);
 		}
 
-		cSimpleInventory.setItem(45, new ItemBuilder(Material.STAINED_GLASS_PANE).setDurability((short) 3).setName(getMessage("saveToSession")).toItemStack());
+		cSimpleInventory.setItem(45, new ItemBuilder(Material.LIGHT_BLUE_STAINED_GLASS_PANE).setName(getMessage("saveToSession")).toItemStack());
 		if (!session.getKitItems().isEmpty() || !session.getKitArmors().isEmpty()) {
-			cSimpleInventory.setItem(46, new ItemBuilder(Material.STAINED_GLASS_PANE).setDurability((short) 3).setName(getMessage("loadFromSession")).setLore(getMessage("loadFromSessionWarning")).toItemStack());
+			cSimpleInventory.setItem(46, new ItemBuilder(Material.LIGHT_BLUE_STAINED_GLASS_PANE).setName(getMessage("loadFromSession")).setLore(getMessage("loadFromSessionWarning")).toItemStack());
 		}
 
-		cSimpleInventory.setItem(53, new ItemBuilder(Material.STAINED_GLASS_PANE).setDurability((short) 13).setName(getMessage("guiEditKit", kit.getName())).toItemStack());
+		cSimpleInventory.setItem(53, new ItemBuilder(Material.GREEN_STAINED_GLASS_PANE).setName(getMessage("guiEditKit", kit.getName())).toItemStack());
 		cSimpleInventory.openInventory();
 
 		//Check if there's a missing armor piece from the gui. If so replace it with the holder
@@ -108,10 +108,8 @@ public class EditCommand extends BaseCommand {
 		if (Objects.isNull(cSimpleInventory.getItem(39)))
 			cSimpleInventory.setItem(39, new ItemBuilder(Material.ARMOR_STAND).setName(getMessage("armorPieceHere")).setLore(getMessage("armorType") + " " + getMessage("armorBoots")).toItemStack());
 
-		if (Minecraft.VERSION.newerThan(Minecraft.Version.v1_9_R1)) {
-			if (Objects.isNull(cSimpleInventory.getItem(40)))
-				cSimpleInventory.setItem(40, new ItemBuilder(Material.ARMOR_STAND).setName(getMessage("armorPieceHere")).setLore(getMessage("armorType") + " " + getMessage("armorShield")).toItemStack());
-		}
+		if (Objects.isNull(cSimpleInventory.getItem(40)))
+		    cSimpleInventory.setItem(40, new ItemBuilder(Material.ARMOR_STAND).setName(getMessage("armorPieceHere")).setLore(getMessage("armorType") + " " + getMessage("armorShield")).toItemStack());
 
 		cSimpleInventory.onInventoryDragEvent(event -> {
 			if (!Stream.of(

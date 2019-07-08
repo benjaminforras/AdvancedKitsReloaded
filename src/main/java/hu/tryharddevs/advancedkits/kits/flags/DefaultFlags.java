@@ -29,7 +29,7 @@ public class DefaultFlags {
 	public static final DoubleFlag DELAY = new DoubleFlag("delay", 0.0);
 
 	public static final ItemStackFlag ICON     = new ItemStackFlag("icon", new ItemStack(Material.EMERALD_BLOCK));
-	public static final ItemStackFlag FIREWORK = new ItemStackFlag("firework", new ItemStack(Material.FIREWORK));
+	public static final ItemStackFlag FIREWORK = new ItemStackFlag("firework", new ItemStack(Material.FIREWORK_ROCKET));
 
 	public static final ListFlag<String>         CUSTOMDESCRIPTION = new ListFlag<>("customdescription", new StringFlag(null));
 	public static final ListFlag<String>         COMMANDS          = new ListFlag<>("commands", new StringFlag(null));
