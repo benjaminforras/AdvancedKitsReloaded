@@ -43,10 +43,10 @@ public class ItemStackUtil {
 	         * This is because some people are getting skulls with null owners, which causes Spigot to throw an error
 	         * when it tries to serialize the item. If this ever gets fixed in Spigot, this will be removed.
 	         */
-			if (itemStack.getType() == Material.LEGACY_SKULL) {
+			if (itemStack.getType() == Material.PLAYER_HEAD) {
 				SkullMeta meta = (SkullMeta) itemStack.getItemMeta();
-				if (meta.hasOwner() && (meta.getOwner() == null || meta.getOwner().isEmpty())) {
-					itemStack.setItemMeta(Bukkit.getServer().getItemFactory().getItemMeta(Material.LEGACY_SKULL));
+				if (meta.hasOwner() && meta.getOwningPlayer() == null) {
+					itemStack.setItemMeta(Bukkit.getServer().getItemFactory().getItemMeta(Material.PLAYER_HEAD));
 				}
 			}
 		}

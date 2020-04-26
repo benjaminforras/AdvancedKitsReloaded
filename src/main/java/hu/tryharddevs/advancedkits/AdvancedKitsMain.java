@@ -18,7 +18,6 @@ import net.milkbowl.vault.economy.Economy;
 import org.bukkit.ChatColor;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.inventivetalent.reflection.minecraft.Minecraft;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -42,12 +41,6 @@ public final class AdvancedKitsMain extends JavaPlugin {
 	public void onEnable() {
 		this.log(ChatColor.GREEN + "Starting " + this.getDescription().getName() + " " + this.getDescription().getVersion());
 		advancedKits = this;
-
-		if (Minecraft.VERSION.olderThan(Minecraft.Version.v1_9_R1)) {
-			this.log(ChatColor.RED + "ERROR: Unsupported Minecraft version. (" + Minecraft.VERSION.toString() + ")");
-			this.setEnabled(false);
-			return;
-		}
 
 		// Hooking vault
 		this.log("Hooking to Vault.");
