@@ -267,8 +267,11 @@ public class MainCommand extends BaseCommand {
 		}
 
 		if (Objects.isNull(kit)) {
-			CPageInventory cPageInventory = new CPageInventory("AdvancedKits - View Kit", player);
-			cPageInventory.setPages(KitManager.getKits().stream().filter(_kit -> _kit.getFlag(VISIBLE, world)).sorted(Comparator.comparing(Kit::getName)).map(_kit -> new ItemBuilder(_kit.getFlag(ICON, world).clone()).setName(ChatColor.WHITE + _kit.getDisplayName(world)).setLore(KitManager.getKitDescription(player, _kit, world)).hideAttributes().toItemStack()).collect(Collectors.toCollection(ArrayList::new)));
+			CPageInventory cPageInventory = new CPageInventory("Kit Auswahl", player);
+			cPageInventory.setPages(KitManager.getKits().stream().filter(_kit -> _kit.getFlag(VISIBLE, world))
+			        .sorted(Comparator.comparing(Kit::getName)).map(_kit -> new ItemBuilder(_kit.getFlag(ICON, world).clone())
+			                .setName(ChatColor.WHITE + _kit.getDisplayName(world)).setLore(KitManager.getKitDescription(player, _kit, world)).hideAttributes()
+			                .toItemStack()).collect(Collectors.toCollection(ArrayList::new)));
 			cPageInventory.openInventory();
 
 			cPageInventory.onInventoryClickEvent((_event) -> {
@@ -286,12 +289,16 @@ public class MainCommand extends BaseCommand {
 				}
 
 				_player.closeInventory();
-				Bukkit.dispatchCommand(_player, "advancedkitsreloaded:kit view " + clickedKit.getName());
+				if(_event.getClick().isRightClick()) {
+                    Bukkit.dispatchCommand(_player, "advancedkitsreloaded:kit view " + clickedKit.getName());
+                } else {
+                    Bukkit.dispatchCommand(_player, "advancedkitsreloaded:kit use " + clickedKit.getName());
+                }
 			});
 			return;
 		}
 
-		CSimpleInventory cSimpleInventory = new CSimpleInventory("AdvancedKits - View Kit", player, 54);
+		CSimpleInventory cSimpleInventory = new CSimpleInventory("Kit-Vorschau", player, 54);
 		cSimpleInventory.addItems(kit.getItems());
 
 		int i = 36;

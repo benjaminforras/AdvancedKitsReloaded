@@ -29,25 +29,6 @@ public class MessagesApi {
 	private static final OBCClassResolver obcClassResolver = new OBCClassResolver();
 	private static final NMSClassResolver nmsClassResolver = new NMSClassResolver();
 
-	@Deprecated
-	public static void sendTitle(Player player, Integer fadeIn, Integer stay, Integer fadeOut, String message) {
-		sendTitle(player, fadeIn, stay, fadeOut, message, null);
-	}
-
-	@Deprecated
-	public static void sendSubtitle(Player player, Integer fadeIn, Integer stay, Integer fadeOut, String message) {
-		sendTitle(player, fadeIn, stay, fadeOut, null, message);
-	}
-
-	@Deprecated
-	public static void sendFullTitle(Player player, Integer fadeIn, Integer stay, Integer fadeOut, String title, String subtitle) {
-		sendTitle(player, fadeIn, stay, fadeOut, title, subtitle);
-	}
-
-	@Deprecated public static Integer getPlayerProtocol(Player player) {
-		return 47;
-	}
-
 	private static void sendPacket(Player player, Object packet) {
 		try {
 			Object handle           = new MethodResolver(player.getClass()).resolveSilent("getHandle").invoke(player);

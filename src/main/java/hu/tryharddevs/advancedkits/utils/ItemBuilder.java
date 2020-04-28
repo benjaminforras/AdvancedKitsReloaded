@@ -16,7 +16,6 @@ import java.util.List;
  * @author NonameSL
  */
 public class ItemBuilder {
-
 	private final ItemStack is;
 
 	/**
@@ -101,6 +100,7 @@ public class ItemBuilder {
 		is.setItemMeta(im);
 		return this;
 	}
+
 
 	/**
 	 * Retrieves the itemstack from the ItemBuilder.
