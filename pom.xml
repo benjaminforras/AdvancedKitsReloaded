@@ -6,7 +6,7 @@
 
 	<groupId>hu.tryharddevs</groupId>
 	<artifactId>advancedkits</artifactId>
-	<version>1.1.15</version>
+	<version>1.1.16</version>
 
 	<name>AdvancedKitsReloaded</name>
 
@@ -156,7 +156,7 @@
 		<dependency>
 			<groupId>co.aikar</groupId>
 			<artifactId>minecraft-timings</artifactId>
-			<version>1.0.3</version>
+			<version>1.0.4</version>
 		</dependency>
 
 		<dependency>

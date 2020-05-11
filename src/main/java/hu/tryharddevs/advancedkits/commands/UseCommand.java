@@ -84,6 +84,9 @@ public class UseCommand extends BaseCommand {
 				    Bukkit.dispatchCommand(_player, "advancedkitsreloaded:kit view " + clickedKit.getName());
 				} else {
 				    Bukkit.dispatchCommand(_player, "advancedkitsreloaded:kit use " + clickedKit.getName());
+				    if(kit.getFlag(KEEPINVENTORYOPEN, world)) {
+                        Bukkit.dispatchCommand(_player, "advancedkitsreloaded:kit use");
+                    }
 				}
 			});
 			return;

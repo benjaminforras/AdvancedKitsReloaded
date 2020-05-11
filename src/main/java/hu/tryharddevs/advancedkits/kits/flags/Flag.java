@@ -35,9 +35,13 @@ public abstract class Flag<T> {
 	public static ContextResolver<Flag> getContextResolver() {
 		return (c) -> {
 			String flagName = c.popFirstArg();
-			Flag   flag     = DefaultFlags.fuzzyMatchFlag(flagName);
+			Flag <?>  flag     = DefaultFlags.fuzzyMatchFlag(flagName);
 			if (Objects.isNull(flag)) {
-				throw new InvalidCommandArgument(getMessage("flagNotFound") + "\n" + Config.CHAT_PREFIX + " " + getMessage("availableFlags", Arrays.stream(DefaultFlags.getFlags()).map(Flag::getName).sorted(String::compareToIgnoreCase).collect(Collectors.joining(","))));
+				throw new InvalidCommandArgument(
+				        getMessage("flagNotFound") + "\n" + Config.CHAT_PREFIX + " " + getMessage("availableFlags", Arrays
+				        .stream(DefaultFlags.getFlags())
+				        .map(Flag::getName).sorted(String::compareToIgnoreCase)
+				        .collect(Collectors.joining(","))));
 			}
 			return flag;
 		};

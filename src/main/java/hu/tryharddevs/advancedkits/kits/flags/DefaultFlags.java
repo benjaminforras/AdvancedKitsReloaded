@@ -10,15 +10,16 @@ import java.util.Arrays;
 import java.util.List;
 
 public class DefaultFlags {
-	public static final BooleanFlag VISIBLE          = new BooleanFlag("visible", true);
-	public static final BooleanFlag FIRSTJOIN        = new BooleanFlag("firstjoin", false);
-	public static final BooleanFlag RESPAWN          = new BooleanFlag("respawn", false);
-	public static final BooleanFlag AUTOEQUIPARMOR   = new BooleanFlag("autoequiparmor", false);
-	public static final BooleanFlag FREE             = new BooleanFlag("free", false);
-	public static final BooleanFlag USEONBUY         = new BooleanFlag("useonbuy", false);
-	public static final BooleanFlag CLEARINVENTORY   = new BooleanFlag("clearinventory", false);
-	public static final BooleanFlag SPEWITEMS        = new BooleanFlag("spewitems", false);
-	public static final BooleanFlag ITEMSINCONTAINER = new BooleanFlag("itemsincontainer", false);
+	public static final BooleanFlag VISIBLE           = new BooleanFlag("visible", true);
+	public static final BooleanFlag FIRSTJOIN         = new BooleanFlag("firstjoin", false);
+	public static final BooleanFlag RESPAWN           = new BooleanFlag("respawn", false);
+	public static final BooleanFlag AUTOEQUIPARMOR    = new BooleanFlag("autoequiparmor", false);
+	public static final BooleanFlag FREE              = new BooleanFlag("free", false);
+	public static final BooleanFlag USEONBUY          = new BooleanFlag("useonbuy", false);
+	public static final BooleanFlag CLEARINVENTORY    = new BooleanFlag("clearinventory", false);
+	public static final BooleanFlag SPEWITEMS         = new BooleanFlag("spewitems", false);
+	public static final BooleanFlag ITEMSINCONTAINER  = new BooleanFlag("itemsincontainer", false);
+	public static final BooleanFlag KEEPINVENTORYOPEN = new BooleanFlag("keepinventoryopen", false);
 
 	public static final StringFlag DISPLAYNAME = new StringFlag("displayname");
 

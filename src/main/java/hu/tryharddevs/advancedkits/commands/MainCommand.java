@@ -37,7 +37,6 @@ import static hu.tryharddevs.advancedkits.kits.flags.DefaultFlags.*;
 import static hu.tryharddevs.advancedkits.utils.MessagesApi.sendMessage;
 import static hu.tryharddevs.advancedkits.utils.localization.I18n.getMessage;
 
-@SuppressWarnings("ConstantConditions")
 @CommandAlias("%rootcommand")
 public class MainCommand extends BaseCommand {
 	private final AdvancedKitsMain instance;
@@ -293,6 +292,9 @@ public class MainCommand extends BaseCommand {
                     Bukkit.dispatchCommand(_player, "advancedkitsreloaded:kit view " + clickedKit.getName());
                 } else {
                     Bukkit.dispatchCommand(_player, "advancedkitsreloaded:kit use " + clickedKit.getName());
+                    if(clickedKit.getFlag(KEEPINVENTORYOPEN, world)) {
+                        Bukkit.dispatchCommand(_player, "advancedkitsreloaded:kit view");
+                    }
                 }
 			});
 			return;
@@ -327,6 +329,9 @@ public class MainCommand extends BaseCommand {
 			if (clickedItem.getType() == Material.GREEN_STAINED_GLASS_PANE || clickedItem.getType() == Material.RED_STAINED_GLASS_PANE|| clickedItem.getType() == Material.WHITE_STAINED_GLASS_PANE) {
 				if (clickedItem.getType() == Material.GREEN_STAINED_GLASS_PANE) {
 					Bukkit.dispatchCommand(_player, "advancedkitsreloaded:kit use " + kit.getName());
+					if(kit.getFlag(KEEPINVENTORYOPEN, world)) {
+                        Bukkit.dispatchCommand(_player, "advancedkitsreloaded:kit view");
+                    }
 				} else if (clickedItem.getType() == Material.RED_STAINED_GLASS_PANE) {
 					Bukkit.dispatchCommand(_player, "advancedkitsreloaded:kit buy " + kit.getName());
 				} else if (clickedItem.getType() == Material.WHITE_STAINED_GLASS_PANE) {
@@ -341,7 +346,7 @@ public class MainCommand extends BaseCommand {
 	@CommandPermission("advancedkits.flag")
 	@CommandCompletion("@kits @flags")
 	@Syntax("<kitname> <flag> <value> [world]")
-	public void onFlagCommand(CommandSender sender, Kit kit, Flag flag, String value, @Optional String world) {
+	public <T> void onFlagCommand(CommandSender sender, Kit kit, Flag<T> flag, String value, @Optional String world) {
 
 		String   tempValue     = String.join(" ", value, Objects.isNull(world) ? "" : world);
 		String[] splittedValue = tempValue.split(" ");
