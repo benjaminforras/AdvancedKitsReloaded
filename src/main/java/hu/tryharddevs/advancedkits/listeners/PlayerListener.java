@@ -9,7 +9,11 @@ import hu.tryharddevs.advancedkits.utils.ItemBuilder;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
-import org.bukkit.block.*;
+import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
+import org.bukkit.block.Chest;
+import org.bukkit.block.DoubleChest;
+import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -114,36 +118,13 @@ public class PlayerListener implements Listener {
 		}
 	}
 
-	@EventHandler(priority = EventPriority.MONITOR)
-	public void onBlockBreakEvent(BlockBreakEvent event) {
-		if (event.isCancelled()) return;
-
-		if (!event.getBlock().getType().equals(Material.CHEST) || event.getBlock().getDrops().isEmpty()) return;
-
-		event.setCancelled(true);
-		event.getBlock().setType(Material.AIR);
-
-		Collection<ItemStack> drops = event.getBlock().getDrops();
-		drops.add(new ItemStack(Material.CHEST));
-		drops.forEach(drop -> {
-			if (drop.getType().equals(Material.CHEST)) {
-				if (drop.hasItemMeta() && drop.getItemMeta().hasDisplayName()) {
-					if (Objects.nonNull(KitManager.getKit(drop.getItemMeta().getDisplayName(), event.getPlayer().getWorld().getName()))) {
-						drop = new ItemBuilder(drop).setName("Chest").toItemStack();
-					}
-				}
-			}
-			event.getPlayer().getWorld().dropItemNaturally(event.getBlock().getLocation(), drop);
-		});
-	}
-
 	@EventHandler
 	public void onPlayerClickSignEvent(PlayerInteractEvent event) {
 		Action action = event.getAction();
 		if (action == Action.RIGHT_CLICK_BLOCK) {
 			if (event.getClickedBlock().getState() instanceof Sign) {
 				Player player = event.getPlayer();
-				Sign   sign   = (Sign) event.getClickedBlock().getState();
+				Sign sign   = (Sign) event.getClickedBlock().getState();
 
 				if (sign.getLine(0).equalsIgnoreCase(ChatColor.GRAY + "[" + ChatColor.DARK_BLUE + "Kits" + ChatColor.GRAY + "]")) {
 					Kit kit = KitManager.getKit(ChatColor.stripColor(sign.getLine(1)), player.getWorld().getName());
