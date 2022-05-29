@@ -164,7 +164,7 @@ public class Kit {
 		return val;
 	}
 
-	public boolean hasFlag(Flag flag, String world) {
+	public boolean hasFlag(Flag<?> flag, String world) {
 		if (this.flags.containsKey(world)) {
 			if (this.flags.get(world).containsKey(flag)) {
 				return true;

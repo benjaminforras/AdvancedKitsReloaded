@@ -1,6 +1,9 @@
 package hu.tryharddevs.advancedkits.kits.flags;
 
 import hu.tryharddevs.advancedkits.utils.ItemStackUtil;
+
+import java.util.Map;
+
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -38,11 +41,11 @@ public class ItemStackFlag extends Flag<ItemStack> {
 	}
 
 	@Override public ItemStack unmarshal(@Nullable Object o) {
-		try {
-			String material = String.valueOf(o);
-			return new ItemStack(Material.matchMaterial(material));
-		} catch (ClassCastException | NullPointerException e) {
-			return ItemStackUtil.itemFromString(String.valueOf(o));
+		Material material = Material.matchMaterial(String.valueOf(o));
+		if(material != null) {
+		    return new ItemStack(material);
+		} else {
+		    return ItemStackUtil.itemFromString(String.valueOf(o));
 		}
 	}
 

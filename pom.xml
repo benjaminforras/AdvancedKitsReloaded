@@ -6,7 +6,7 @@
 
 	<groupId>hu.tryharddevs</groupId>
 	<artifactId>advancedkits</artifactId>
-	<version>1.1.14</version>
+	<version>1.1.16</version>
 
 	<name>AdvancedKitsReloaded</name>
 
@@ -22,16 +22,16 @@
 
 		<repository>
 			<id>placeholderapi-repo</id>
-			<url>http://repo.extendedclip.com/content/repositories/placeholderapi/</url>
+			<url>https://repo.extendedclip.com/content/repositories/placeholderapi/</url>
 		</repository>
 		<repository>
 			<id>vault-repo</id>
-			<url>http://nexus.hc.to/content/repositories/pub_releases/</url>
+			<url>https://nexus.hc.to/content/repositories/pub_releases/</url>
 		</repository>
 
 		<repository>
 			<id>aikar-repo</id>
-			<url>http://ci.emc.gs/nexus/content/groups/aikar/</url>
+			<url>https://ci.emc.gs/nexus/content/groups/aikar/</url>
 		</repository>
 		<repository>
 			<id>jitpack.io</id>
@@ -46,7 +46,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
-				<version>3.2</version>
+				<version>3.8.1</version>
 				<configuration>
 					<source>1.8</source>
 					<target>1.8</target>
@@ -60,7 +60,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-source-plugin</artifactId>
-				<version>3.0.1</version>
+				<version>3.2.1</version>
 				<executions>
 					<execution>
 						<id>attach-sources</id>
@@ -73,14 +73,13 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-shade-plugin</artifactId>
-				<version>2.4.1</version>
+				<version>3.2.4</version>
 				<configuration>
 					<dependencyReducedPomLocation>${project.build.directory}/dependency-reduced-pom.xml</dependencyReducedPomLocation>
 					<artifactSet>
 						<includes>
 							<include>co.aikar:acf-core</include>
 							<include>co.aikar:minecraft-timings</include>
-							<include>com.github.TryHardDood:ReflectionHelper</include>
 							<include>com.github.InventivetalentDev:ParticleAPI</include>
 						</includes>
 					</artifactSet>
@@ -102,10 +101,6 @@
 							<shadedPattern>hu.tryharddevs.advancedkits.utils.timings</shadedPattern>
 						</relocation>
 						<relocation>
-							<pattern>org.inventivetalent.reflection</pattern>
-							<shadedPattern>hu.tryharddevs.advancedkits.utils.reflection</shadedPattern>
-						</relocation>
-						<relocation>
 							<pattern>org.inventivetalent.particle</pattern>
 							<shadedPattern>hu.tryharddevs.advancedkits.utils.particle</shadedPattern>
 						</relocation>
@@ -116,29 +111,6 @@
 						<phase>package</phase>
 						<goals>
 							<goal>shade</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
-			<plugin>
-				<artifactId>maven-antrun-plugin</artifactId>
-				<version>1.8</version>
-				<executions>
-					<execution>
-						<id>copy</id>
-						<phase>package</phase>
-						<configuration>
-							<target>
-								<echo>Copying AdvancedKitsReloaded.jar to localtest</echo>
-								<copy todir="C:\Users\rsnco\Desktop\Servers\Servers\plugins" overwrite="true" flatten="true">
-									<fileset dir="${basedir}">
-										<include name="target/AdvancedKitsReloaded.jar" />
-									</fileset>
-								</copy>
-							</target>
-						</configuration>
-						<goals>
-							<goal>run</goal>
 						</goals>
 					</execution>
 				</executions>
@@ -154,21 +126,27 @@
 
 	<dependencies>
 		<dependency>
-			<groupId>org.bukkit</groupId>
-			<artifactId>bukkit</artifactId>
-			<version>1.12-pre2-SNAPSHOT</version>
+			<groupId>org.spigotmc</groupId>
+			<artifactId>spigot-api</artifactId>
+			<version>1.16.5-R0.1-SNAPSHOT</version>
 			<scope>provided</scope>
 		</dependency>
 
 		<dependency>
 			<groupId>me.clip</groupId>
 			<artifactId>placeholderapi</artifactId>
-			<version>2.7.1</version>
+			<version>2.10.10</version>
 		</dependency>
 		<dependency>
 			<groupId>net.milkbowl.vault</groupId>
 			<artifactId>VaultAPI</artifactId>
-			<version>1.6</version>
+			<version>1.7</version>
+			<exclusions>
+				<exclusion>
+					<groupId>org.bukkit</groupId>
+					<artifactId>bukkit</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 
 		<dependency>
@@ -179,13 +157,7 @@
 		<dependency>
 			<groupId>co.aikar</groupId>
 			<artifactId>minecraft-timings</artifactId>
-			<version>1.0.3</version>
-		</dependency>
-
-		<dependency>
-			<groupId>com.github.TryHardDood</groupId>
-			<artifactId>ReflectionHelper</artifactId>
-			<version>-SNAPSHOT</version>
+			<version>1.0.4</version>
 		</dependency>
 		<dependency>
 			<groupId>com.github.InventivetalentDev</groupId>

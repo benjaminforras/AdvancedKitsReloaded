@@ -7,7 +7,6 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
-import org.inventivetalent.reflection.minecraft.Minecraft;
 import org.inventivetalent.reflection.resolver.FieldResolver;
 import org.inventivetalent.reflection.resolver.MethodResolver;
 import org.inventivetalent.reflection.resolver.ResolverQuery;
@@ -26,30 +25,9 @@ import java.util.Arrays;
  **
  *
  ****************************************************/
-@SuppressWarnings("ALL")
 public class MessagesApi {
 	private static final OBCClassResolver obcClassResolver = new OBCClassResolver();
 	private static final NMSClassResolver nmsClassResolver = new NMSClassResolver();
-	private static final boolean          useOldMethods    = Minecraft.VERSION.olderThan(Minecraft.Version.v1_8_R1);
-
-	@Deprecated
-	public static void sendTitle(Player player, Integer fadeIn, Integer stay, Integer fadeOut, String message) {
-		sendTitle(player, fadeIn, stay, fadeOut, message, null);
-	}
-
-	@Deprecated
-	public static void sendSubtitle(Player player, Integer fadeIn, Integer stay, Integer fadeOut, String message) {
-		sendTitle(player, fadeIn, stay, fadeOut, null, message);
-	}
-
-	@Deprecated
-	public static void sendFullTitle(Player player, Integer fadeIn, Integer stay, Integer fadeOut, String title, String subtitle) {
-		sendTitle(player, fadeIn, stay, fadeOut, title, subtitle);
-	}
-
-	@Deprecated public static Integer getPlayerProtocol(Player player) {
-		return 47;
-	}
 
 	private static void sendPacket(Player player, Object packet) {
 		try {
@@ -147,18 +125,10 @@ public class MessagesApi {
 			Object   ppoc;
 			Class<?> c4 = nmsClassResolver.resolveSilent("PacketPlayOutChat");
 			Class<?> c5 = nmsClassResolver.resolveSilent("Packet");
-			if (useOldMethods) {
-				Class<?> c2  = nmsClassResolver.resolveSilent("ChatSerializer");
-				Class<?> c3  = nmsClassResolver.resolveSilent("IChatBaseComponent");
-				Method   m3  = c2.getDeclaredMethod("a", String.class);
-				Object   cbc = c3.cast(m3.invoke(c2, "{\"text\": \"" + message + "\"}"));
-				ppoc = c4.getConstructor(new Class<?>[]{c3, byte.class}).newInstance(cbc, (byte) 2);
-			} else {
-				Class<?> c2 = nmsClassResolver.resolveSilent("ChatComponentText");
-				Class<?> c3 = nmsClassResolver.resolveSilent("IChatBaseComponent");
-				Object   o  = c2.getConstructor(new Class<?>[]{String.class}).newInstance(message);
-				ppoc = c4.getConstructor(new Class<?>[]{c3, byte.class}).newInstance(o, (byte) 2);
-			}
+			Class<?> c2 = nmsClassResolver.resolveSilent("ChatComponentText");
+			Class<?> c3 = nmsClassResolver.resolveSilent("IChatBaseComponent");
+			Object   o  = c2.getConstructor(new Class<?>[]{String.class}).newInstance(message);
+			ppoc = c4.getConstructor(new Class<?>[]{c3, byte.class}).newInstance(o, (byte) 2);
 			Method m1 = c1.getDeclaredMethod("getHandle");
 			Object h  = m1.invoke(p);
 			Field  f1 = h.getClass().getDeclaredField("playerConnection");

@@ -187,7 +187,7 @@ public class CPageInventory extends CInventory {
 
 	public ItemStack getBackPage() {
 		if (this.backAPage == null) {
-			this.backAPage = new ItemBuilder(new ItemStack(Material.SIGN)).setName(getMessage("guiBackpage")).setLore(getMessage("guiBackpageLore")).toItemStack();
+			this.backAPage = new ItemBuilder(new ItemStack(Material.OAK_SIGN)).setName(getMessage("guiBackpage")).setLore(getMessage("guiBackpageLore")).toItemStack();
 		}
 		return this.backAPage;
 	}
@@ -202,7 +202,7 @@ public class CPageInventory extends CInventory {
 
 	public ItemStack getForwardsPage() {
 		if (this.forwardsAPage == null) {
-			this.forwardsAPage = new ItemBuilder(new ItemStack(Material.SIGN)).setName(getMessage("guiNextpage")).setLore(getMessage("guiNextpageLore")).toItemStack();
+			this.forwardsAPage = new ItemBuilder(new ItemStack(Material.OAK_SIGN)).setName(getMessage("guiNextpage")).setLore(getMessage("guiNextpageLore")).toItemStack();
 		}
 		return this.forwardsAPage;
 	}

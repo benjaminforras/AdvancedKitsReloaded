@@ -13,8 +13,6 @@ public class Config {
 	public static String       CHAT_PREFIX        = ChatColor.translateAlternateColorCodes('&', "&7[&6AdvancedKits&7]");
 	public static String       LOCALE             = "en";
 	public static Boolean      COLORED_LOG        = true;
-	public static Boolean      METRICS_ENABLED    = true;
-	public static Boolean      AUTOUPDATE_ENABLED = true;
 	public static Boolean      TITLES_ENABLED     = true;
 	public static Boolean      ACTIONBARS_ENABLED = true;
 	public static List<String> DISABLED_WORLDS    = new ArrayList<>();
@@ -39,16 +37,6 @@ public class Config {
 		if (!config.contains("Log.ColoredLog")) {
 			config.addDefault("Log.ColoredLog", true);
 			//config.addDefault("Log.ColoredLog2", true); //Don't ask why. Idk
-			oldConfig = true;
-		}
-
-		if (!config.contains("MetricsEnabled")) {
-			config.addDefault("MetricsEnabled", true);
-			oldConfig = true;
-		}
-
-		if (!config.contains("AutoUpdateEnabled")) {
-			config.addDefault("AutoUpdateEnabled", true);
 			oldConfig = true;
 		}
 
@@ -83,8 +71,6 @@ public class Config {
 		LOCALE = config.getString("Locale");
 
 		COLORED_LOG = config.getBoolean("Log.ColoredLog");
-		METRICS_ENABLED = config.getBoolean("MetricsEnabled");
-		AUTOUPDATE_ENABLED = config.getBoolean("AutoUpdateEnabled");
 
 		TITLES_ENABLED = config.getBoolean("Messages.TitlesEnabled", true);
 		ACTIONBARS_ENABLED = config.getBoolean("Messages.ActionbarsEnabled", true);

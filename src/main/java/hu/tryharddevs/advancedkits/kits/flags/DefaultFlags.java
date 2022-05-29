@@ -10,14 +10,16 @@ import java.util.Arrays;
 import java.util.List;
 
 public class DefaultFlags {
-	public static final BooleanFlag VISIBLE          = new BooleanFlag("visible", true);
-	public static final BooleanFlag FIRSTJOIN        = new BooleanFlag("firstjoin", false);
-	public static final BooleanFlag AUTOEQUIPARMOR   = new BooleanFlag("autoequiparmor", false);
-	public static final BooleanFlag FREE             = new BooleanFlag("free", false);
-	public static final BooleanFlag USEONBUY         = new BooleanFlag("useonbuy", false);
-	public static final BooleanFlag CLEARINVENTORY   = new BooleanFlag("clearinventory", false);
-	public static final BooleanFlag SPEWITEMS        = new BooleanFlag("spewitems", false);
-	public static final BooleanFlag ITEMSINCONTAINER = new BooleanFlag("itemsincontainer", false);
+	public static final BooleanFlag VISIBLE           = new BooleanFlag("visible", true);
+	public static final BooleanFlag FIRSTJOIN         = new BooleanFlag("firstjoin", false);
+	public static final BooleanFlag RESPAWN           = new BooleanFlag("respawn", false);
+	public static final BooleanFlag AUTOEQUIPARMOR    = new BooleanFlag("autoequiparmor", false);
+	public static final BooleanFlag FREE              = new BooleanFlag("free", false);
+	public static final BooleanFlag USEONBUY          = new BooleanFlag("useonbuy", false);
+	public static final BooleanFlag CLEARINVENTORY    = new BooleanFlag("clearinventory", false);
+	public static final BooleanFlag SPEWITEMS         = new BooleanFlag("spewitems", false);
+	public static final BooleanFlag ITEMSINCONTAINER  = new BooleanFlag("itemsincontainer", false);
+	public static final BooleanFlag KEEPINVENTORYOPEN = new BooleanFlag("keepinventoryopen", false);
 
 	public static final StringFlag DISPLAYNAME = new StringFlag("displayname");
 
@@ -28,7 +30,7 @@ public class DefaultFlags {
 	public static final DoubleFlag DELAY = new DoubleFlag("delay", 0.0);
 
 	public static final ItemStackFlag ICON     = new ItemStackFlag("icon", new ItemStack(Material.EMERALD_BLOCK));
-	public static final ItemStackFlag FIREWORK = new ItemStackFlag("firework", new ItemStack(Material.FIREWORK));
+	public static final ItemStackFlag FIREWORK = new ItemStackFlag("firework", new ItemStack(Material.FIREWORK_ROCKET));
 
 	public static final ListFlag<String>         CUSTOMDESCRIPTION = new ListFlag<>("customdescription", new StringFlag(null));
 	public static final ListFlag<String>         COMMANDS          = new ListFlag<>("commands", new StringFlag(null));
@@ -38,7 +40,7 @@ public class DefaultFlags {
 	public static final ListFlag<ParticleEffect> PARTICLEEFFECTS   = new ListFlag<>("particleeffects", new ParticleEffectFlag(null));
 	public static final ListFlag<Sound>          SOUNDEFFECTS      = new ListFlag<>("soundeffects", new SoundEffectFlag(null));
 
-	private static final Flag<?>[] flagsList = new Flag<?>[]{VISIBLE, FIRSTJOIN, AUTOEQUIPARMOR, FREE, USEONBUY, CLEARINVENTORY, SPEWITEMS, ITEMSINCONTAINER, DISPLAYNAME, PERUSECOST, COST, MAXUSES, DELAY, FIREWORK, ICON, CUSTOMDESCRIPTION, COMMANDS, MESSAGES, DISABLEDWORLDS, POTIONEFFECTS, PARTICLEEFFECTS, SOUNDEFFECTS};
+	private static final Flag<?>[] flagsList = new Flag<?>[]{VISIBLE, FIRSTJOIN, RESPAWN, AUTOEQUIPARMOR, FREE, USEONBUY, CLEARINVENTORY, SPEWITEMS, ITEMSINCONTAINER, DISPLAYNAME, PERUSECOST, COST, MAXUSES, DELAY, FIREWORK, ICON, CUSTOMDESCRIPTION, COMMANDS, MESSAGES, DISABLEDWORLDS, POTIONEFFECTS, PARTICLEEFFECTS, SOUNDEFFECTS};
 
 	public static Flag<?>[] getFlags() {
 		return flagsList;

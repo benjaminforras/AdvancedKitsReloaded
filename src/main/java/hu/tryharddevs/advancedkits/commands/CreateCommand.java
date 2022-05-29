@@ -16,7 +16,6 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.inventory.ItemStack;
-import org.inventivetalent.reflection.minecraft.Minecraft;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -54,16 +53,14 @@ public class CreateCommand extends BaseCommand {
 		cSimpleInventory.setItem(38, new ItemBuilder(Material.ARMOR_STAND).setName(getMessage("armorPieceHere")).setLore(getMessage("armorType") + " " + getMessage("armorLeggings")).toItemStack());
 		cSimpleInventory.setItem(39, new ItemBuilder(Material.ARMOR_STAND).setName(getMessage("armorPieceHere")).setLore(getMessage("armorType") + " " + getMessage("armorBoots")).toItemStack());
 
-		if (Minecraft.VERSION.newerThan(Minecraft.Version.v1_9_R1)) {
-			cSimpleInventory.setItem(40, new ItemBuilder(Material.ARMOR_STAND).setName(getMessage("armorPieceHere")).setLore(getMessage("armorType") + " " + getMessage("armorShield")).toItemStack());
-		}
+		cSimpleInventory.setItem(40, new ItemBuilder(Material.ARMOR_STAND).setName(getMessage("armorPieceHere")).setLore(getMessage("armorType") + " " + getMessage("armorShield")).toItemStack());
 
-		cSimpleInventory.setItem(45, new ItemBuilder(Material.STAINED_GLASS_PANE).setDurability((short) 3).setName(getMessage("saveToSession")).toItemStack());
+		cSimpleInventory.setItem(45, new ItemBuilder(Material.GREEN_STAINED_GLASS_PANE).setName(getMessage("saveToSession")).toItemStack());
 		if (!session.getKitItems().isEmpty() || !session.getKitArmors().isEmpty()) {
-			cSimpleInventory.setItem(46, new ItemBuilder(Material.STAINED_GLASS_PANE).setDurability((short) 3).setName(getMessage("loadFromSession")).toItemStack());
+			cSimpleInventory.setItem(46, new ItemBuilder(Material.GREEN_STAINED_GLASS_PANE).setName(getMessage("loadFromSession")).toItemStack());
 		}
 
-		cSimpleInventory.setItem(53, new ItemBuilder(Material.STAINED_GLASS_PANE).setDurability((short) 13).setName(getMessage("guiCreateKit", kitName)).toItemStack());
+		cSimpleInventory.setItem(53, new ItemBuilder(Material.BLUE_STAINED_GLASS_PANE).setName(getMessage("guiCreateKit", kitName)).toItemStack());
 
 		cSimpleInventory.openInventory();
 
@@ -144,8 +141,6 @@ public class CreateCommand extends BaseCommand {
 
 				// Shield
 				case 40: {
-					if (!Minecraft.VERSION.newerThan(Minecraft.Version.v1_9_R1)) break;
-
 					if (Objects.isNull(itemOnCursor) || itemOnCursor.getType() == Material.AIR) {
 						event.getInventory().setItem(clickedSlot, new ItemBuilder(Material.ARMOR_STAND).setName(getMessage("armorPieceHere")).setLore(getMessage("armorType") + " " + getMessage("armorShield")).toItemStack());
 					} else if (ItemStackUtil.isShield(itemOnCursor)) {
@@ -188,7 +183,7 @@ public class CreateCommand extends BaseCommand {
 						else if (ItemStackUtil.isChest(armor)) event.getInventory().setItem(37, armor);
 						else if (ItemStackUtil.isLegs(armor)) event.getInventory().setItem(38, armor);
 						else if (ItemStackUtil.isBoots(armor)) event.getInventory().setItem(39, armor);
-						else if (Minecraft.VERSION.newerThan(Minecraft.Version.v1_9_R1) && ItemStackUtil.isShield(armor))
+						else if (ItemStackUtil.isShield(armor))
 							event.getInventory().setItem(40, armor);
 					}
 

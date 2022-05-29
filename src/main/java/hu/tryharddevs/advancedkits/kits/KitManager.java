@@ -26,7 +26,6 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import static hu.tryharddevs.advancedkits.kits.flags.DefaultFlags.*;
 import static hu.tryharddevs.advancedkits.utils.localization.I18n.getMessage;
 
-@SuppressWarnings("ALL")
 public class KitManager {
 	private static final Pattern        FILE_PATTERN = Pattern.compile("[^A-Za-z0-9_]+", Pattern.CASE_INSENSITIVE);
 	private static       ArrayList<Kit> kitArrayList = new ArrayList<>();

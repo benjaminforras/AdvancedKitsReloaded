@@ -3,6 +3,10 @@
 target/
 AdvancedKitsReloaded.iml
 
+.classpath
+.project
+.settings/
+
 ### Java template
 # Compiled class file
 *.class

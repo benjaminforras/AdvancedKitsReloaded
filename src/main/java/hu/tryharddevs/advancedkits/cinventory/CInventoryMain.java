@@ -1,6 +1,5 @@
 package hu.tryharddevs.advancedkits.cinventory;
 
-import hu.tryharddevs.advancedkits.AdvancedKitsMain;
 import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -14,13 +13,7 @@ import java.util.Objects;
 
 public class CInventoryMain implements Listener {
 
-	private final AdvancedKitsMain instance;
-
 	private static final ArrayList<CInventory> cInventoryArrayList = new ArrayList<>();
-
-	public CInventoryMain(AdvancedKitsMain instance) {
-		this.instance = instance;
-	}
 
 	public static void registerInventory(CInventory cInventory) {
 		cInventoryArrayList.add(cInventory);

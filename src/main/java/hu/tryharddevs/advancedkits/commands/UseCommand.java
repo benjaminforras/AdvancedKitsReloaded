@@ -57,8 +57,11 @@ public class UseCommand extends BaseCommand {
 		}
 
 		if (Objects.isNull(kit)) {
-			CPageInventory cPageInventory = new CPageInventory("AdvancedKits - Use Kit", player);
-			cPageInventory.setPages(KitManager.getKits().stream().filter(_kit -> _kit.getFlag(VISIBLE, world) && (_kit.getFlag(FREE, world) && player.hasPermission(_kit.getPermission()) || user.isUnlocked(_kit))).sorted(Comparator.comparing(Kit::getName)).map(_kit -> new ItemBuilder(_kit.getFlag(ICON, world).clone()).setName(ChatColor.WHITE + _kit.getDisplayName(world)).setLore(KitManager.getKitDescription(player, _kit, world)).hideAttributes().toItemStack()).collect(Collectors.toCollection(ArrayList::new)));
+			CPageInventory cPageInventory = new CPageInventory("Kits", player);
+			cPageInventory.setPages(KitManager.getKits().stream()
+			        .filter(_kit -> _kit.getFlag(VISIBLE, world) && (_kit.getFlag(FREE, world) && player.hasPermission(_kit.getPermission()) || user.isUnlocked(_kit)))
+			        .sorted(Comparator.comparing(Kit::getName)).map(_kit -> new ItemBuilder(_kit.getFlag(ICON, world).clone()).setName(ChatColor.WHITE + _kit.getDisplayName(world))
+			                .setLore(KitManager.getKitDescription(player, _kit, world)).hideAttributes().toItemStack()).collect(Collectors.toCollection(ArrayList::new)));
 			cPageInventory.openInventory();
 
 			cPageInventory.onInventoryClickEvent((_event) -> {
@@ -77,7 +80,14 @@ public class UseCommand extends BaseCommand {
 				}
 
 				_player.closeInventory();
-				Bukkit.dispatchCommand(_player, "advancedkitsreloaded:kit use " + clickedKit.getName());
+				if(_event.getClick().isRightClick()) {
+				    Bukkit.dispatchCommand(_player, "advancedkitsreloaded:kit view " + clickedKit.getName());
+				} else {
+				    Bukkit.dispatchCommand(_player, "advancedkitsreloaded:kit use " + clickedKit.getName());
+				    if(kit.getFlag(KEEPINVENTORYOPEN, world)) {
+                        Bukkit.dispatchCommand(_player, "advancedkitsreloaded:kit use");
+                    }
+				}
 			});
 			return;
 		}
@@ -123,7 +133,7 @@ public class UseCommand extends BaseCommand {
 
 			if (kit.getFlag(MAXUSES, world) > 0) user.addUse(kit, world);
 		}
-		sendMessage(player, getMessage("successfullyUsed", kit.getName()));
+		sendMessage(player, getMessage("successfullyUsed", kit.getDisplayName(world)));
 	}
 
 	private static boolean hasInventorySpace(Player player, ItemStack item) {

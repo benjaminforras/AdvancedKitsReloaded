@@ -12,7 +12,6 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.util.io.BukkitObjectInputStream;
 import org.bukkit.util.io.BukkitObjectOutputStream;
-import org.inventivetalent.reflection.minecraft.Minecraft;
 import org.yaml.snakeyaml.external.biz.base64Coder.Base64Coder;
 
 import java.io.ByteArrayInputStream;
@@ -44,10 +43,10 @@ public class ItemStackUtil {
 	         * This is because some people are getting skulls with null owners, which causes Spigot to throw an error
 	         * when it tries to serialize the item. If this ever gets fixed in Spigot, this will be removed.
 	         */
-			if (itemStack.getType() == Material.SKULL_ITEM) {
+			if (itemStack.getType() == Material.PLAYER_HEAD) {
 				SkullMeta meta = (SkullMeta) itemStack.getItemMeta();
-				if (meta.hasOwner() && (meta.getOwner() == null || meta.getOwner().isEmpty())) {
-					itemStack.setItemMeta(Bukkit.getServer().getItemFactory().getItemMeta(Material.SKULL_ITEM));
+				if (meta.hasOwner() && meta.getOwningPlayer() == null) {
+					itemStack.setItemMeta(Bukkit.getServer().getItemFactory().getItemMeta(Material.PLAYER_HEAD));
 				}
 			}
 		}
@@ -121,7 +120,7 @@ public class ItemStackUtil {
 	}
 
 	private static boolean isChest(Material material) {
-		return material.name().endsWith("CHESTPLATE") || Minecraft.VERSION.newerThan(Minecraft.Version.v1_9_R1) && material.name().endsWith("ELYTRA");
+		return material.name().endsWith("CHESTPLATE") || material.name().endsWith("ELYTRA");
 	}
 
 	public static boolean isHelmet(ItemStack item) {
